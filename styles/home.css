@@ -357,6 +357,11 @@ body {
     padding-right: 3rem;
     padding-left: 3rem;
     text-align: center;
+    transition: transform .2s ease;
+}
+
+.cta-button-container a:hover {
+    transform: scale(1.1);
 }
 
 .footer {
