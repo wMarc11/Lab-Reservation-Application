@@ -128,9 +128,10 @@ body {
 .hero-buttons a {
     font-family: 'Inter';
     font-weight: 600;
+    font-size: 1.5rem;
     text-decoration: none;
     color: #F8FAFC;
-    padding: 10px;
+    padding: 20px;
     display: inline-block;
     margin-left: 50px
 }
@@ -141,7 +142,7 @@ body {
 
 .hero-buttons .btn-primary { 
     background-color: #5B8DEF;
-    border-radius: 25px;
+    border-radius: 10px;
     transition: transform .2s;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
@@ -153,7 +154,7 @@ body {
 
 .hero-buttons .btn-secondary { 
     background-color: #A3D4FA;
-    border-radius: 25px;
+    border-radius: 10px;
     transition: transform .2s ease;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
