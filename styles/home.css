@@ -399,13 +399,14 @@ footer {
     }
 }
 
-.hidden {
+.is-hidden {
     display: none;
     visibility: hidden;
 }
 
-.no-opacity {
+.is-transparent {
     opacity: 0;
+    transition: opacity 0.1s ease-in;
 }
 
 .overlay {
@@ -421,7 +422,7 @@ footer {
     top: 0;
 }
 
-.auth-card {
+.form {
     position: relative;
     overflow: hidden;
     display: flex;
@@ -439,7 +440,7 @@ footer {
 }
 
 
-.auth-content {
+.form__content {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -450,11 +451,11 @@ footer {
     transition: opacity 0.1s ease-in;
 }
 
-.auth-content h1 {
+.form__content h1 {
     text-transform: uppercase;
 }
 
-.auth-content input {
+.form__input {
     border: none;
     box-sizing: border-box;
     color: white;
@@ -467,14 +468,14 @@ footer {
     backdrop-filter: blur(20px);
 }
 
-.auth-content input:focus {
+.form__input:focus {
     outline-color: white;
     outline-style: solid;
     outline-offset: 5px;
     outline-width: 2px;
 }
 
-.auth-content button {
+.form__button {
     border: none;
     border-radius: 10px;
     padding: 15px 15px;
@@ -486,17 +487,16 @@ footer {
     font-weight: bold;
     font-size: 0.8rem;
     text-decoration: none;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-in();
+    transition: scale 0.2s ease, opacity 0.2s ease;
     color: white;
     text-transform: uppercase;
 }
 
-.auth-content button:hover {
+.form__button:hover {
     scale: 1.05;
 }
 
-.auth-card .log-in-panel {
+.form__panel {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -510,19 +510,19 @@ footer {
     transition: transform 0.4s ease;
 }
 
-.auth-card .log-in-panel.active {
+.form__panel--active {
     transform: translateY(-80%);
 }
 
-.auth-card .log-in-panel h4 {
+.form__panel h4 {
     margin-bottom: 0px;
 }
 
-.auth-card .log-in-panel button {
+.form__button--dark {
     background: #0F172A;
 }
 
-.auth-card .log-in-panel .transition {
+.form__button--outline {
     background: none;
     border-color: white;
     border-style: solid;
