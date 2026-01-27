@@ -114,11 +114,17 @@ b{
 }
 
 .danger {
-    color: var(--color-danger)
+    color: var(--color-danger);
+    background: rgba(207, 89, 30, 0.757);
+    border-radius: 10px;
+    padding: 2px;
 }
 
 .success {
-    color: var(--color-success)
+    color: var(--color-success);
+    background: rgba(9, 127, 26, 0.66);
+    border-radius: 10px;
+    padding: 2px;
 }
 
 .warning {
@@ -217,7 +223,7 @@ aside .sidebar a:hover span{
 
 /*Main*/
 main{
-    margin: 0 2rem 0 16rem;
+    margin: 0 2rem 2rem 18rem;
 }
 
 main .header{
@@ -288,8 +294,6 @@ main .date input[type='date']{
     color: var(--color-white);
 }
 
-
-/* Replace this with yours */
 main .stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -369,4 +373,164 @@ main .stats .slots .number{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+main .block1{   
+    display: grid;  
+    grid-template-columns: auto 30rem;
+    gap: 2rem;
+}
+
+main h2{
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+}
+
+main .upcoming-reservations table{
+    width: 100%;
+    border-radius: var(--card-border-radius);
+    text-align: center;
+}
+
+main .upcoming-reservations,
+main .quick-actions,
+main .lab-availability,
+main .recent-activity {
+    background: var(--color-light);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+    text-align: center;
+    transition: all 0.3s ease;
+    margin: 1rem 0;
+}
+
+main .upcoming-reservations:hover,
+main .quick-actions:hover,
+main .lab-availability:hover,
+main .recent-activity:hover{
+    transform: translateY(-5px);
+}
+
+.upcoming-reservations{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+main .view-more a{
+    transition: all 0.3s ease;
+}
+
+main .view-more a:hover{
+    text-decoration: underline;
+}
+
+main table tbody td {
+    height: 2.8rem;
+    border-bottom: 1px solid var(--color-dark);
+    color: var(--color-info-light);
+}
+
+main table tbody td:last-child{
+    width: 20px;
+    transform: translateX(15px);
+}
+
+main table tbody tr:last-child td{
+    border: none;
+}
+
+.quick-actions button {
+    width: 100%;
+    margin-top: 0.8rem;
+    padding: 0.9rem;
+    border-radius: var(--border-radius-2);
+    background: var(--color-dark);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quick-actions button:hover {
+    background: var(--color-primary);
+}
+
+.quick-actions .primary-btn {
+    background: var(--color-success);
+    color: #000;
+}
+
+.recent-activity ul {
+    margin-top: 1rem;
+}
+
+.recent-activity li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--color-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-info-light);
+}
+
+.recent-activity li:last-child {
+    border: none;
+}
+
+.view-more-activity{
+    display: flex;
+}
+
+.recent-activity .view-more-activity a{
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.recent-activity .view-more-activity a:hover{
+    text-decoration: underline;
+}
+
+.lab-container {
+    margin-top: 1rem;
+}
+
+.lab {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-info-light);
+    align-items: center;
+    padding: 0.6rem;
+}
+
+.lab .lab-fig{
+    transition: all 0.3s ease;
+}
+
+.lab .lab-fig:hover{
+    transform: scale(1.1);
+}
+
+.dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-dark);
+}
+
+.dots .on {
+    background: var(--color-success);
+}
+
+.dots .off {
+    background: var(--color-dark-variant);
 }
