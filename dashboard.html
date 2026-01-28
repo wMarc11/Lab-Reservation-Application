@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles/dashboard.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard.html"><img src="images/logo2.png"></a>
+                    </div>
+                    <div class="close" id="close-btn">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard.html" class="active">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="#">
+                        <span class="material-symbols-outlined">computer</span>
+                        <h3>Computer Labs</h3>
+                    </a>
+                    <a href="#">
+                        <span class="material-symbols-outlined">tatami_seat</span>
+                        <h3>Reservations</h3>
+                    </a>     
+                    <a href="#">
+                        <span class="material-symbols-outlined">search</span>
+                        <h3>Search</h3>
+                    </a>                         
+                </div>
+            </aside>
+            <main>
+                <!-- Header section, just replace the h1 and delete the date unless you need it. Do not delete!!-->
+                <div class="header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <div class="date">
+                                <input type="date">
+                        </div>
+                    </div>
+                    <div class="profile">
+                        <div class="profile-photo">
+                            <img src="images/profilepic.webp">
+                        </div>
+                        <div class="info">
+                            <p>Hello, <b>User</b></p>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="#">
+                                <span class="material-symbols-outlined">account_circle</span>
+                                <p>My Profile</p>
+                            </a>
+                            <a href="#">
+                                <span class="material-symbols-outlined">settings</span>
+                                <p>Settings</p>
+                            </a>
+                            <a href="#">
+                                <span class="material-symbols-outlined">logout</span>
+                                <p>Logout</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Replace this section with yours-->
+                <div class="stats">
+                    <div class="slots-card">
+                        <span class="material-symbols-outlined">event_seat</span>
+                        <div class="middle">
+                            <div>
+                                <p>Available Seats Today</p>
+                            </div>
+                            <div class="slots">
+                                <svg>
+                                    <circle cx="38" cy="38" r="36"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>42</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="labs-card">
+                        <span class="material-symbols-outlined">computer</span>
+                        <div class="middle">
+                            <div>
+                                <p>Computer Labs</p>
+                            </div>
+                            <div class="slots">
+                                <svg>
+                                    <circle cx="38" cy="38" r="36"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>3</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reservations-card">
+                        <span class="material-symbols-outlined">schedule</span>
+                        <div class="middle">
+                            <div>
+                                <p>My Reservations</p>
+                            </div>
+                            <div class="slots">
+                                <svg>
+                                    <circle cx="38" cy="38" r="36"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>2</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upcoming-card">
+                        <span class="material-symbols-outlined">event</span>
+                        <div class="middle">
+                            <div>
+                                <p>Upcoming Today</p>
+                            </div>
+                            <div class="slots">
+                                <svg>
+                                    <circle cx="38" cy="38" r="36"></circle>
+                                </svg>
+                                <div class="number">
+                                    <p>1</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="block1">
+                    <div>
+                        <h2>Upcoming Reservations</h2>
+                        <div class="upcoming-reservations">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Laboratory</th>
+                                        <th>Date & Time</th>
+                                        <th>Seat</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Lab A</td>
+                                        <td>Today · 10:00–11:30</td>
+                                        <td>Seat 14</td>
+                                        <td class="success">Upcoming</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lab C</td>
+                                        <td>Tomorrow · 1:00–2:30</td>
+                                        <td>Seat 8</td>
+                                        <td class="danger">1 Day</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="view-more"><a href="#">View All</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div>
+                            <h2>Recent Activity</h2>
+                            <div class="recent-activity">
+                                <ul>
+                                    <li>Reserved Seat 8 in Lab C <small>30 mins ago</small></li>
+                                    <li>Reserved Seat 14 in Lab A <small>1 day ago</small></li>
+                                    <li>Cancelled reservation for Seat 18 in Lab A <small>1 day ago</small></li>
+                                    <li class="view-more-activity"><a href="#">View All</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div>
+                            <h2>Quick Actions</h2>
+                            <div class="quick-actions">
+                                <button class="primary-btn">
+                                    <span class="material-symbols-outlined">add</span>
+                                    Reserve a Seat
+                                </button>
+                                <button>
+                                    <span class="material-symbols-outlined">search</span>
+                                    Search Available Labs
+                                </button>
+                                <button>
+                                    <span class="material-symbols-outlined">computer</span>
+                                    View All Labs
+                                </button>
+                            </div>
+                        </div>
+
+                         <div class="lab-container">
+                            <h2>Lab Availability</h2>
+                            <div class="lab-availability">
+                                <div class="lab">
+                                    <a href="#">
+                                        <div class="lab-fig">
+                                            <p>Lab A</p>
+                                            <div class="dots">
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="off"></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div>
+                                        <p>30 seats left</p>
+                                    </div>
+                                </div>
+                                <div class="lab">
+                                    <a href="#">
+                                        <div class="lab-fig">
+                                            <p>Lab B</p>
+                                            <div class="dots">
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="off"></span>
+                                                <span class="off"></span>
+                                                <span class="off"></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                        <div>
+                                        <p>12 seats left</p>
+                                    </div>
+                                </div>
+                                <div class="lab">
+                                    <a href="#">
+                                        <div class="lab-fig">
+                                            <p>Lab C</p>
+                                            <div class="dots">
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="on"></span>
+                                                <span class="off"></span>
+                                                <span class="off"></span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div>
+                                        <p>22 seats left</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html> 
