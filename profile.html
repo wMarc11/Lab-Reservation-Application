@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="styles/variables.css">
+        <link rel="stylesheet" href="styles/profile.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <title>My Profile</title>
+    </head>
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard.html"><img src="images/logo2.png"></a>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard.html">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="profile.html" class="active">
+                        <span class="material-symbols-outlined">account_circle</span>
+                        <h3>Profile</h3>
+                    </a>
+                    <a href="#">
+                        <span class="material-symbols-outlined">settings</span>
+                        <h3>Settings</h3>
+                    </a>
+                </div>
+            </aside>
+
+            <main>
+                <div class="header"> 
+                    <h1>My Profile</h1>
+                </div>
+
+                <div class="block1">
+                    <div class="profile-card">
+                        <div class="profile-photo">
+                            <img src="images/profilepic.webp">  
+                        </div>
+
+                        <h2>User Name</h2>
+                        <h3>Student</h3>
+
+                        <div class="profile-stats">
+                            <div>
+                                <h3>Reservations</h3>
+                                <p>2</p>
+                            </div>
+                            <div>
+                                <h3>Upcoming</h3>
+                                <p>1</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <h2>Account Information</h2>
+
+                        <form class="profile-form">
+                            <div class="form">
+                                <div class="form-name">
+                                    <div>
+                                        <label>
+                                            First Name
+                                        </label>
+
+                                        <input type="text" placeholder="First Name">
+                                    </div>
+                                    <div>
+                                        <label>
+                                            Last Name
+                                        </label>
+
+                                        <input type="text" placeholder="Last Name">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Email
+                                </label>
+
+                                <input type="email" placeholder="user@email.com">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Student ID
+                                </label>
+
+                                <input type="text" placeholder="Enter your student ID">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Address
+                                </label>
+
+                                <input type="text" placeholder="Enter your address">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Contact Number
+                                </label>
+
+                                <input type="tel" placeholder="Enter your contact number">
+                            </div>
+
+                            <div class="form">
+                                <label>
+                                    Password
+                                </label>
+
+                                <input type="password" placeholder="Enter your password">
+                            </div>
+
+                            <div class="form-actions">
+                                <button class="primary-btn">
+                                    Save
+                                </button>
+
+                                <button type="reset">
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
