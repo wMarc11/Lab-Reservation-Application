@@ -253,6 +253,7 @@ label {
 
 .info-container {
     display: flex;
+    flex-direction: column;
     padding: 20px;
     height: 20vh;
     margin-bottom: 20px;
@@ -267,4 +268,11 @@ label {
 hr {
   border-top: 1px solid var(--color-dark-variant);
   margin-bottom: 20px;
+}
+
+input[type='submit'] {
+    padding: 10px;
+    border-radius: 5px;
+    color: var(--color-info-light);
+    background-color: var(--color-dark);
 }
