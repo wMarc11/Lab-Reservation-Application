@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reservation</title>
+        <link rel="stylesheet" href="styles/reservation.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script src="scripts/reservation.js" defer></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard.html"><img src="images/logo2.png"></a>
+                    </div>
+                    <div class="close" id="close-btn">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard.html" class="active">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="#">
+                        <span class="material-symbols-outlined">computer</span>
+                        <h3>Computer Labs</h3>
+                    </a>
+                    <a href="#">
+                        <span class="material-symbols-outlined">tatami_seat</span>
+                        <h3>Reservations</h3>
+                    </a>     
+                    <a href="#">
+                        <span class="material-symbols-outlined">search</span>
+                        <h3>Search</h3>
+                    </a>                         
+                </div>
+            </aside>
+            <main>
+                <form action="/view-slot-availability.html" method="POST" id="reservation_form">
+                    <p>
+                        <label for="buildings"> Building: </label>
+                        <select id="buildings" onchange="handleBuildingChange(this)">
+                            <option value="GH" selected> Gokongwei Hall </option>
+                            <option value="STRC"> Science and Technology Research Center </option>
+                            <option value="SJ"> St. Joseph Hall </option>
+                            <option value="LS"> St. La Salle Hall </option>
+                            <option value="MH"> St. Miguel Hall </option>
+                            <option value="VH"> Velasco Hall </option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="floor"> Floor: </label>
+                        <select id="floors">
+                            <!--- Since Goks is the default, ill just put this here -->
+                            <option value="3rd Floor"> 3rd Floor </option>
+                            <option value="4th Floor"> 4th Floor </option>
+                        </select>
+                    </p>
+                    <p>
+                        <label for="capacity"> Capacity </label>
+                        <select id="capacities">
+                            <option value="1-4 people"> 1-4 people </option>
+                            <option value="4-8 people"> 4-8 people </option>
+                        </select>
+                    </p>
+                </form>
+            </main>
+        </div>
+    </body>
+</html>
