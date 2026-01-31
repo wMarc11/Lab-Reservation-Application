@@ -197,7 +197,7 @@ main{
 
 main .block1{   
     display: grid;  
-    grid-template-columns: auto 45rem;
+
     gap: 2rem;
 }
 
@@ -213,14 +213,12 @@ main .header div:last-child{
 }
 
 .profile-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-    justify-content: center;
     background: var(--color-light);
     border-radius: var(--card-border-radius);
-    text-align: center;
+    padding: calc(var(--card-padding) + 5rem);
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
 .profile-details{
@@ -228,10 +226,34 @@ main .header div:last-child{
     border-radius: var(--card-border-radius);
     padding: var(--card-padding);
     text-align: center;
+    display: none;
+    justify-content: center;
 }
 
 .profile-card h2 {
     margin-top: 0.8rem;
+}
+
+
+.profile-card-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    justify-content: center;
+    transform: scale(1.4);
+    text-align: center;
+}
+
+.profile-info{
+    display: flex;  
+    flex-direction: row;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    margin-left: 4rem;
+    opacity: 0.8;
 }
 
 .block1 h3{
@@ -254,10 +276,13 @@ main .header div:last-child{
 .profile-details h2 {   
     text-align: left;
     margin-top: 0;
-}
+}   
 
 .profile-form {
+    display: flex;
     margin-top: 1rem;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .form {
@@ -291,13 +316,13 @@ main .header div:last-child{
     color: var(--color-white);
 }
 
-.form-actions {
-    display: flex;
+.form-actions { 
+    display: none;
     gap: 1rem;
     margin-top: 1.5rem;
 }
 
-.form-actions button {
+button {
     padding: 0.8rem 1.2rem;
     border-radius: var(--border-radius-2);
     background: var(--color-dark);
@@ -306,11 +331,33 @@ main .header div:last-child{
     transition: all 0.3s ease;
 }
 
-.form-actions button:hover {
+button:hover {
     background: var(--color-primary);
 }
 
-.form-actions .primary-btn {
+.primary-btn {
     background: var(--color-success);
     color: black;
+}
+
+#saveBtn, 
+#cancelBtn,
+#changePhotoBtn,
+#editBtn{
+    display: none;
+}   
+
+#changePhotoBtn{
+    background: none;
+    transition: all 0.3s ease;  
+    display: none;
+    margin: -1rem 0;
+}
+
+#changePhotoBtn h3{
+    font-size: 0.6rem;
+}
+
+#changePhotoBtn:hover{
+    transform: scale(1.1);
 }
