@@ -40,34 +40,49 @@
                 </div>
             </aside>
             <main>
-                <form action="/view-slot-availability.html" method="POST" id="reservation_form">
-                    <p>
-                        <label for="buildings"> Building: </label>
-                        <select id="buildings" onchange="handleBuildingChange(this)">
-                            <option value="GH" selected> Gokongwei Hall </option>
-                            <option value="STRC"> Science and Technology Research Center </option>
-                            <option value="SJ"> St. Joseph Hall </option>
-                            <option value="LS"> St. La Salle Hall </option>
-                            <option value="MH"> St. Miguel Hall </option>
-                            <option value="VH"> Velasco Hall </option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="floor"> Floor: </label>
-                        <select id="floors">
-                            <!--- Since Goks is the default, ill just put this here -->
-                            <option value="3rd Floor"> 3rd Floor </option>
-                            <option value="4th Floor"> 4th Floor </option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="capacity"> Capacity </label>
-                        <select id="capacities">
-                            <option value="1-4 people"> 1-4 people </option>
-                            <option value="4-8 people"> 4-8 people </option>
-                        </select>
-                    </p>
-                </form>
+                <div class="info-container">
+                    <h1> Reservation Form </h1>
+                    <p> Reserve a Laboratory by filling out the information below and click submit after</p>
+                </div>
+                <div class="form-container">
+                    <form action="/view-slot-availability.html" method="POST" id="reservation_form">
+                        <p>
+                            <label for="buildings"> Building: </label>
+                            <select id="buildings" onchange="handleBuildingChange(this)">
+                                <option value="GH" selected> Gokongwei Hall </option>
+                                <option value="STRC"> Science and Technology Research Center </option>
+                                <option value="SJ"> St. Joseph Hall </option>
+                                <option value="LS"> St. La Salle Hall </option>
+                                <option value="MH"> St. Miguel Hall </option>
+                                <option value="VH"> Velasco Hall </option>
+                            </select>
+                        </p>
+                        <hr>
+                        <p>
+                            <label for="floor"> Floor: </label>
+                            <select id="floors">
+                                <!--- Since Goks is the default, ill just put this here -->
+                                <option value="3rd Floor"> 3rd Floor </option>
+                                <option value="4th Floor"> 4th Floor </option>
+                            </select>
+                        </p>
+                        <hr>
+                        <p>
+                            <label for="room"> Room: </label>
+                            <select id="rooms">
+                                <!--- Same with floor -->
+                            </select>
+                        </p>
+                        <hr>
+                        <p>
+                            <label for="capacity"> Capacity: </label>
+                            <select id="capacities">
+                                <option value="1-4 people"> 1-4 people </option>
+                                <option value="4-8 people"> 4-8 people </option>
+                            </select>
+                        </p>
+                    </form>
+                </div>
             </main>
         </div>
     </body>

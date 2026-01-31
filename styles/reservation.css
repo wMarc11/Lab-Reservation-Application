@@ -221,7 +221,50 @@ aside .sidebar a:hover span{
     margin-left: 1rem;
 }
 
-main{
+main {
     margin: 0 2rem 2rem 18rem;
-    padding-top: 1rem;
+    padding-top: 3rem;
+}
+
+select {
+    padding: 10px;
+    border-radius: 5px;
+    color: var(--color-info-light);
+    background-color: var(--color-dark);
+}
+
+.form-container {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    height: 65vh;
+    border-radius: 20px;
+    background-color: var(--color-light);
+}
+
+form p {
+    margin-bottom: 1rem;
+}
+
+label {
+    margin-right: 1rem;
+    font-size: 1.5rem;
+}
+
+.info-container {
+    display: flex;
+    padding: 20px;
+    height: 20vh;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    background-color: var(--color-light);
+}
+
+#buildings, #floors, #rooms, #capacities {
+    font-size: 1rem;
+}
+
+hr {
+  border-top: 1px solid var(--color-dark-variant);
+  margin-bottom: 20px;
 }
