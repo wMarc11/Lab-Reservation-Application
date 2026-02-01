@@ -39,7 +39,8 @@
                     <div class="profile-card">
                         <div class="profile-card-container">
                             <div class="profile-photo">
-                                <img src="images/profilepic.webp">  
+                                <img id="profileImage" src="images/profilepic.webp">  
+                                <input type="file" id="photoInput" accept="image/*" hidden>
                             </div>
                             <button id="changePhotoBtn"><h3>Change Photo</h3></button>
                             <h2><span id="firstName">User Name</span> <span id="lastName"></span></h2>
@@ -56,18 +57,21 @@
                                 </div>
                             </div>
                             <div class="profile-info">
-                                <div class="profile-info-labels">
-                                    <div>Email:</div>
-                                    <div>Student ID:</div>
-                                    <div>Address:</div>
-                                    <div>Contact Number:</div>
+                                <div class="info-row">
+                                    <span class="label">Email</span>
+                                    <span class="value" id="email">user@email.com</span>
                                 </div>
-
-                                <div class="profile-info-values">
-                                    <div><span id="email">user@email.com</span></div>
-                                    <div><span id="studentID">12345678</span></div>
-                                    <div><span id="address">123 Main St, City, Country</span></div>
-                                    <div><span id="contactNumber">+63 912 345 6789</span></div>
+                                <div class="info-row">
+                                    <span class="label">Student ID</span>
+                                    <span class="value" id="studentID">12345678</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Address</span>
+                                    <span class="value" id="address">123 Main St, City</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Contact</span>
+                                    <span class="value" id="contactNumber">+67 676 767 6767</span>
                                 </div>
                             </div>
 

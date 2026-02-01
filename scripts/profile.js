@@ -11,6 +11,8 @@ const editBtn = document.getElementById("editBtn");
 const saveBtn = document.getElementById("saveBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const changePhotoBtn = document.getElementById("changePhotoBtn");
+const photoInput = document.getElementById("photoInput");
+const profileImage = document.getElementById("profileImage");
 
 const inputs = document.querySelectorAll(".profile-form input");
 
@@ -22,7 +24,7 @@ if (loggedInUserID === profileUserID) {
 editBtn.addEventListener("click", () => {
     inputs.forEach(input => input.removeAttribute("disabled"));
     block.style.gridTemplateColumns = "auto 45rem";
-    profileDetails.style.display = "block";
+    profileDetails.style.display = "flex";
     saveBtn.style.display = "block";
     cancelBtn.style.display = "block";
     changePhotoBtn.style.display = "block";
@@ -86,4 +88,19 @@ saveBtn.addEventListener("click", (e) => {
     cancelBtn.style.display = "none";
     changePhotoBtn.style.display = "none";
     editBtn.style.display = "block";
+});
+
+changePhotoBtn.addEventListener("click", () => {
+    photoInput.click();
+});
+
+photoInput.addEventListener("change", (event) => {
+    const file = photoInput.files[0]
+    if (file) {
+        const reader = new FileReader();        
+        reader.onload = function(e) {
+            profileImage.src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
 });
