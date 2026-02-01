@@ -6,6 +6,7 @@
         <title>Slot Availabilityt</title>
         <link rel="stylesheet" href="styles/slot-availability.css">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script src="scripts/slot-availability.js" defer></script>
     </head>
 
     <body>
@@ -41,11 +42,19 @@
             <main>
                 <div class="availability-section">
                     <div class="information-section">
-                        <div class="information-container">
-                            <p> </p>
-                            <div class="date-container">
-                                
-                            </div>
+                        <!-- A default date will be put here through a script -->
+                        <h1> </h1>
+                        <p> To navigate other dates, use the buttons below: </p>
+                        <div class="date-container">
+                            <input
+                                type="date"
+                                id="start"
+                                name="trip-start"
+                                value="2018-07-22"
+                                min="2018-01-01"
+                                max="2018-12-31" />
+                            <button> &lt; </button>
+                            <button> &gt; </button>
                         </div>
                     </div>
                     <div class="reservation-section">

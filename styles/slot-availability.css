@@ -242,3 +242,25 @@ main {
     background-color: var(--color-dark);
     border-radius: 20px;
 }
+
+.date-container {
+    display: flex;
+    margin-top: 1.5rem;
+    gap: 0.35rem;
+}
+
+.date-container button {
+    padding: 0.55rem;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+input[type="date"] {
+  margin-right: 1.25rem;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+}
