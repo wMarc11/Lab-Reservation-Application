@@ -220,3 +220,25 @@ aside .sidebar a:hover{
 aside .sidebar a:hover span{
     margin-left: 1rem;
 }
+
+main {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    margin: 0 2rem 2rem 17rem;
+    padding: 10px;
+}
+
+.availability-section {
+    flex-grow: 1;
+    display: grid;
+    grid-template-rows: 2fr 5fr;
+    height: 90vh;
+    gap: 2rem;
+}
+
+.availability-section > div {
+    padding: 1.5rem;
+    background-color: var(--color-dark);
+    border-radius: 20px;
+}
