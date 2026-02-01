@@ -1,35 +1,35 @@
 const GOKS_FLOORS = `
-    <option value="3rd Floor"> 3rd Floor </option>
+    <option value="3rd Floor" selected> 3rd Floor </option>
     <option value="4th Floor"> 4th Floor </option>
 `
 
 const STRC_FLOORS = `
-    <option value="1st Floor"> 1st Floor </option>
+    <option value="1st Floor" selected> 1st Floor </option>
     <option value="2nd Floor"> 2nd Floor </option>
     <option value="3rd Floor"> 3rd Floor </option>
     <option value="4th Floor"> 4th Floor </option>
 `
 
 const SJ_FLOORS = `
-    <option value="3rd Floor"> 3rd Floor </option>
+    <option value="3rd Floor" selected> 3rd Floor </option>
     <option value="4th Floor"> 4th Floor </option>
     <option value="5th Floor"> 5th Floor </option>
     <option value="6th Floor"> 6th Floor </option>
 `
 
 const LS_FLOORS = `
-    <option value="2nd Floor"> 2nd Floor </option>
+    <option value="2nd Floor" selected> 2nd Floor </option>
     <option value="3rd Floor"> 3rd Floor </option>
 `
 
 const MIGUEL_FLOORS = `
-    <option value="1st Floor"> 1st Floor </option>
+    <option value="1st Floor" selected> 1st Floor </option>
     <option value="2nd Floor"> 2nd Floor </option>
     <option value="4th Floor"> 4th Floor </option>
 `
 
 const VELASCO_FLOORS = `
-    <option value="1st Floor"> 1st Floor </option>
+    <option value="1st Floor" selected> 1st Floor </option>
     <option value="2nd Floor"> 2nd Floor </option>
     <option value="3rd Floor"> 3rd Floor </option>
     <option value="4th Floor"> 4th Floor </option>

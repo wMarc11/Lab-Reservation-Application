@@ -308,7 +308,9 @@ hr {
 
 input[type='submit'] {
     padding: 10px;
+    padding-right: 15px;
     border-radius: 5px;
+    font-family: poppins, sans-serif;
     color: var(--color-info-light);
     background-color: var(--color-dark);
 }
@@ -321,4 +323,24 @@ input[type='submit'] {
 .info-container-logo image {
     height: 150px;
     width: 100px;
+}
+
+select,
+::picker(select) {
+  appearance: base-select;
+}
+
+::picker(select) {
+  border: none;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+
+  border: 2px solid #dddddd;
+  background: #eeeeee;
+  padding: 10px;
+  transition: 0.4s;
 }
