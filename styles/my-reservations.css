@@ -1,0 +1,384 @@
+/* Extra styles for My Reservations page.
+   Uses dashboard.css for base layout/colors. */
+
+.reservations-page {
+    margin-top: 1.2rem;
+}
+
+/* Prevent the background from scrolling when a modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+.reservations-insights {
+    margin-top: 1rem;
+}
+
+/* Make the insights cards match dashboard but allow re-use */
+.insight-card {
+    background: var(--color-light);
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    transition: all 0.3s ease;
+}
+.insight-card:hover {
+    transform: translateY(-5px);
+}
+
+.reservations-content {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+
+/* Panel */
+.reservations-panel {
+    background: var(--color-light);
+    border-radius: var(--card-border-radius);
+    padding: var(--card-padding);
+}
+
+.panel-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: 1rem;
+}
+
+.filter label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-info-light);
+    margin-bottom: 0.4rem;
+}
+
+.filter select,
+.filter input {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--border-radius-2);
+    background: var(--color-dark);
+    color: var(--color-white);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.reservations-table-wrap {
+    width: 100%;
+    position: relative;
+    border-radius: var(--card-border-radius);
+    overflow: hidden;
+}
+
+.reservations-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.reservations-table thead th {
+    padding: 0.8rem 0.6rem;
+    color: var(--color-white);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.reservations-table tbody td {
+    padding: 0.9rem 0.6rem;
+}
+
+.reservations-table thead th:last-child,
+.reservations-table tbody td:last-child {
+    width: 12.5rem;
+    padding-right: 1.2rem;
+}
+
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: rgba(255,255,255,0.08);
+    color: var(--color-info-light);
+    white-space: nowrap;
+}
+.badge.upcoming { color: var(--color-success); }
+.badge.today { color: var(--color-warning); }
+.badge.past { color: var(--color-info-light); }
+.badge.cancelled { color: var(--color-danger); }
+
+.row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.action-btn {
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--border-radius-2);
+    background: var(--color-dark);
+    color: var(--color-white);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: poppins, sans-serif;
+    font-size: 0.82rem;
+}
+.action-btn:hover {
+    background: var(--color-primary);
+}
+.action-btn.primary {
+    background: var(--color-success);
+    color: #000;
+}
+.action-btn.primary:hover {
+    filter: brightness(0.95);
+}
+
+.icon-btn {
+    background: transparent;
+    color: var(--color-white);
+    cursor: pointer;
+    padding: 0.35rem;
+    border-radius: 0.6rem;
+}
+.icon-btn:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.details-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.details-body {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 1rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+}
+
+.detail-item {
+    background: rgba(0,0,0,0.15);
+    border-radius: var(--border-radius-2);
+    padding: 0.8rem;
+}
+.detail-item span {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-info-light);
+    margin-bottom: 0.3rem;
+}
+.detail-item b {
+    font-weight: 700;
+    color: var(--color-white);
+}
+
+.details-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 2rem 0.6rem;
+    text-align: center;
+}
+.details-placeholder span.material-symbols-outlined {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+}
+
+.empty-state {
+    margin-top: 1.2rem;
+    padding: 2rem 1rem;
+    border-radius: var(--border-radius-2);
+    background: rgba(0,0,0,0.15);
+    text-align: center;
+}
+.empty-state span.material-symbols-outlined {
+    font-size: 2.2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    /* Keep this hidden by default; JS toggles .is-open and [hidden]. */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    z-index: 1000;
+}
+
+.modal-overlay.is-open {
+    display: flex;
+}
+
+.modal-overlay[hidden] {
+    display: none !important;
+}
+
+.modal {
+    width: min(820px, 100%);
+    border-radius: var(--card-border-radius);
+    background: #0b1224;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: var(--box-shadow);
+    /* Prevent the modal from getting cut off on smaller screens */
+    max-height: calc(100vh - 3rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 1.2rem 0.8rem;
+    position: relative;
+}
+
+/* Ensure the close button is always clickable */
+#modal-close {
+    position: relative;
+    z-index: 2;
+}
+
+.modal-tabs {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0 1.2rem 1rem;
+}
+
+.tab-btn {
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: var(--color-white);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: poppins, sans-serif;
+    font-size: 0.82rem;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.12); }
+.tab-active { background: var(--color-primary); }
+
+.modal-content {
+    padding: 0 1.2rem 1.2rem;
+    overflow: auto;
+    min-height: 220px;
+}
+
+/* Improve readability inside the modal (global <b> is blue in dashboard.css) */
+.modal .detail-item b {
+    color: var(--color-white);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-field label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-info-light);
+    margin-bottom: 0.4rem;
+}
+.form-field small {
+    display: block;
+    margin-top: 0.35rem;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--border-radius-2);
+    background: var(--color-dark);
+    color: var(--color-white);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.form-field input:disabled,
+.form-field select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.form-field-inline {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    grid-column: 1 / -1;
+}
+
+.form-field-inline input {
+    width: auto;
+    transform: scale(1.1);
+}
+
+.form-error {
+    margin-top: 1rem;
+    padding: 0.8rem 0.9rem;
+    background: rgba(255, 119, 130, 0.15);
+    border: 1px solid rgba(255, 119, 130, 0.35);
+    border-radius: var(--border-radius-2);
+    color: var(--color-danger);
+    font-weight: 600;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .reservations-content {
+        grid-template-columns: 1fr;
+    }
+    .details-panel {
+        order: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .filters {
+        grid-template-columns: 1fr;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
