@@ -16,9 +16,37 @@ const profileImage = document.getElementById("profileImage");
 
 const inputs = document.querySelectorAll(".profile-form input");
 
+let tableVisible = false;
+let formsActive = false;
+
+const upcomingReservations = [
+    {
+        studentID: "12345678",
+        lab: "GK302B",
+        datetime: "Today 10:00-11:30",
+        seat: "Seat 14",
+        status: "Upcoming",
+        statusClass: "success"
+    },  
+    {
+        studentID: "12345678",
+        lab: "GK301",
+        datetime: "Tomorrow 1:00-2:30",
+        seat: "Seat 8",
+        status: "1 Day",
+        statusClass: "danger"
+    }
+];
+
+const reservationsBtn = document.getElementById("reservationsBtn");
+const upcomingBtn = document.getElementById("upcomingBtn");
+
+const reservationList = document.getElementById("reservationList");
+const listTitle = document.getElementById("listTitle");
+const upcomingTableBody = document.getElementById("upcomingTableBody");
+
 if (loggedInUserID === profileUserID) {
     editBtn.style.display = "block";
-    formActions.style.display = "flex"; 
 };
 
 editBtn.addEventListener("click", () => {
@@ -29,6 +57,8 @@ editBtn.addEventListener("click", () => {
     cancelBtn.style.display = "block";
     changePhotoBtn.style.display = "block";
     editBtn.style.display = "none";
+    reservationList.style.display = "none";
+    formsActive = true;
 });
 
 cancelBtn.addEventListener("click", () => {
@@ -39,9 +69,9 @@ cancelBtn.addEventListener("click", () => {
     cancelBtn.style.display = "none";
     changePhotoBtn.style.display = "none";
     editBtn.style.display = "block";
+    formsActive = false;
 });
 
-// Imma switch this later, I think there must be something better
 saveBtn.addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -82,12 +112,7 @@ saveBtn.addEventListener("click", (e) => {
         }
     });
 
-    block.style.gridTemplateColumns = "auto";
-    profileDetails.style.display = "none";
-    saveBtn.style.display = "none";
-    cancelBtn.style.display = "none";
-    changePhotoBtn.style.display = "none";
-    editBtn.style.display = "block";
+    cancelBtn.click();
 });
 
 changePhotoBtn.addEventListener("click", () => {
@@ -104,3 +129,46 @@ photoInput.addEventListener("change", (event) => {
         reader.readAsDataURL(file);
     }
 });
+
+function showUpcomingReservations() {
+    upcomingTableBody.innerHTML = "";
+    reservationList.style.display = "flex";
+    block.style.gridTemplateColumns = "auto 45rem";
+    profileDetails.style.display = "none";
+    listTitle.textContent = "Reservations";
+
+    const reservations = upcomingReservations.filter(r => r.studentID === profileUserID);
+
+    if (reservations.length === 0) {
+        upcomingTableBody.innerHTML = `<tr><td colspan="4">No upcoming reservations</td></tr>`;
+        return;
+    }
+
+    reservations.forEach(r => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${r.lab}</td>
+                         <td>${r.datetime}</td>
+                         <td>${r.seat}</td>
+                         <td class="${r.statusClass}">${r.status}</td>`;
+        upcomingTableBody.appendChild(row);
+    });
+}
+
+function toggleReservations() {
+    if (formsActive) {
+        cancelBtn.click();
+        tableVisible = false;
+    }
+
+    if (reservationList.style.display === "flex") {
+        reservationList.style.display = "none";
+        block.style.gridTemplateColumns = "auto";
+        tableVisible = false;
+    } else {
+        showUpcomingReservations();
+        tableVisible = true;
+    }
+}
+
+upcomingBtn.addEventListener("click", toggleReservations);
+reservationsBtn.addEventListener("click", toggleReservations);

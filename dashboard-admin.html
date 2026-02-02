@@ -2,7 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="styles/variables.css">
-        <link rel="stylesheet" href="styles/dashboard.css">
+        <link rel="stylesheet" href="styles/dashboard-admin.css">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
         <title>Dashboard</title>
     </head>
@@ -24,11 +24,11 @@
                     </a>
                     <a href="#">
                         <span class="material-symbols-outlined">computer</span>
-                        <h3>Search Labs</h3>
+                        <h3>Manage Labs</h3>
                     </a>
                     <a href="#">
                         <span class="material-symbols-outlined">tatami_seat</span>
-                        <h3>My Reservations</h3>
+                        <h3>Manage Reservations</h3>
                     </a>                  
                 </div>
             </aside>
@@ -45,7 +45,7 @@
                             <img src="images/profilepic.webp">
                         </div>
                         <div class="info">
-                            <p>Hello, <b>User</b></p>
+                            <p>Hello, <b>Admin</b></p>
                         </div>
                         <div class="dropdown-menu">
                             <a href="profile.html">
@@ -64,28 +64,28 @@
                     </div>
                 </div>
                 <div class="stats">
-                    <div class="slots-card">
+                    <div class="total-reservations-card">
                         <span class="material-symbols-outlined">event_seat</span>
                         <div class="middle">
                             <div>
-                                <p>Available Seats Today</p>
+                                <p>Total Reservations Today</p>
                             </div>
                             <div class="slots">
                                 <svg>
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>14</p>
+                                    <p>33</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="labs-card">
-                        <span class="material-symbols-outlined">computer</span>
+                    <div class="no-show-card">
+                        <span class="material-symbols-outlined">person_off</span>
                         <div class="middle">
                             <div>
-                                <p>Computer Labs</p>
+                                <p>No-Show Reservations</p>
                             </div>
                             <div class="slots">
                                 <svg>
@@ -98,35 +98,38 @@
                         </div>
                     </div>
 
-                    <div class="reservations-card">
+                    <div class="upcoming-card">
                         <span class="material-symbols-outlined">schedule</span>
                         <div class="middle">
                             <div>
-                                <p>My Reservations</p>
+                                <p>Upcoming Reservations</p>
                             </div>
                             <div class="slots">
                                 <svg>
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>2</p>
+                                    <p>15</p>
                                 </div>
                             </div>
                         </div>
+                        <div>
+                            <p class="time-period">Last 24 hours</p>
+                        </div>
                     </div>
 
-                    <div class="upcoming-card">
-                        <span class="material-symbols-outlined">event</span>
+                    <div class="occupancy-rate-card">
+                        <span class="material-symbols-outlined">insights</span>
                         <div class="middle">
                             <div>
-                                <p>Upcoming Today</p>
+                                <p>Lab Occupancy Rate</p>
                             </div>
                             <div class="slots">
                                 <svg>
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>1</p>
+                                    <p>45%</p>
                                 </div>
                             </div>
                         </div>
@@ -140,6 +143,7 @@
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
+                                        <th>Student ID</th>
                                         <th>Date & Time</th>
                                         <th>Seat</th>
                                         <th></th>
@@ -148,17 +152,20 @@
                                 <tbody>
                                     <tr>
                                         <td>GK302B</td>
-                                        <td>Today · 10:00-11:30</td>
+                                        <td>12345678</td>
+                                        <td>Today · 10:00–11:30</td>
                                         <td>Seat 14</td>
                                         <td class="success">Upcoming</td>
                                     </tr>
                                     <tr>
                                         <td>GK301</td>
-                                        <td>Tomorrow · 1:00-2:30</td>
-                                        <td>Seat 8</td>
-                                        <td class="danger">1 Day</td>
+                                        <td>12345679</td>
+                                        <td>Today · 1:00–2:30</td>
+                                        <td>Seat 18</td>
+                                        <td class="success">Upcoming</td>
                                     </tr>
                                     <tr>
+                                        <td></td>
                                         <td></td>
                                         <td></td>
                                         <td></td>
@@ -172,9 +179,9 @@
                             <h2>Recent Activity</h2>
                             <div class="recent-activity">
                                 <ul>
-                                    <li>Reserved Seat 8 in GK301 <small>30 mins ago</small></li>
-                                    <li>Reserved Seat 14 in GK302B <small>1 day ago</small></li>
-                                    <li>Cancelled reservation for Seat 18 in GK302B <small>1 day ago</small></li>
+                                    <li>Student ID 12234421 reserved Seat 18 in GK301 <small>30 mins ago</small></li>
+                                    <li>Student ID 12434422 reserved Seat 4 in GK302B <small>1 day ago</small></li>
+                                    <li>Student ID 12134423 cancelled reservation for Seat 1 in GK302B <small>1 day ago</small></li>
                                     <li class="view-more-activity"><a href="#">View All</a></li>
                                 </ul>
                             </div>
@@ -191,11 +198,11 @@
                                 </button>
                                 <button class="primary-btn">
                                     <span class="material-symbols-outlined">search</span>
-                                    Search Available Labs
+                                    Search Reservations
                                 </button>
                                 <button class="primary-btn">
                                     <span class="material-symbols-outlined">computer</span>
-                                    View All Labs
+                                    View All Lab Availability
                                 </button>
                             </div>
                         </div>
