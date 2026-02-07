@@ -267,11 +267,16 @@ input[type="date"] {
 
 .search-table-outer {
     display: flex;
-    border:2px solid red; 
+    border:2px solid var(--color-primary);
     overflow-x: scroll; 
     overflow-y: scroll; 
+    scrollbar-width: none;
     min-height: 50vh;
     max-height: 50vh;
+}
+
+.search-table-outer::-webkit-scrollbar {
+    display: none;
 }
 
 .search-table{
@@ -282,6 +287,11 @@ input[type="date"] {
 .search-table, td, th{
     border-collapse: collapse; 
     border: 1px solid #777;
+}
+
+td {
+    color: var(--color-dark);
+    background-color: #dde7ed;
 }
 
 th {
