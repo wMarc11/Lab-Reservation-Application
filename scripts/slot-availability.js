@@ -1,4 +1,13 @@
 
+/*
+##########################################################################
+
+This section of the code is to display dates properly on the front-end
+side.
+
+##########################################################################
+*/
+
 const info_container = document.querySelector('.availability-section');
 const heading = info_container.querySelector('h1');
 
@@ -12,3 +21,13 @@ const options = {
 
 const formattedDate = today.toLocaleDateString('en-US', options);
 heading.innerText = formattedDate;
+
+
+
+/*
+##########################################################################
+
+
+
+##########################################################################
+*/
