@@ -308,6 +308,7 @@ th {
 .reservation-availability {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 2rem;
     padding: 10px;
     border-radius: 8px;
