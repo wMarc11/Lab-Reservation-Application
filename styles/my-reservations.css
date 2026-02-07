@@ -382,3 +382,17 @@ body.modal-open {
         grid-template-columns: 1fr;
     }
 }
+
+.dropdown-menu{
+    top: 100%;
+}
+
+main table tbody td{
+    transition: all 0.3s ease;
+}
+
+main table tbody tr:hover{
+    background: var(--color-light);
+    background-size: 200%;
+    cursor: pointer;
+}

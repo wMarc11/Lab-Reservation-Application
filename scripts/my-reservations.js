@@ -167,6 +167,8 @@
     const viewItems = [
       { label: "Reservation ID", value: res.id },
       { label: "Laboratory", value: res.lab },
+     { label: "Date & Time Requested", value: res.dateTimeReq ? new Date(res.dateTimeReq).toLocaleString() : "N/A" },
+
       { label: "Date", value: formatDateLabel(res.date) },
       { label: "Time", value: `${res.startTime} - ${res.endTime}` },
       { label: "Seat", value: String(res.seat) },
@@ -324,6 +326,11 @@ openModal(id, "view"); // switch back to view
             changed = true;
           }
           seen.add(r.id);
+
+          if(!r.dateTimeReq){
+            r.dateTimeReq = new Date().toISOString();
+            changed = true;
+          }
         });
         if (changed) persist();
         return;
@@ -342,6 +349,7 @@ openModal(id, "view"); // switch back to view
         userId: loggedInUserID,
         lab: "GK302B",
         seat: 14,
+        dateTimeReq: "2026-02-04T06:30:00",
         date: todayISO,
         startTime: "10:00",
         endTime: "11:30",
@@ -353,6 +361,7 @@ openModal(id, "view"); // switch back to view
         userId: loggedInUserID,
         lab: "GK301",
         seat: 8,
+        dateTimeReq: "2026-02-05T11:30:00",
         date: tomorrowISO,
         startTime: "13:00",
         endTime: "14:30",
@@ -364,6 +373,7 @@ openModal(id, "view"); // switch back to view
         userId: loggedInUserID,
         lab: "GK302A",
         seat: 3,
+        dateTimeReq: "2026-02-01T07:00:00",
         date: toISODate(addDays(today, -2)),
         startTime: "09:00",
         endTime: "10:00",
@@ -444,6 +454,11 @@ openModal(id, "view"); // switch back to view
           <tr>
             <td><b>${r.id}</b></td>
             <td>${r.lab}</td>
+            <td>
+              ${r.dateTimeReq 
+                ? new Date(r.dateTimeReq).toLocaleString() 
+                : "N/A"}
+            </td>
             <td>${formatDateLabel(r.date)}</td>
             <td>${r.startTime} - ${r.endTime}</td>
             <td>Seat ${r.seat}</td>
