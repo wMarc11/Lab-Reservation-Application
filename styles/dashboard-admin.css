@@ -256,7 +256,7 @@ main .profile{
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
+    filter: invert(1);
 }
 
 main .date input[type='date']{
@@ -290,16 +290,21 @@ main .stats > div span{
     font-size: 2rem;
 }
 
-main .stats > div.labs-card span{
+main .stats > div.no-show-card span{
     background-color: #5B8DEF;
 }
 
-main .stats > div.reservations-card span{
+main .stats > div.occupancy-rate-card span{
     background-color: #7BA6F8;
 }
 
 main .stats > div.upcoming-card span{
     background-color: #A3D4FA;
+}
+
+.upcoming-card .time-period {
+    color: var(--color-dark-variant);
+    font-size: 10px;
 }
 
 main .stats > div .middle{

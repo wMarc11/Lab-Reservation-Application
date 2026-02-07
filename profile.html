@@ -47,15 +47,16 @@
                             <h3>Student</h3>
 
                             <div class="profile-stats">
-                                <div>
+                                <div id="reservationsBtn" class="showReservations">
                                     <h3>Reservations</h3>
                                     <p>2</p>
                                 </div>
-                                <div>
-                                    <h3>Upcoming</h3>
+                                <div id="upcomingBtn" class="showReservations">
+                                    <h3>Upcoming Today</h3>
                                     <p>1</p>
                                 </div>
                             </div>
+
                             <div class="profile-info">
                                 <div class="info-row">
                                     <span class="label">Email</span>
@@ -81,6 +82,23 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <div class="reservation-list" id="reservationList">
+                        <h2 id="listTitle"></h2>
+
+                        <table class="upcoming-reservations">
+                            <thead>
+                                <tr>
+                                    <th>Laboratory</th>
+                                    <th>Date & Time Requested</th>
+                                    <th>Date & Time</th>
+                                    <th>Seat</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="upcomingTableBody">
+                            </tbody>
+                        </table>
                     </div>
                     
                     <div class="profile-details">
