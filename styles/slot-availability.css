@@ -224,7 +224,7 @@ aside .sidebar a:hover span{
 main {
     height: 100vh;
     margin: 0 2rem 2rem 17rem;
-    padding: 2rem 10px 10px 10px;
+    padding: 28px 10px 10px 10px;
 }
 
 .availability-section {
@@ -260,18 +260,41 @@ input[type="date"] {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    height: 100%;
+    padding: 2.5rem 2.5rem 1.5rem 2.5rem;
+    border-radius: 20px;
+    background-color: var(--color-dark);
 }
 
 .search-table-outer {
-    border: 2px solid red;
+    border:2px solid red; 
     overflow-x: scroll; 
-    overflow-y: scroll;
-    flex-grow: 1;
+    overflow-y: scroll; 
+    max-height: 75vh;
 }
 
-.table {
-    table-layout: fixed;
+.search-table{
+    table-layout: fixed; 
+}
+
+.search-table, td, th{
+    border-collapse:collapse; 
+    border:1px solid #777;
+}
+
+th {
+    padding:20px 7px; 
+    font-size:15px; 
+    color:#444; 
+    background:#66C2E0;
+}
+
+td { 
+    padding:5px 10px; 
+    height:35px;
+}
+
+th, td { 
+    min-width: 200px; 
 }
 
 .reservation-availability {
@@ -280,10 +303,3 @@ input[type="date"] {
     gap: 2rem;
 }
 
-.fixed-block {
-    height: 100%;
-    width: 100%;
-    background-color: lightgray;
-    border: 1px solid red;
-    overflow: auto; 
-}
