@@ -3,7 +3,7 @@
 ##########################################################################
 
 This section of the code is to display dates properly on the front-end
-side.
+side, specifically at the heading container.
 
 ##########################################################################
 */
@@ -21,8 +21,6 @@ const options = {
 
 const formattedDate = today.toLocaleDateString('en-US', options);
 heading.innerText = formattedDate;
-
-
 
 /*
 ##########################################################################
