@@ -327,9 +327,17 @@ openModal(id, "view"); // switch back to view
           }
           seen.add(r.id);
 
-          if(!r.dateTimeReq){
+          if(!("r.dateTimeReq") in r){
             r.dateTimeReq = new Date().toISOString();
-            changed = true;
+            if (r.lab === "GK302B" && r.seat == 14) {
+              r.dateTimeReq = "2026-02-04T06:30:00";
+            } else if (r.lab === "GK301" && r.seat == 8) {
+              r.dateTimeReq = "2026-02-05T11:30:00";
+            } else if (r.lab === "GK302A" && r.seat == 3) {
+              r.dateTimeReq = "2026-02-01T07:00:00";
+            } else {
+              r.dateTimeReq = null;
+            }
           }
         });
         if (changed) persist();
