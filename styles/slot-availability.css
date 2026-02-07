@@ -222,13 +222,16 @@ aside .sidebar a:hover span{
 }
 
 main {
-    height: 100vh;
+    min-height: 100vh;
     margin: 0 2rem 2rem 17rem;
     padding: 28px 10px 10px 10px;
 }
 
-.availability-section {
+main > div { 
     margin-bottom: 2rem;
+}
+
+.availability-section {
     background-color: var(--color-dark);
     padding: 1.5rem;
     border-radius: 20px;
@@ -260,7 +263,7 @@ input[type="date"] {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    padding: 2.5rem 2.5rem 1.25rem 2.5rem;
+    padding: 2.5rem 2.5rem 2rem 2.5rem;
     border-radius: 20px;
     background-color: var(--color-dark);
 }
