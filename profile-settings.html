@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/profile-settings.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <title>Profile Settings</title>
+</head>
+
+<body>
+    <div class="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <a href="dashboard.html"><img src="images/logo2.png"></a>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <a href="dashboard.html">
+                    <span class="material-symbols-outlined">dashboard_2</span>
+                    <h3>Dashboard</h3>
+                </a>
+
+                <a href="profile.html">
+                    <span class="material-symbols-outlined">account_circle</span>
+                    <h3>Profile</h3>
+                </a>
+
+                <a href="profile-settings.html" class="active">
+                    <span class="material-symbols-outlined">settings</span>
+                    <h3>Profile Settings</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <div class="header">
+                <h1>Profile Settings</h1>
+            </div>
+
+            <div class="settings-card">
+                <h2>Security</h2>
+
+                <form class="settings-form">
+                    <div class="form">
+                        <label>Current Password</label>
+                        <input type="password" placeholder="Enter current password">
+                    </div>
+
+                    <div class="form">
+                        <label>New Password</label>
+                        <input type="password" placeholder="Enter new password">
+                    </div>
+
+                    <div class="form">
+                        <label>Confirm New Password</label>
+                        <input type="password" placeholder="Confirm new password">
+                    </div>
+
+                    <div class="actions">
+                        <button class="primary-btn" type="submit">
+                            Update Password
+                        </button>
+                    </div>
+                </form>
+                <br>
+                <div class="settings-card-danger-zone">
+                    <h2>Danger Zone</h2>
+                    <p>Deleting your account is permanent and cannot be undone.</p>
+
+                    <button class="danger-btn" id="deleteAccountBtn">
+                        Delete Account
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

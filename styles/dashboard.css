@@ -99,7 +99,8 @@ b{
 }
 
 .warning {
-    color: var(--color-warning)
+    color: var(--color-warning);
+    border: none;
 }
 
 aside{
