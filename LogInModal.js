@@ -291,9 +291,17 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
 //this is ideally exported elsewhere, but i cant do export/imports without a server i think?
 document.getElementById("sign-in").addEventListener("click", () => {
-    new LogInModal("SIGN_IN");
+    new LogInModal("LOG_IN");
 })
 
 document.getElementById("register").addEventListener("click", () => {
+    new LogInModal("SIGN_IN");
+})
+
+document.getElementById("sign-in2").addEventListener("click", () => {
     new LogInModal("LOG_IN");
+})
+
+document.getElementById("register2").addEventListener("click", () => {
+    new LogInModal("SIGN_IN");
 })
