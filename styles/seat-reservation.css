@@ -257,11 +257,12 @@ main > div {
 }
 
 .background {
+    background-image: url('https://www.iedesign.in/images/gallery_category/interior-projects/mvn-school-laboratory-complex-aravalli-hills/1.jpg');
     position: absolute;
     inset: 0;
     background-size: cover;
     background-repeat: no-repeat;
-    opacity: 0.1;
+    opacity: 0.05;
     z-index: 0;
 }
 
@@ -270,6 +271,12 @@ main > div {
     display: flex;
     align-items: center; 
     gap: 1.5rem;
+}
+
+.display-seat > *:not(.background) {
+    position: relative;
+    z-index: 1;
+    opacity: 1;
 }
 
 svg {
