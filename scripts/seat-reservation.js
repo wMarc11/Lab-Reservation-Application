@@ -419,6 +419,50 @@ const GK304 =  `
 
 `
 
+const SJ605 = `
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 30rem; height: 5rem; margin-left:23rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="1500" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 4.5rem; height: 4.5rem; margin-left: 5rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <circle r="45" cx="50" cy="50" fill="#8FC991" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+    <svg style="width: 30rem; height: 5rem; margin-left:23rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <rect width="1500" height="100" style="fill:var(--color-info-dark)" />
+    </svg>
+    <div class="display-seat-row"> 
+        <svg style="width: 4.5rem; height: 4.5rem; margin-left: 33rem;" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+        <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <circle r="45" cx="50" cy="50" fill="#8FC991" />
+        </svg>
+    </div>
+`
+
 function displayAvailableSeats() {
 
 }
