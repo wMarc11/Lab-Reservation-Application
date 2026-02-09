@@ -214,7 +214,7 @@ const BUILDING_DATA = {
 
 function redirectToSeatReservation() {
     // probably will change to http request later
-    window.location.replace('room-reservation.html');
+    window.location.replace('seat-reservation.html');
 }
 
 function populateTable(roomCode, floor) {
@@ -239,7 +239,6 @@ function populateTable(roomCode, floor) {
             cells[i].addEventListener('click', redirectToSeatReservation);
         }
     }
-
 }
 
 function initialize(roomCode, floor) {
