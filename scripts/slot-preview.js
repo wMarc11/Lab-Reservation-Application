@@ -211,9 +211,8 @@ const BUILDING_DATA = {
         'V513'
     ]
 }
-
 function redirectToSeatReservation(roomCode) {
-    window.location.replace(`preview-seats.html?room=${roomCode}`);
+    window.location.href = `preview-seats.html?room=${roomCode}`;
 }
 
 function populateTable(roomCode, floor) {
@@ -221,13 +220,13 @@ function populateTable(roomCode, floor) {
     const search_table = document.querySelector('.search-table');
 
     for (let room of rooms) {
-        var row = search_table.insertRow(-1);
-        var room_row = row.insertCell(0);
+        let row = search_table.insertRow(-1);
+        let room_row = row.insertCell(0);
         room_row.className = 'room-data';
         room_row.textContent = room;
 
         for (var i = 1; i < 11; i++) {
-            let cell = row.insertCell(i);
+            var cell = row.insertCell(i);
             cell.textContent = room;
             cell.style.color = "transparent";
         }
@@ -235,10 +234,11 @@ function populateTable(roomCode, floor) {
 
     const cells = document.querySelectorAll('td');
 
-    for (var i = 0; i < cells.length; i++) {
+    for (let i = 0; i < cells.length; i++) {
         if (cells[i].className != 'room-data') {
             cells[i].addEventListener('click', () => {
-                redirectToSeatReservation(cells[i].textContent)});
+                redirectToSeatReservation(cells[i].textContent)
+            });
         }
     }
 }
@@ -247,4 +247,22 @@ function initialize(roomCode, floor) {
     populateTable(roomCode, floor);
 }
 
-initialize('GOKS', 3);
+const BUILDING_PREFIX = {
+    GH: 'GOKS',
+    STRC: 'STRC',
+    SJ: 'SJ',
+    LS: 'LS_ROOMS',
+    MH: 'MIGUEL',
+    VH: 'VELASCO'
+};
+
+const params = new URLSearchParams(window.location.search);
+const buildingCode = params.get("building");
+const floor = params.get("floor");
+
+const floor_number = floor.match(/\d+/)[0];
+
+console.log(floor_number);
+console.log(buildingCode);
+
+initialize(BUILDING_PREFIX[buildingCode], floor_number);
