@@ -876,7 +876,7 @@ const GK306A_TEXT = `
             <svg viewBox="0 0 100 100" preserveAspectRatio="none">
                 <circle r="45" cx="50" cy="50" fill="#F06F65" />
                 <text class="number" x="50" y="55">3</text>
-            </svg>
+            </svg>  
             <div class="seat-dropdown">
                 <p>Status: Not Available</p>
                 <p>By: <span class="user">Anonymous</span></p>
