@@ -72,3 +72,12 @@ function populateFloor(event) {
         floor_select.innerHTML = floors['GH'];
     }
 }
+
+reservation_form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const building = encodeURIComponent(document.getElementById('buildings').value);
+    const floor = encodeURIComponent(document.getElementById('floors').value);
+
+    window.location.href = `view-slot-availability.html?building=${building}&floor=${floor}`;
+});

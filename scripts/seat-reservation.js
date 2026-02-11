@@ -95,7 +95,7 @@ const M104D_TEXT = `
     </div>
 `
 
-const M104D_HEADER = `M104D - Ece Thesis Room`;
+const M104D_HEADER = `M104D - ECE Thesis Room`;
 
 // I removed the hardcoded margins and I just let flex box do the work. Also added some additional CSS and classes
 // I will just copy paste this for other labs later
@@ -638,20 +638,24 @@ function initialize(roomCode) {
     displayAvailableSeats(roomCode);
 }   
 
-initialize('GK301');
-
 display_seat.addEventListener("click", (e) => {
     const seat = e.target.closest(".seat");
 
     const dropdown = seat.querySelector(".seat-dropdown");
 
     document.querySelectorAll(".seat-dropdown").forEach(d => {
-        if (d !== dropdown) d.style.display = "none";
+        if (d !== dropdown) 
+            d.style.display = "none";
     });
 
-    if(dropdown.style.display === "block"){
+    if (dropdown.style.display === "block"){
         dropdown.style.display = "none";
     } else{
         dropdown.style.display = "block"
     }
 });
+
+const params = new URLSearchParams(window.location.search);
+const roomCode = params.get("room");
+console.log(roomCode);
+initialize(roomCode);
