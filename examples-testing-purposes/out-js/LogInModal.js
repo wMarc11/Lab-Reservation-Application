@@ -308,20 +308,3 @@ export class LogInModal {
             this._rememberMe1.checked = !this._rememberMe1.checked;
     }
 }
-
-//this is ideally exported elsewhere, but i cant do export/imports without a server i think?
-document.getElementById("sign-in").addEventListener("click", () => {
-    new LogInModal("LOG_IN");
-})
-
-document.getElementById("register").addEventListener("click", () => {
-    new LogInModal("SIGN_IN");
-})
-
-document.getElementById("sign-in2").addEventListener("click", () => {
-    new LogInModal("LOG_IN");
-})
-
-document.getElementById("register2").addEventListener("click", () => {
-    new LogInModal("SIGN_IN");
-})

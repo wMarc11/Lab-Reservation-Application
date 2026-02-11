@@ -22,6 +22,7 @@ document.getElementById("register2")?.addEventListener("click", () => {
 
 function initLoginModal(type: "SIGN_IN" | "LOG_IN"): void {
     logInModal = new LogInModal(type);
+    console.log("yurrr");
     logInModal.onLogIn(() => {
         const accountFound = logIn(logInModal.getLogInFields());
         if (accountFound === "Account Not Found")
@@ -47,10 +48,10 @@ function logIn(logInFields: ModalFields): "Account Found" | "Account Not Found" 
 
 function sendToUserDashboard(account: Account) {
     sessionStorage.setItem("account", JSON.stringify(account));
-    window.location.href = "./dashboard-testing.html";
+    window.location.href = "./dashboard.html";
 }
 
 function sendToAdminDashboard(account: Account) {
     sessionStorage.setItem("account", JSON.stringify(account));
-    window.location.href = "./dashboard-admin-testing.html";
+    window.location.href = "./dashboard-admin.html";
 }

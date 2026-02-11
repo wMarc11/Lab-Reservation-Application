@@ -16,6 +16,7 @@ let logInModal;
 });
 function initLoginModal(type) {
     logInModal = new LogInModal(type);
+    console.log("yurrr");
     logInModal.onLogIn(() => {
         const accountFound = logIn(logInModal.getLogInFields());
         if (accountFound === "Account Not Found")
@@ -37,9 +38,9 @@ function logIn(logInFields) {
 }
 function sendToUserDashboard(account) {
     sessionStorage.setItem("account", JSON.stringify(account));
-    window.location.href = "./dashboard-testing.html";
+    window.location.href = "./dashboard.html";
 }
 function sendToAdminDashboard(account) {
     sessionStorage.setItem("account", JSON.stringify(account));
-    window.location.href = "./dashboard-admin-testing.html";
+    window.location.href = "./dashboard-admin.html";
 }

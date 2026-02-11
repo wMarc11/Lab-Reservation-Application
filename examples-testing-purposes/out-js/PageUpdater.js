@@ -6,25 +6,26 @@ function init() {
     console.log("accountjson found");
     const account = JSON.parse(accountJSON);
     const currentFilePath = window.location.pathname;
-    if (currentFilePath.endsWith("dashboard-testing") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
+    if (currentFilePath.endsWith("dashboard") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
         console.log("init dashboard");
         initDashboard(account.accountType, account.reservations);
     }
-    else if (currentFilePath.endsWith("my-reservations-testing")) {
+    else if (currentFilePath.endsWith("my-reservations")) {
         initMyReservation(account.accountType, account.reservations);
     }
-    else if (currentFilePath.endsWith("profile-testing")) {
+    else if (currentFilePath.endsWith("profile")) {
         initProfile(account);
     }
 }
 function initDashboard(accountType, reservations) {
     initProfileHeader(accountType);
+    const { noOfReservations, noOfUpcoming } = getReservationCountInfo(reservations);
     const noReservations = document.querySelector("#no-reservations");
     if (noReservations)
-        noReservations.innerHTML = reservations.length.toString();
+        noReservations.innerHTML = noOfReservations.toString();
     const noUpcoming = document.querySelector("#no-upcoming");
     if (noUpcoming)
-        noUpcoming.innerHTML = reservations.filter((reservation) => reservation.status === "Upcoming").length.toString();
+        noUpcoming.innerHTML = noOfUpcoming.toString();
     const upcomingReservationTable = document.getElementById("upcoming-reservations");
     if (!upcomingReservationTable)
         return;
@@ -51,18 +52,34 @@ function initDashboard(accountType, reservations) {
         row.appendChild(status);
         tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(row);
     }
+    tbody === null || tbody === void 0 ? void 0 : tbody.appendChild(createViewAllRow());
+}
+function createViewAllRow() {
+    const row = document.createElement("tr");
+    const INNER_HTML = `
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="view-more"><a href="my-reservations.html">View All</a></td>
+        </tr>
+    `;
+    row.innerHTML = INNER_HTML;
+    return row;
 }
 function initMyReservation(accountType, reservations) {
     initProfileHeader(accountType);
+    const reservationCounts = getReservationCountInfo(reservations);
     const noUpcoming = document.querySelector("#stat-upcoming-badge");
     if (noUpcoming)
-        noUpcoming.innerHTML = reservations.filter((reservation) => reservation.status === "Upcoming").length.toString();
+        noUpcoming.innerHTML = reservationCounts.noOfUpcoming.toString();
     const noToday = document.querySelector("#stat-today-badge");
     if (noToday)
-        noToday.innerHTML = reservations.filter((reservation) => reservation.status === "Today").length.toString();
+        noToday.innerHTML = reservationCounts.noOfToday.toString();
     const noReservations = document.querySelector("#stat-total-badge");
     if (noReservations)
-        noReservations.innerHTML = reservations.length.toString();
+        noReservations.innerHTML = reservationCounts.noOfReservations.toString();
     const reservationTBody = document.querySelector("#reservations-tbody");
     if (!reservationTBody)
         return;
@@ -77,7 +94,6 @@ function initMyReservation(accountType, reservations) {
         const seat = document.createElement("td");
         const visibility = document.createElement("td");
         const status = document.createElement("td");
-        const action = document.createElement("td"); // empty column
         id.innerHTML = reservation.id;
         lab.innerHTML = reservation.labratory;
         dateTimeSchedule.innerHTML = formatShortDateTime(reservation.dateTimeSchedule);
@@ -90,11 +106,47 @@ function initMyReservation(accountType, reservations) {
             status.classList.add("warning");
         else
             status.classList.add("success");
-        row.append(id, lab, dateTimeRequested, dateTimeSchedule, time, seat, visibility, status, action);
+        row.append(id, lab, dateTimeRequested, dateTimeSchedule, time, seat, visibility, status, createReservationButtonsRow(reservation.id));
         reservationTBody.appendChild(row);
     }
 }
+function createReservationButtonsRow(accountID) {
+    accountID = "R-MLHSJBZ4IY8I";
+    const buttonDataCell = document.createElement("td");
+    const INNER_HTML = `
+            <td>
+              <div class="row-actions">
+                <button class="action-btn" type="button" data-action="view" data-id="${accountID}">
+                  <span class="material-symbols-outlined">visibility</span>
+                  View
+                </button>
+                <button class="action-btn primary" type="button" data-action="edit" data-id="${accountID}">
+                  <span class="material-symbols-outlined">edit</span>
+                  Edit
+                </button>
+              </div>
+            </td> 
+    `;
+    buttonDataCell.innerHTML = INNER_HTML;
+    return buttonDataCell;
+}
 function initProfile(account) {
+    const userType = document.querySelector("#user-type");
+    if (userType)
+        userType.innerHTML = account.accountType;
+    const reservationCounts = getReservationCountInfo(account.reservations);
+    const reservationCount = document.querySelector("#reservations");
+    if (reservationCount)
+        reservationCount.innerHTML = reservationCounts.noOfReservations.toString();
+    const upcomingCount = document.querySelector("#upcoming");
+    if (upcomingCount)
+        upcomingCount.innerHTML = reservationCounts.noOfReservations.toString();
+    const email = document.querySelector("#email");
+    if (email)
+        email.innerHTML = account.email;
+    const id = document.querySelector("#studentID");
+    if (id)
+        id.innerHTML = account.id.toString();
 }
 function initProfileHeader(accountType) {
     const userType = document.querySelector("#user-type");
@@ -146,5 +198,12 @@ export function computeDayDifferenceFromToday(dt) {
     const oneDayMs = 24 * 60 * 60 * 1000;
     const dayDiff = Math.floor((dtDate.setHours(0, 0, 0, 0) - now.setHours(0, 0, 0, 0)) / oneDayMs);
     return dayDiff;
+}
+export function getReservationCountInfo(reservations) {
+    return {
+        noOfReservations: reservations.length,
+        noOfToday: reservations.filter((reservation) => reservation.status === "Today").length,
+        noOfUpcoming: reservations.filter((reservation) => reservation.status === "Upcoming").length,
+    };
 }
 init();
