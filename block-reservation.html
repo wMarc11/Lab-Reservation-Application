@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Reservation</title>
+        <link rel="stylesheet" href="styles/seat-reservation.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script src="scripts/seat-block.js" defer></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard-admin.html"><img src="images/logo2.png"></a>
+                    </div>
+                    <div class="close" id="close-btn">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard-admin.html">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="block.html" class="active">
+                        <span class="material-symbols-outlined">add</span>
+                        <h3>Block a Seat</h3>
+                    </a>
+                    <a href="all-reservations.html">
+                        <span class="material-symbols-outlined">tatami_seat</span>
+                        <h3>Manage Reservations</h3>
+                    </a>                    
+                </div>
+            </aside>
+            <main>
+                <div class="seat-reservation-information"> 
+                    <h1> </h1>
+                    <p> Here is the room information for M101 </p>
+                </div>
+                <div class="seat-reservation-container">
+                    <div class="display-seat">
+                        <div class="background"></div>
+                    </div>
+                </div>
+                <div class="reservation-counter"> 
+                    <h1> Reservation Count: <span id="reservation-counter"> </span> </h1>
+                    <button id="reserve-all-button"> Reserve All </button>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>

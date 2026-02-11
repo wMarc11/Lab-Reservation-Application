@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Slot Availabilityt</title>
+        <link rel="stylesheet" href="styles/slot-availability.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script src="scripts/block-slot-availability.js" defer></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <aside>
+                <div class="top">
+                    <div class="logo">
+                        <a href="dashboard-admin.html"><img src="images/logo2.png"></a>
+                    </div>
+                    <div class="close" id="close-btn">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+                <div class="sidebar">
+                    <a href="dashboard-admin.html">
+                        <span class="material-symbols-outlined">dashboard_2</span>
+                        <h3>Dashboard</h3>
+                    </a>
+                    <a href="block.html" class="active">
+                        <span class="material-symbols-outlined">add</span>
+                        <h3>Block a Seat</h3>
+                    </a>     
+                    <a href="all-reservations.html">
+                        <span class="material-symbols-outlined">tatami_seat</span>
+                        <h3>Manage Reservations</h3>
+                    </a>                         
+                </div>
+            </aside>
+            <main>
+                <div class="availability-section">
+                    <!-- A default date will be put here through a script -->
+                    <h1> </h1>
+                    <p> To navigate other dates, use the buttons below: </p>
+                    <div class="date-container">
+                        <input
+                            type="date"
+                            id="start"
+                            name="trip-start"
+                            value="2026-07-22"/>
+                        <button> &lt; </button>
+                        <button> &gt; </button>
+                    </div>
+                </div>
+                <div class="reservation-section">
+                    <div class="search-table-outer">
+                        <table class="search-table">
+                            <tr>
+                                <th class="room-col sticky-col">Rooms</th>
+                                <th class="sticky-col">08:00 AM </th>
+                                <th class="sticky-col">09:00 AM </th>
+                                <th class="sticky-col">10:00 AM </th>
+                                <th class="sticky-col">11:00 AM </th>
+                                <th class="sticky-col">12:00 PM </th>
+                                <th class="sticky-col">1:00 PM </th>
+                                <th class="sticky-col">2:00 PM </th>
+                                <th class="sticky-col">3:00 PM </th>
+                                <th class="sticky-col">4:00 PM </th>
+                                <th class="sticky-col">5:00 PM </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="reservation-availability">
+                        <svg width="25" height="25">
+                            <rect width="25" height="25"
+                            style="fill: #a2f2b6; stroke-width:3; stroke: #020417" />
+                        </svg>
+                        <p> Available </p>
+                        <svg width="25" height="25">
+                            <rect width="25" height="25"
+                            style="fill: #e37488; stroke-width:3; stroke: #020417" />
+                        </svg>
+                        <p> Not Available </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
+
