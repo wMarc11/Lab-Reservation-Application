@@ -12,12 +12,12 @@ function init() {
 
     const currentFilePath = window.location.pathname;
 
-    if(currentFilePath.endsWith("dashboard") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
+    if(currentFilePath.endsWith("dashboard.html") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
         console.log("init dashboard");
         initDashboard(getValidUser(account.user), account.accountType, account.reservations);
-    } else if (currentFilePath.endsWith("my-reservations")) {
+    } else if (currentFilePath.endsWith("my-reservations.html")) {
         initMyReservation(getValidUser(account.user), account.accountType, account.reservations);
-    } else if (currentFilePath.endsWith("profile")) {
+    } else if (currentFilePath.endsWith("profile.html")) {
         initProfile(account);
     }
 }
