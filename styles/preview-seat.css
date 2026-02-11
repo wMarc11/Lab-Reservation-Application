@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
@@ -126,123 +125,241 @@ b{
     background: rgba(9, 127, 26, 0.66);
     border-radius: 10px;
     padding: 2px;
-}   
+}
 
 .warning {
     color: var(--color-warning)
 }
 
-main {
-    min-height: 100vh;
-    margin: 1rem 2rem 2rem 2rem;
-    padding: 28px 10px 10px 28px;
+aside{
+    height: 100vh;
+    background: var(--color-light);
+    width: 14rem;
+    position: fixed;
 }
 
-main > div { 
-    margin-bottom: 2rem;
-}
-
-.availability-section {
-    background-color: var(--color-dark);
-    padding: 1.5rem;
-    border-radius: 20px;
-}
-
-.date-container {
+aside .top{
     display: flex;
-    margin-top: 1.5rem;
-    gap: 0.35rem;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.4rem;
+    margin-left: 0.8rem;
 }
 
-.date-container button {
-    padding: 0.55rem;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
+aside .logo img{
+    width: 8rem;
+    height: 2rem;
+    transform: translateX(15px);
 }
 
-input[type="date"] {
-  margin-right: 1.25rem;
-  font-size: 1rem;
-  padding: 0.5rem;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  font-family: inherit;
-}
-
-.reservation-section {
+aside .logo{
     display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    padding: 2.5rem 2.5rem 2rem 2.5rem;
-    border-radius: 20px;
-    background-color: var(--color-dark);
+    gap: 0.8rem;
+    transition: all 0.3s ease;
 }
 
-.search-table-outer {
-    display: flex;
-    border:2px solid var(--color-primary);
-    overflow-x: scroll; 
-    overflow-y: scroll; 
-    scrollbar-width: none;
-    height: 50vh;
+aside .logo:hover{
+    transform: scale(1.1);
 }
 
-.search-table-outer::-webkit-scrollbar {
+aside .close{
     display: none;
 }
 
-.search-table{
+aside .sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 86vh;
+    position: relative;
+    top: 3rem;
+}
+
+aside h3{
+    font-weight: 500;
+}
+
+aside .sidebar a{
+    display: flex;
+    color: var(--color-info-light);
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.7rem;
+    transition: all 0.3s ease;
+}
+
+
+aside .sidebar a span{
+    font-size: 1.6rem;
+    transition: all 0.3s ease;
+}
+
+aside .sidebar a.active{
+    background-color: var(--color-dark);
+    color: var(--color-primary);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content: '';
+    width: 6px;
+    height: 100%;
+    background: var(--color-primary);
+}
+
+aside .sidebar a.active span{
+    color: var(--color-primary);
+    margin-left: calc(1rem - 3px);
+}
+
+aside .sidebar a:hover{
+   color: var(--color-primary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 1rem;
+}
+
+main {
+    margin: 1rem 2rem 2rem 2rem;
+    padding-top: 3rem;
+}
+
+main > div {
+    padding: 1.5rem;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-dark);
+    margin-bottom: 2rem;
+}
+
+.seat-reservation-information {
+    min-height: 10vh;
+}
+
+.seat-reservation-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 70vh;
+}
+
+.display-seat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    table-layout: fixed; 
+    padding: 1rem;
+    border-radius: 10px;
+    gap: 0.3rem;
+    background-color: var(--color-info-light);
+    align-items: center;
+}
+
+.background {
+    background-image: url('https://www.iedesign.in/images/gallery_category/interior-projects/mvn-school-laboratory-complex-aravalli-hills/1.jpg');
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.05;
+    z-index: 0;
+}
+
+.display-seat-row {
+    flex-grow: 0;
+    display: flex;
+    align-items: center; 
+    width: 80%;
+    margin-top: 2rem;
+}
+
+.display-seat > *:not(.background) {
+    position: relative;
+    opacity: 1;
+}
+
+svg {
+    flex-shrink:0;
+    display: block;
+    text-align: center;
+    margin: 0; 
+}
+
+.row-spread {
+    justify-content: space-between;
+}
+
+.seat-group {   
+    display: flex;
+    gap: 1.5rem;
+    margin-top: -10px;
+}
+
+.table {
+    width: 13.5rem; 
+    height: 2.5rem;
+}
+
+.table svg {
+    width: 100%;
     height: 100%;
 }
 
-.search-table, td, th{
-    border-collapse: collapse; 
-    border: 1px solid #777;
+.seat svg {
+    width: 3.5rem;
+    height: 3.5rem;
+    transition: all 0.3s ease;
 }
 
-td {
-    color: var(--color-dark);
-    background-color: #dde7ed;
+.number{
+    text-anchor: middle;
+    font-size: 40px; 
+    fill: #fff; 
+    dominant-baseline: middle;
 }
 
-th {
-    padding: 10px 7px; 
-    font-size: 15px; 
-    color:#444; 
-    background:#66C2E0;
+.seat svg:hover{
+    transform: scale(1.1);
 }
 
-.room-col { 
-    min-width: 200px !important;
+.seat {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;    
 }
 
-.reservation-availability {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: var(--color-info-light);
+.seat-dropdown {
+    display: none; 
+    position: absolute;
+    top: 110%;           
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 4px;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
+    z-index: 999999999;
+    white-space: nowrap;    
 }
 
-.reservation-availability p {
+.seat-dropdown p{
     color: black;
-}
-
-.sticky-col {
-    position: sticky;
-    min-width: 100px;
-    top: 0;
-}
-
-.room-data {
     text-align: center;
-    padding: 5px 10px; 
-    height: 35px;
+}
+
+.user{  
+    color: blue;
+    text-decoration: underline;
+    transition: all 0.3s ease;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.user:hover {
+    transform: scale(1.1);
 }
 
 .banner header {
