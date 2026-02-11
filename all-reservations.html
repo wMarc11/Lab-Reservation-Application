@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/my-reservations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <title>My Reservations</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <aside>
+        <div class="top">
+          <div class="logo">
+            <a href="dashboard.html"><img src="images/logo2.png" alt="Labynx logo"></a>
+          </div>
+          <div class="close" id="close-btn">
+            <span class="material-symbols-outlined">close</span>
+          </div>
+        </div>
+
+        <div class="sidebar">
+          <a href="dashboard-admin.html">
+            <span class="material-symbols-outlined">dashboard_2</span>
+            <h3>Dashboard</h3>
+          </a>
+
+          <a href="reservation.html">
+            <span class="material-symbols-outlined">add</span>
+            <h3>Reserve</h3>
+          </a>
+
+          <a href="my-reservations.html" class="active">
+            <span class="material-symbols-outlined">tatami_seat</span>
+            <h3>My Reservations</h3>
+          </a>
+        </div>
+      </aside>
+
+      <main>
+        <div class="header">
+          <div>
+            <h1>My Reservations</h1>
+            <p class="text-muted">View and edit your upcoming reservations.</p>
+          </div>
+
+          <div class="profile">
+            <div class="profile-photo">
+              <img src="images/profilepic.webp" alt="Profile photo">  
+            </div>
+            <div class="info">
+              <p>Hello, <b>User</b></p>
+              <small class="text-muted">Admin</small>
+            </div>
+            <div class="dropdown-menu">
+              <a href="profile.html">
+                <span class="material-symbols-outlined">account_circle</span>
+                <p>My Profile</p>
+              </a>
+              <a href="#">
+                <span class="material-symbols-outlined">logout</span>
+                 <p>Logout</p>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <section class="reservations-page">
+          
+          
+          <div class="stats">
+            <div class="upcoming-card">
+              <span class="material-symbols-outlined">event_upcoming</span>
+              <div class="middle">
+                <div class="left">
+                  <h3>Upcoming</h3>
+                  <h1 id="stat-upcoming">0</h1>
+                </div>
+                <div class="slots">
+                  <svg>
+                    <circle cx="38" cy="38" r="36"></circle>
+                  </svg>
+                  <div class="number">
+                    <p id="stat-upcoming-badge">0</p>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted">Next 7 days</small>
+            </div>
+
+            <div class="reservations-card">
+              <span class="material-symbols-outlined">today</span>
+              <div class="middle">
+                <div class="left">
+                  <h3>Today</h3>
+                  <h1 id="stat-today">0</h1>
+                </div>
+                <div class="slots">
+                  <svg>
+                    <circle cx="38" cy="38" r="36"></circle>
+                  </svg>
+                  <div class="number">
+                    <p id="stat-today-badge">0</p>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted">Reservations today</small>
+            </div>
+
+            <div class="labs-card">
+              <span class="material-symbols-outlined">inventory_2</span>
+              <div class="middle">
+                <div class="left">
+                  <h3>Total</h3>
+                  <h1 id="stat-total">0</h1>
+                </div>
+                <div class="slots">
+                  <svg>
+                    <circle cx="38" cy="38" r="36"></circle>
+                  </svg>
+                  <div class="number">
+                    <p id="stat-total-badge">0</p>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted">All reservations</small>
+            </div>
+
+            <div class="slots-card">
+              <span class="material-symbols-outlined">cancel</span>
+              <div class="middle">
+                <div class="left">
+                  <h3>Cancelled</h3>
+                  <h1 id="stat-cancelled">0</h1>
+                </div>
+                <div class="slots">
+                  <svg>
+                    <circle cx="38" cy="38" r="36"></circle>
+                  </svg>
+                  <div class="number">
+                    <p id="stat-cancelled-badge">0</p>
+                  </div>
+                </div>
+              </div>
+              <small class="text-muted">Cancelled reservations</small>
+            </div>
+          </div>
+
+          <div class="reservations-content">
+            <section class="reservations-panel">
+              <div class="panel-header">
+                <h2>Reservations List</h2>
+                <div class="filters">
+                  <div class="filter">
+                    <label for="filter-lab">Laboratory</label>
+                    <select id="filter-lab">
+                      <option value="ALL">All Labs</option>
+                      <option value="GK301">GK301</option>
+                      <option value="GK302A">GK302A</option>
+                      <option value="GK302B">GK302B</option>
+                    </select>
+                  </div>
+
+                  <div class="filter">
+                    <label for="filter-status">Status</label>
+                    <select id="filter-status">
+                      <option value="ALL">All</option>
+                      <option value="UPCOMING">Upcoming</option>
+                      <option value="TODAY">Today</option>
+                      <option value="PAST">Past</option>
+                      <option value="CANCELLED">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <div class="filter">
+                    <label for="filter-search">Search</label>
+                    <input id="filter-search" type="text" placeholder="Reservation ID or lab...">
+                  </div>
+                </div>
+              </div>
+
+              <div class="reservations-table-wrap">
+                <table class="reservations-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Laboratory</th>
+                      <th>Date & Time</th>
+                      <th>Date</th>
+                      <th>Time</th>
+                      <th>Seat</th>
+                      <th>Visibility</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="reservations-tbody">
+                    <!-- rows inserted by JS -->
+                  </tbody>
+                </table>
+
+                <div class="empty-state" id="empty-state" hidden>
+                  <span class="material-symbols-outlined">event_busy</span>
+                  <h3>No reservations found</h3>
+                  <p class="text-muted">Try adjusting your filters.</p>
+                </div>
+              </div>
+            </section>
+</div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal: View/Edit -->
+    <div class="modal-overlay" id="modal-overlay" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-header">
+          <h2 id="modal-title">Reservation</h2>
+          <button class="icon-btn" id="modal-close" type="button" aria-label="Close">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="modal-tabs">
+          <button class="tab-btn tab-active" id="tab-view" type="button">View</button>
+          <button class="tab-btn" id="tab-edit" type="button">Edit</button>
+        </div>
+
+        <div class="modal-content">
+          <div id="view-pane">
+            <div class="detail-grid" id="modal-view-grid"></div>
+          </div>
+
+          <form id="edit-form" hidden>
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Reservation ID</label>
+                <input id="edit-id" type="text" disabled>
+              </div>
+
+              <div class="form-field">
+                <label>Laboratory</label>
+                <select id="edit-lab" disabled>
+                  <option value="GK301">GK301</option>
+                  <option value="GK302A">GK302A</option>
+                  <option value="GK302B">GK302B</option>
+                </select>
+                <small class="text-muted">Lab cannot be changed (delete + rebook for another lab).</small>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-date">Date</label>
+                <input id="edit-date" type="date" required>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-seat">Seat</label>
+                <input id="edit-seat" type="number" min="1" step="1" required>
+                <small class="text-muted" id="seat-hint">Seat must be within lab capacity.</small>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-start">Start Time</label>
+                <select id="edit-start" required></select>
+              </div>
+
+              <div class="form-field">
+                <label for="edit-end">End Time</label>
+                <select id="edit-end" required></select>
+              </div>
+
+              <div class="form-field form-field-inline">
+                <input id="edit-anon" type="checkbox">
+                <label for="edit-anon">Anonymous reservation</label>
+              </div>
+            </div>
+
+            <div class="form-error" id="form-error" hidden></div>
+
+            <div class="modal-actions">
+              <button class="action-btn" id="btn-cancel" type="button">Cancel</button>
+              <button class="action-btn warning" id="btn-delete" type="button">Delete</button>
+              <button class="action-btn primary" id="btn-save" type="submit">
+                <span class="material-symbols-outlined">save</span>
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts/my-reservations.js"></script>
+  </body>
+</html>
