@@ -123,6 +123,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -132,6 +135,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -141,6 +147,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -153,6 +162,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -162,6 +174,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -171,6 +186,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -204,6 +222,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -213,6 +234,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -222,6 +246,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -233,6 +260,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -242,6 +272,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -251,6 +284,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -262,6 +298,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -271,6 +310,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -280,6 +322,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -312,6 +357,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -321,6 +369,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -330,6 +381,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -341,6 +395,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -350,6 +407,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -359,6 +419,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -380,6 +443,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -389,6 +455,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                   <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -421,6 +490,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -430,6 +502,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -439,6 +514,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -450,6 +528,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -459,6 +540,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -468,6 +552,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -489,6 +576,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
             <div class="seat">
@@ -498,6 +588,9 @@ const GK301_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -516,6 +609,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -525,6 +621,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -544,6 +643,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -553,6 +655,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -565,6 +670,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -574,6 +682,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -593,6 +704,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -602,6 +716,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -616,6 +733,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -625,6 +745,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -644,6 +767,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -653,6 +779,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -665,6 +794,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -674,6 +806,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -693,6 +828,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -702,6 +840,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -718,6 +859,9 @@ const GK302A_TEXT =  `
         </svg>  
         <div class="seat-dropdown">
             <p>Status: Available</p>
+            <button type="button" class="reserve">
+                Reserve
+            </button>
         </div>
     </div>
 
@@ -729,6 +873,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -738,6 +885,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -757,6 +907,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -766,6 +919,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -778,6 +934,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -787,6 +946,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -806,6 +968,9 @@ const GK302A_TEXT =  `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">  
@@ -816,6 +981,9 @@ const GK302A_TEXT =  `
 
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -832,6 +1000,9 @@ const GK302A_TEXT =  `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -851,6 +1022,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -860,6 +1034,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -889,6 +1066,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -901,6 +1081,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -910,6 +1093,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -929,6 +1115,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -938,6 +1127,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -952,6 +1144,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -961,6 +1156,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -980,6 +1178,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -989,6 +1190,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1001,6 +1205,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1010,6 +1217,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1029,6 +1239,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1038,6 +1251,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1054,6 +1270,9 @@ const GK306A_TEXT = `
         </svg>  
         <div class="seat-dropdown">
             <p>Status: Available</p>
+            <button type="button" class="reserve">
+                    Reserve
+                </button>
         </div>
     </div>
 
@@ -1065,6 +1284,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1074,6 +1296,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1093,6 +1318,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1102,6 +1330,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1114,6 +1345,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">
@@ -1123,6 +1357,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1142,6 +1379,9 @@ const GK306A_TEXT = `
             </svg>
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
         <div class="seat col">  
@@ -1152,6 +1392,9 @@ const GK306A_TEXT = `
 
             <div class="seat-dropdown">
                 <p>Status: Available</p>
+                <button type="button" class="reserve">
+                    Reserve
+                </button>
             </div>
         </div>
     </div>
@@ -1168,6 +1411,9 @@ const GK306A_TEXT = `
                 </svg>
                 <div class="seat-dropdown">
                     <p>Status: Available</p>
+                    <button type="button" class="reserve">
+                        Reserve
+                    </button>
                 </div>
             </div>
         </div>
@@ -1260,10 +1506,11 @@ display_seat.addEventListener("click", (e) => {
             d.style.display = "none";
     });
 
-    if (dropdown.style.display === "block"){
+    if (dropdown.style.display === "flex"){
         dropdown.style.display = "none";
     } else{
-        dropdown.style.display = "block"
+        dropdown.style.display = "flex";
+        dropdown.style.flexDirection = "column";
     }
 });
 
@@ -1271,3 +1518,25 @@ const params = new URLSearchParams(window.location.search);
 const roomCode = params.get("room");
 console.log(roomCode);
 initialize(roomCode);
+
+const reservation_counter = document.getElementById('reservation-counter');
+let reservation_count = 0;
+reservation_counter.textContent = reservation_count;
+
+document.querySelectorAll('button').forEach(button => {
+  button.addEventListener('click', function() {
+    this.disabled = true;
+
+    reservation_count++;
+    reservation_counter.textContent = reservation_count;
+  });
+});
+
+const reserve_all_button = document.getElementById('reserve-all-button')
+
+reserve_all_button.addEventListener('click', redirectToReservationForm)
+
+function redirectToReservationForm() {
+    window.location.href = `reservation.html`;
+}
+

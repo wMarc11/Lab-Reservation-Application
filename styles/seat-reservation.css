@@ -349,6 +349,7 @@ svg {
     position: absolute;
     top: 110%;           
     left: 50%;
+    gap: 2px;
     transform: translateX(-50%);
     background-color: #fff;
     border: 1px solid #ccc;
@@ -387,3 +388,27 @@ svg {
     justify-content: center;
     gap: 1rem;
 }
+
+button {
+    text-align: center;
+    padding: 3px 30px;
+    border-radius: 12px;
+}
+
+.reservation-counter {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
+    min-height: 5vh;
+}
+
+#reserve-all-button {
+    text-align: center;
+    padding: 10px 30px;
+    border-radius: 6px;
+    font-family: inherit;
+    background-color: var(--color-info-light);
+}
+
