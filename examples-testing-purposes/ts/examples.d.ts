@@ -2,6 +2,7 @@ export interface Account {
     id: number,
     user?: string,
     email: string,
+    phoneNumber?: string,
     password: string,
     accountType: "Student" | "Admin",
     reservations: Reservation[]

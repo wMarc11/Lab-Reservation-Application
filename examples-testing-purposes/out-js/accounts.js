@@ -2,6 +2,7 @@ export const accounts = {
     ["user1@example.com"]: {
         id: 1,
         user: "user1",
+        phoneNumber: "+67 6767 676 6767",
         email: "user1@example.com",
         password: "pass123",
         accountType: "Student",
@@ -52,6 +53,7 @@ export const accounts = {
     ["user2@example.com"]: {
         id: 2,
         user: "John Doe",
+        phoneNumber: "#87-000",
         email: "user2@example.com",
         password: "mypassword",
         accountType: "Student",

@@ -164,6 +164,7 @@ function initProfile(account: Account) {
 
     setInnerHTML("#email", account.email);
     setInnerHTML("#studentID", account.id.toString());
+    setInnerHTML("#contactNumber", account.phoneNumber ?? "No phone number");
 }
 
 function initProfileHeader(userName: string, accountType: "Student" | "Admin") {
