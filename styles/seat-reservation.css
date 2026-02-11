@@ -243,6 +243,7 @@ main > div {
     display: flex;
     flex-direction: column;
     min-height: 70vh;
+    padding-bottom: 1.2rem;
 }
 
 .display-seat {
@@ -302,6 +303,11 @@ svg {
     height: 2.5rem;
 }
 
+.table-col {
+    width: 2.5rem; 
+    height: 13.5rem;
+}
+
 .table svg {
     width: 100%;
     height: 100%;
@@ -327,6 +333,14 @@ svg {
 .seat {
     position: relative;
     display: inline-block;
+    cursor: pointer;    
+}
+
+.seat .col{
+    display: flex;
+    position: relative;
+    display: block;
+    flex-direction: column;
     cursor: pointer;    
 }
 
@@ -360,4 +374,9 @@ svg {
 
 .user:hover {
     transform: scale(1.1);
+}
+
+.seat-group-col{
+    flex-direction: column;
+    display: flex;
 }

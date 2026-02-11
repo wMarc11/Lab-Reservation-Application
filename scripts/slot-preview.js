@@ -35,7 +35,7 @@ time section of the table.
 const BUILDING_DATA = {
     GOKS_3: [
         'GK301', 
-        'GK302', 
+        'GK302A', 
         'GK302B', 
         'GK304A', 
         'GK304B', 

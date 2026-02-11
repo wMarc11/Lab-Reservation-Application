@@ -449,3 +449,8 @@ svg {
     opacity: 1;
     visibility: visible;
 }
+
+.seat-group-col{
+    flex-direction: column;
+    display: flex;
+}
