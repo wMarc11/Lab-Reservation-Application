@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
@@ -222,7 +223,7 @@ aside .sidebar a:hover span{
 }
 
 main {
-    margin: 0 2rem 2rem 18rem;
+    margin: 1rem 2rem 2rem 2rem;
     padding-top: 3rem;
 }
 
@@ -243,7 +244,6 @@ main > div {
     display: flex;
     flex-direction: column;
     min-height: 70vh;
-    padding-bottom: 1.2rem;
 }
 
 .display-seat {
@@ -303,11 +303,6 @@ svg {
     height: 2.5rem;
 }
 
-.table-col {
-    width: 2.5rem; 
-    height: 13.5rem;
-}
-
 .table svg {
     width: 100%;
     height: 100%;
@@ -336,20 +331,11 @@ svg {
     cursor: pointer;    
 }
 
-.seat .col{
-    display: flex;
-    position: relative;
-    display: block;
-    flex-direction: column;
-    cursor: pointer;    
-}
-
 .seat-dropdown {
     display: none; 
     position: absolute;
     top: 110%;           
     left: 50%;
-    gap: 2px;
     transform: translateX(-50%);
     background-color: #fff;
     border: 1px solid #ccc;
@@ -377,38 +363,94 @@ svg {
     transform: scale(1.1);
 }
 
+.banner header {
+    padding: 15px;
+    color: #F8FAFC;
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.85);
+    height: 30px;
+}
+
+.home-nav {
+    display: flex;
+    position: relative;
+    padding: 10px 90px;
+    font-family: Roboto;
+    text-transform: uppercase;
+    left: -25px;
+}
+
+.home-nav .logo a {
+    background-image: url("../images/logo1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 170px;
+    text-indent: -999999px;
+    position: relative;
+    margin: 0 -20px 0 -30px;
+    top: -55px;
+}
+
+.home-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.home-nav li {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+.home-nav li:first-child {
+    margin-left: 0;
+}
+
+.home-nav a {
+    text-decoration: none;
+    color: #F8FAFC;
+    transition: transform .2s ease;
+    display: inline-block;
+}
+
+.home-nav a:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.home-nav div {
+    margin-left: auto;
+    position: relative;
+}
+
+.dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    background-color: #1E293B;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #F8FAFC;
+}
+
+.dropdown-content a:hover {
+    background-color: #374151;
+    transform: none;
+}
+
+.home-nav .dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+}
+
 .seat-group-col{
     flex-direction: column;
     display: flex;
 }
-
-.corner{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-}
-
-button {
-    text-align: center;
-    padding: 3px 30px;
-    border-radius: 12px;
-}
-
-.reservation-counter {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 3rem;
-    min-height: 5vh;
-}
-
-#reserve-all-button {
-    text-align: center;
-    padding: 10px 30px;
-    border-radius: 6px;
-    font-family: inherit;
-    background-color: var(--color-info-light);
-}
-

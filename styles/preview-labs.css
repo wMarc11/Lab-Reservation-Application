@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
@@ -125,105 +126,15 @@ b{
     background: rgba(9, 127, 26, 0.66);
     border-radius: 10px;
     padding: 2px;
-}
+}   
 
 .warning {
     color: var(--color-warning)
 }
 
-aside{
-    height: 100vh;
-    background: var(--color-light);
-    width: 14rem;
-    position: fixed;
-}
-
-aside .top{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2.4rem;
-    margin-left: 0.8rem;
-}
-
-aside .logo img{
-    width: 8rem;
-    height: 2rem;
-    transform: translateX(15px);
-}
-
-aside .logo{
-    display: flex;
-    gap: 0.8rem;
-    transition: all 0.3s ease;
-}
-
-aside .logo:hover{
-    transform: scale(1.1);
-}
-
-aside .close{
-    display: none;
-}
-
-aside .sidebar {
-    display: flex;
-    flex-direction: column;
-    height: 86vh;
-    position: relative;
-    top: 3rem;
-}
-
-aside h3{
-    font-weight: 500;
-}
-
-aside .sidebar a{
-    display: flex;
-    color: var(--color-info-light);
-    margin-left: 2rem;
-    gap: 1rem;
-    align-items: center;
-    position: relative;
-    height: 3.7rem;
-    transition: all 0.3s ease;
-}
-
-
-aside .sidebar a span{
-    font-size: 1.6rem;
-    transition: all 0.3s ease;
-}
-
-aside .sidebar a.active{
-    background-color: var(--color-dark);
-    color: var(--color-primary);
-    margin-left: 0;
-}
-
-aside .sidebar a.active:before{
-    content: '';
-    width: 6px;
-    height: 100%;
-    background: var(--color-primary);
-}
-
-aside .sidebar a.active span{
-    color: var(--color-primary);
-    margin-left: calc(1rem - 3px);
-}
-
-aside .sidebar a:hover{
-   color: var(--color-primary);
-}
-
-aside .sidebar a:hover span{
-    margin-left: 1rem;
-}
-
 main {
     min-height: 100vh;
-    margin: 0 2rem 2rem 17rem;
+    margin: 1rem 2rem 2rem 2rem;
     padding: 28px 10px 10px 28px;
 }
 
@@ -332,4 +243,91 @@ th {
     text-align: center;
     padding: 5px 10px; 
     height: 35px;
+}
+
+.banner header {
+    padding: 15px;
+    color: #F8FAFC;
+    position: sticky;
+    top: 0;
+    background: rgba(15,23,42,0.85);
+    height: 30px;
+}
+
+.home-nav {
+    display: flex;
+    position: relative;
+    padding: 10px 90px;
+    font-family: Roboto;
+    text-transform: uppercase;
+    left: -25px;
+}
+
+.home-nav .logo a {
+    background-image: url("../images/logo1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    display: inline-block;
+    width: 200px;
+    height: 170px;
+    text-indent: -999999px;
+    position: relative;
+    margin: 0 -20px 0 -30px;
+    top: -55px;
+}
+
+.home-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.home-nav li {
+    display: inline-block;
+    margin-left: 25px;
+}
+
+.home-nav li:first-child {
+    margin-left: 0;
+}
+
+.home-nav a {
+    text-decoration: none;
+    color: #F8FAFC;
+    transition: transform .2s ease;
+    display: inline-block;
+}
+
+.home-nav a:hover {
+    transform: scale(1.1);
+    text-decoration: underline;
+}
+
+.home-nav div {
+    margin-left: auto;
+    position: relative;
+}
+
+.dropdown-content {
+    opacity: 0;
+    visibility: hidden;
+    background-color: #1E293B;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #F8FAFC;
+}
+
+.dropdown-content a:hover {
+    background-color: #374151;
+    transform: none;
+}
+
+.home-nav .dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
 }

@@ -364,6 +364,36 @@ body {
     transform: scale(1.1);
 }
 
+#contact {
+    background-color: #1E293B;
+    padding: 30px 10%;         
+    text-align: center;
+    margin: 0 auto;
+}
+
+#contact h2 {
+    font-size: 2.5rem;
+    color: #5B8DEF;          
+    margin-bottom: 20px;
+}
+
+#contact p {
+    font-size: 1.2rem;
+    color: #E0E7FF;
+    line-height: 1.6;
+}
+
+#contact a {
+    color: #A3D4FA;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+#contact a:hover {
+    transform: scale(1.05);
+    text-decoration: underline;
+}
+
 footer {
     display: flex;
     flex-direction: row;
@@ -398,3 +428,4 @@ footer {
         font-size: 8px;
     }
 }
+

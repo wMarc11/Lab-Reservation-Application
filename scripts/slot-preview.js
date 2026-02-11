@@ -212,7 +212,7 @@ const BUILDING_DATA = {
     ]
 }
 function redirectToSeatReservation(roomCode) {
-    window.location.href = `seat-reservation.html?room=${roomCode}`;
+    window.location.href = `preview-seats.html?room=${roomCode}`;
 }
 
 function populateTable(roomCode, floor) {

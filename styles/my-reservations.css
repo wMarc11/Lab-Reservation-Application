@@ -396,3 +396,12 @@ main table tbody tr:hover{
     background-size: 200%;
     cursor: pointer;
 }
+
+.action-btn.warning{
+    background: red;
+    transition: all 0.3s ease;
+}
+
+.action-btn.warning:hover{
+    background: rgb(167, 20, 20);
+}

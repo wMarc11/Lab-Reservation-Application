@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lab Availability</title>
+        <link rel="stylesheet" href="styles/preview-labs.css">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+        <script src="scripts/slot-preview.js" defer></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="banner">
+                <header>
+                    <nav class="home-nav">
+                        <ul>
+                            <li class="logo"><a href="index.html">Labynx</a></li>
+                            <li><a href="index.html">Home</a></li>
+                            <li><a href="preview-availability.html">View Labs</a></li>
+                            <li><a href="index.html#contact">Contact</a></li>
+                        </ul>
+                        <div class="dropdown">
+                            <a href="#">Sign in ▾</a>
+                            <div class="dropdown-content">
+                                <a id="sign-in">Log In</a>
+                                <a id="register">Register</a>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+            <main>
+                <div class="availability-section">
+                    <!-- A default date will be put here through a script -->
+                    <h1> </h1>
+                    <p> To navigate other dates, use the buttons below: </p>
+                    <div class="date-container">
+                        <input
+                            type="date"
+                            id="start"
+                            name="trip-start"
+                            value="2026-07-22"/>
+                        <button> &lt; </button>
+                        <button> &gt; </button>
+                    </div>
+                </div>
+                <div class="reservation-section">
+                    <div class="search-table-outer">
+                        <table class="search-table">
+                            <tr>
+                                <th class="room-col sticky-col">Rooms</th>
+                                <th class="sticky-col">08:00 AM </th>
+                                <th class="sticky-col">09:00 AM </th>
+                                <th class="sticky-col">10:00 AM </th>
+                                <th class="sticky-col">11:00 AM </th>
+                                <th class="sticky-col">12:00 PM </th>
+                                <th class="sticky-col">1:00 PM </th>
+                                <th class="sticky-col">2:00 PM </th>
+                                <th class="sticky-col">3:00 PM </th>
+                                <th class="sticky-col">4:00 PM </th>
+                                <th class="sticky-col">5:00 PM </th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="reservation-availability">
+                        <svg width="25" height="25">
+                            <rect width="25" height="25"
+                            style="fill: #a2f2b6; stroke-width:3; stroke: #020417" />
+                        </svg>
+                        <p> Available </p>
+                        <svg width="25" height="25">
+                            <rect width="25" height="25"
+                            style="fill: #e37488; stroke-width:3; stroke: #020417" />
+                        </svg>
+                        <p> Not Available </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </body>
+</html>
+

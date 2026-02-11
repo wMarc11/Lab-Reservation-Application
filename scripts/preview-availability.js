@@ -79,5 +79,5 @@ reservation_form.addEventListener('submit', (event) => {
     const building = encodeURIComponent(document.getElementById('buildings').value);
     const floor = encodeURIComponent(document.getElementById('floors').value);
 
-    window.location.href = `view-slot-availability.html?building=${building}&floor=${floor}`;
+    window.location.href = `preview-labs.html?building=${building}&floor=${floor}`;
 });
