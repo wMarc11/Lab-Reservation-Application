@@ -133,6 +133,7 @@ function initProfile(account) {
     setInnerHTML("#upcoming", reservationCounts.noOfUpcoming.toString());
     setInnerHTML("#email", account.email);
     setInnerHTML("#studentID", account.id.toString());
+    setInnerHTML("#course", account.course);
     setInnerHTML("#contactNumber", (_a = account.phoneNumber) !== null && _a !== void 0 ? _a : "No phone number");
 }
 function initProfileHeader(userName, accountType) {

@@ -227,6 +227,7 @@ function initProfile(account) {
     setInnerHTML("#reservations", reservationCounts.noOfReservations.toString());
     setInnerHTML("#upcoming", reservationCounts.noOfUpcoming.toString());
     setInnerHTML("#email", account.email);
+    setInnerHTML("#course", account.course);
     setInnerHTML("#studentID", account.id.toString());
     setInnerHTML("#contactNumber", (_a = account.phoneNumber) !== null && _a !== void 0 ? _a : "No phone number");
 }

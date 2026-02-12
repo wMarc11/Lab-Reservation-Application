@@ -1,7 +1,7 @@
 export const accounts = {
     ["user1@example.com"]: {
         id: 1,
-        user: "user1",
+        user: "Jake",
         phoneNumber: "+67 6767 676 6767",
         email: "user1@example.com",
         password: "pass123",
@@ -10,7 +10,7 @@ export const accounts = {
         reservations: [
             {
                 id: "R-MLHSJBZ4IY8I",
-                labratory: "GK302B",    
+                labratory: "GK302A",    
                 dateTimeRequested: {
                     year: 2026,
                     month: 2,
@@ -55,6 +55,7 @@ export const accounts = {
         user: "John Doe",
         phoneNumber: "#87-000",
         email: "user2@example.com",
+        course: "Computer Science",
         password: "mypassword",
         accountType: "Student",
         reservations: [
@@ -82,14 +83,14 @@ export const accounts = {
     },
     ["user3@example.com"]: {
         id: 3,
-        user: "test",
+        user: "Kane",
         email: "user3@example.com",
         password: "securepass",
         accountType: "Student",
         reservations: [
             {
                 id: "R-MLHSJBZ53RO6",
-                labratory: "GK302A",
+                labratory: "GK302B",
                 dateTimeRequested: {
                     year: 2026,
                     month: 2,
