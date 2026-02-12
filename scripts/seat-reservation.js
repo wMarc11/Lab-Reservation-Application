@@ -1527,6 +1527,6 @@ const reserve_all_button = document.getElementById('reserve-all-button')
 reserve_all_button.addEventListener('click', redirectToReservationForm)
 
 function redirectToReservationForm() {
-    window.location.href = `reservation.html`;
+    window.location.href = `/reservation`;
 }
 

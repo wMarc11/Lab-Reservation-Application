@@ -212,7 +212,7 @@ const BUILDING_DATA = {
     ]
 }
 function redirectToSeatReservation(roomCode) {
-    window.location.href = `seat-reservation.html?room=${roomCode}`;
+    window.location.href = `/seat-reservation?room=${roomCode}`;
 }
 
 function populateTable(roomCode, floor) {
@@ -257,12 +257,10 @@ const BUILDING_PREFIX = {
 };
 
 const params = new URLSearchParams(window.location.search);
+console.log("Current URL:", window.location.href);
 const buildingCode = params.get("building");
 const floor = params.get("floor");
 
 const floor_number = floor.match(/\d+/)[0];
-
-console.log(floor_number);
-console.log(buildingCode);
 
 initialize(BUILDING_PREFIX[buildingCode], floor_number);

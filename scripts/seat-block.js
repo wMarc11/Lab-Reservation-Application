@@ -1520,14 +1520,14 @@ console.log(roomCode);
 initialize(roomCode);
 
 const reservation_counter = document.getElementById('reservation-counter');
-let reservation_count = 0;
+let block_count = 0;
 reservation_counter.textContent = reservation_count;
 
 document.querySelectorAll('button').forEach(button => {
   button.addEventListener('click', function() {
     this.disabled = true;
 
-    reservation_count++;
+    block_count++;
     reservation_counter.textContent = reservation_count;
   });
 });
@@ -1537,6 +1537,6 @@ const reserve_all_button = document.getElementById('reserve-all-button')
 reserve_all_button.addEventListener('click', redirectToReservationForm)
 
 function redirectToReservationForm() {
-    window.location.href = `reservation.html`;
+    window.location.href = `/block`;
 }
 
