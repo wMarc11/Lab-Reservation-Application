@@ -12,12 +12,12 @@ function init() {
 
     const currentFilePath = window.location.pathname;
 
-    if(currentFilePath.endsWith("dashboard.html") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
+    if(currentFilePath.endsWith("dashboard") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
         console.log("init dashboard");
         initDashboard(getValidUser(account.user), account.accountType, account.reservations);
-    } else if (currentFilePath.endsWith("my-reservations.html")) {
+    } else if (currentFilePath.endsWith("my-reservations")) {
         initMyReservation(getValidUser(account.user), account.accountType, account.reservations);
-    } else if (currentFilePath.endsWith("profile.html")) {
+    } else if (currentFilePath.endsWith("profile")) {
         initProfile(account);
     }
 }
@@ -164,6 +164,7 @@ function initProfile(account: Account) {
 
     setInnerHTML("#email", account.email);
     setInnerHTML("#studentID", account.id.toString());
+    setInnerHTML("#course", account.course ?? "N/A");
     setInnerHTML("#contactNumber", account.phoneNumber ?? "No phone number");
 }
 

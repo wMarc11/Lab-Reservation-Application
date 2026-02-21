@@ -7,14 +7,14 @@ function init() {
     console.log("accountjson found");
     const account = JSON.parse(accountJSON);
     const currentFilePath = window.location.pathname;
-    if (currentFilePath.endsWith("dashboard.html") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
+    if (currentFilePath.endsWith("dashboard") /*|| currentFilePath.endsWith("dashboard-admin-testing.html")*/) {
         console.log("init dashboard");
         initDashboard(getValidUser(account.user), account.accountType, account.reservations);
     }
-    else if (currentFilePath.endsWith("my-reservations.html")) {
+    else if (currentFilePath.endsWith("my-reservations")) {
         initMyReservation(getValidUser(account.user), account.accountType, account.reservations);
     }
-    else if (currentFilePath.endsWith("profile.html")) {
+    else if (currentFilePath.endsWith("profile")) {
         initProfile(account);
     }
 }
@@ -122,7 +122,7 @@ function createReservationButtonsRow(accountID) {
     return buttonDataCell;
 }
 function initProfile(account) {
-    var _a;
+    var _a, _b;
     let userName = getValidUser(account.user);
     if (account.accountType === "Admin")
         userName = "Admin";
@@ -133,8 +133,8 @@ function initProfile(account) {
     setInnerHTML("#upcoming", reservationCounts.noOfUpcoming.toString());
     setInnerHTML("#email", account.email);
     setInnerHTML("#studentID", account.id.toString());
-    setInnerHTML("#course", account.course);
-    setInnerHTML("#contactNumber", (_a = account.phoneNumber) !== null && _a !== void 0 ? _a : "No phone number");
+    setInnerHTML("#course", (_a = account.course) !== null && _a !== void 0 ? _a : "N/A");
+    setInnerHTML("#contactNumber", (_b = account.phoneNumber) !== null && _b !== void 0 ? _b : "No phone number");
 }
 function initProfileHeader(userName, accountType) {
     setInnerHTML("#user-name", userName);

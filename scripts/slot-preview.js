@@ -244,7 +244,11 @@ function populateTable(roomCode, floor) {
 }
 
 function initialize(roomCode, floor) {
-    populateTable(roomCode, floor);
+    if (!roomCode || !floor) {
+        populateTable('GOKS', 3);
+    } else {
+        populateTable(roomCode, floor);
+    }
 }
 
 const BUILDING_PREFIX = {
@@ -259,8 +263,11 @@ const BUILDING_PREFIX = {
 const params = new URLSearchParams(window.location.search);
 const buildingCode = params.get("building");
 const floor = params.get("floor");
+let floor_number = "";
 
-const floor_number = floor.match(/\d+/)[0];
+if (floor) {
+    floor_number = floor.match(/\d+/)[0];
+}
 
 console.log(floor_number);
 console.log(buildingCode);
