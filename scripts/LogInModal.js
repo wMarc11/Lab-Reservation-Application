@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 const DIV = `
         <div class="overlay">
             <div class="form">
@@ -117,7 +119,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
     }
 
     /**
-     * This fires when log in is clicked
+     * This fires when sign up is clicked
      *
      * @param callback: () => void;
      * @returns void
@@ -265,10 +267,14 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
 
         this._signUp.addEventListener("click", () => {
             console.log(this.getSignUpFields());
+            const {email, password} = this.getSignUpFields();
+            this._signUpUser(email, password);
         })
 
         this._logIn.addEventListener("click", () => {
             console.log(this.getLogInFields());
+            const {email, password} = this.getLogInFields();
+            this._logInUser(email, password);
         })
 
         this._rememberMe1.addEventListener("click", () => {
@@ -277,6 +283,48 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`
         this._rememberMe2.addEventListener("click", () => {
             this._syncRememberMe(2)}
         );
+    }
+
+    async _signUpUser(email, password) {
+        try {
+            const response = await fetch("/signup", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ email: email, password: password }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                this.displayErrorSignUp(data.message || "Sing up failed");
+                return;
+            }
+
+            sessionStorage.setItem("user", data.user);
+            window.location.href = "./dashboard.html";
+        } catch {
+            this.displayErrorSignUp("Network error");
+        }
+    }
+
+    async _logInUser(email, password) {
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ email: email, password: password , role: "student"}),
+            })
+
+            const data = await response.json();
+            if (!response.ok) {
+                this.displayErrorSignUp(data.message || "Log up failed");
+                return;
+            }
+
+            sessionStorage.setItem("user", data.user);
+            window.location.href = "./dashboard.html";
+        } catch {
+            this.displayErrorSignUp("Network error");
+        }
     }
 
     _modeLogIn() {
