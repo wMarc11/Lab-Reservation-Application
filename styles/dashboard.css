@@ -506,3 +506,9 @@ main table tbody tr:last-child td{
 .dots .off {
     background: var(--color-dark-variant);
 }
+
+.upcoming-reservations{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
