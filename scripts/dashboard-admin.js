@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", async() => {
         const userRes = await fetch(`http://localhost:3000/users/${userID}`);
         const user = await userRes.json();
 
-        if(user.role === "Admin"){
-            window.location.href = "./dashboard-admin.html";
+        if(user.role === "Student"){
+            window.location.href = "./dashboard.html";
             return;
         }
 
@@ -53,12 +53,12 @@ document.addEventListener("DOMContentLoaded", async() => {
         const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
         const reservations = await reservationRes.json();
 
-        updateDashboard(reservations);
+        //updateDashboard(reservations);
     } catch (e){
         console.error("Error: ", e);
     }
 });
-
+/*
 function updateDashboard(reservations){
     const upcomingTable = document.querySelector("#upcoming-reservations");
     const upcomingTableBody = document.querySelector("#upcoming-reservations").querySelector("tbody");
@@ -98,4 +98,4 @@ function updateDashboard(reservations){
 
     noUpcoming.textContent = count;
     noReservations.textContent = reservations.length;
-}
+}*/
