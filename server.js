@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const User = require('./models/user.model');
 const Reservation = require('./models/reservation.model');
+const Activity = require('./models/activity.model');
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -89,6 +90,34 @@ app.get("/reservations/user/:id", async(req, res) => {
         res.json(reservations);
     } catch(error){
         res.status(400).json({message: error.message});
+    }
+});
+
+app.get("/activities/user/:id", async (req, res) =>{
+    try{
+        const activities = await Activity.find({user: req.params.id})
+            .sort({timestamp: -1})
+
+        res.json(activities);
+    } catch(error){
+        res.status(500).json({message: error.message});
+    }
+});
+
+    // Temporary route for activity log posting (This will be implemented correctly once reservation api is done)
+app.post("/activities/test", async (req, res) => {
+    try {
+        const activity = await Activity.create({
+            user: req.body.userId,
+            reservation: new mongoose.Types.ObjectId(),
+            action: req.body.action,
+            seatNumber: req.body.seatNumber,
+            labName: req.body.labName
+        });
+
+        res.status(201).json(activity);
+    } catch(error){
+        res.status(500).json({message: error.message});
     }
 });
 
