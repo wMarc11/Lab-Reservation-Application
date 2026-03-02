@@ -1,2 +1,2 @@
-declare const accountJSON: string | null;
+export {};
 //# sourceMappingURL=settings.d.ts.map

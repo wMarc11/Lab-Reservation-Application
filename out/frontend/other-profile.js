@@ -1,6 +1,4 @@
-"use strict";
 // @ts-nocheck
-Object.defineProperty(exports, "__esModule", { value: true });
 // I hardcoded this for now to be the same as the logged in user
 // Basically, if this is changed, the edit button will not be displayed
 const loggedInUserID = "12345679";
@@ -167,8 +165,8 @@ function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
-const accounts_js_1 = require("../examples-testing-purposes/out-js/accounts.js");
-const Helper_js_1 = require("../examples-testing-purposes/out-js/Helper.js");
+import { accounts } from "../examples-testing-purposes/out-js/accounts.js";
+import { getReservationCountInfo, getValidUser, setInnerHTML } from "../examples-testing-purposes/out-js/Helper.js";
 function init() {
     const userId = getQueryParam("id");
     if (!userId) {
@@ -176,7 +174,7 @@ function init() {
         return;
     }
     console.log(userId);
-    const accountsArray = Object.values(accounts_js_1.accounts);
+    const accountsArray = Object.values(accounts);
     const account = accountsArray.find(acc => acc.id.toString() === userId.toString());
     if (!account) {
         console.error("User not found.");
@@ -187,18 +185,18 @@ function init() {
 function initProfile(account) {
     var _a;
     console.log(account);
-    let userName = (0, Helper_js_1.getValidUser)(account.user);
+    let userName = getValidUser(account.user);
     if (account.accountType === "Admin")
         userName = "Admin";
-    (0, Helper_js_1.setInnerHTML)("#firstName", userName);
-    (0, Helper_js_1.setInnerHTML)("#user-type", account.accountType);
-    const reservationCounts = (0, Helper_js_1.getReservationCountInfo)(account.reservations);
-    (0, Helper_js_1.setInnerHTML)("#reservations", reservationCounts.noOfReservations.toString());
-    (0, Helper_js_1.setInnerHTML)("#upcoming", reservationCounts.noOfUpcoming.toString());
-    (0, Helper_js_1.setInnerHTML)("#email", account.email);
-    (0, Helper_js_1.setInnerHTML)("#course", account.course);
-    (0, Helper_js_1.setInnerHTML)("#studentID", account.id.toString());
-    (0, Helper_js_1.setInnerHTML)("#contactNumber", (_a = account.phoneNumber) !== null && _a !== void 0 ? _a : "No phone number");
+    setInnerHTML("#firstName", userName);
+    setInnerHTML("#user-type", account.accountType);
+    const reservationCounts = getReservationCountInfo(account.reservations);
+    setInnerHTML("#reservations", reservationCounts.noOfReservations.toString());
+    setInnerHTML("#upcoming", reservationCounts.noOfUpcoming.toString());
+    setInnerHTML("#email", account.email);
+    setInnerHTML("#course", account.course);
+    setInnerHTML("#studentID", account.id.toString());
+    setInnerHTML("#contactNumber", (_a = account.phoneNumber) !== null && _a !== void 0 ? _a : "No phone number");
 }
 document.addEventListener("DOMContentLoaded", () => {
     init();

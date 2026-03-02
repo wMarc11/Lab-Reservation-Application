@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const frontendUtil_1 = require("../util/frontendUtil");
-const dateInput = (0, frontendUtil_1.queryElement)("#current-date");
+import { queryElement } from "./util/frontendUtil.js";
+const dateInput = queryElement("#current-date");
 const today = new Date();
 const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -42,8 +40,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.href = "./dashboard-admin.html";
             return;
         }
-        (0, frontendUtil_1.queryElement)('#user-name').textContent = `${user.firstName}`;
-        (0, frontendUtil_1.queryElement)('#user-type').textContent = `${user.role}`;
+        queryElement('#user-name').textContent = `${user.firstName}`;
+        queryElement('#user-type').textContent = `${user.role}`;
         const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
         const reservations = await reservationRes.json();
         updateDashboard(reservations);
@@ -53,11 +51,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 function updateDashboard(reservations) {
-    const upcomingTable = (0, frontendUtil_1.queryElement)("#upcoming-reservations");
-    const upcomingTableBody = (0, frontendUtil_1.queryElement)("tbody", upcomingTable);
-    const noUpcoming = (0, frontendUtil_1.queryElement)('#no-upcoming');
-    const noReservations = (0, frontendUtil_1.queryElement)('#no-reservations');
-    const filler = (0, frontendUtil_1.queryElement)("#filler");
+    const upcomingTable = queryElement("#upcoming-reservations");
+    const upcomingTableBody = queryElement("tbody", upcomingTable);
+    const noUpcoming = queryElement('#no-upcoming');
+    const noReservations = queryElement('#no-reservations');
+    const filler = queryElement("#filler");
     upcomingTableBody.innerHTML = "";
     if (reservations.length === 0) {
         filler.innerHTML = "<h3>None</h3>";

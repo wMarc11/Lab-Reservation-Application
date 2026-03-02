@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // @ts-nocheck
-const frontendUtil_1 = require("../util/frontendUtil");
+import { queryElement } from "./util/frontendUtil.js";
 /*
 ##########################################################################
 
@@ -10,8 +8,8 @@ side, specifically at the heading container.
 
 ##########################################################################
 */
-const info_container = (0, frontendUtil_1.queryElement)('.availability-section');
-const heading = (0, frontendUtil_1.queryElement)('h1', info_container);
+const info_container = queryElement('.availability-section');
+const heading = queryElement('h1', info_container);
 const today = new Date();
 const options = {
     weekday: 'short',

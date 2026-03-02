@@ -1,4 +1,4 @@
-import { queryElement } from "../util/frontendUtil";
+import { queryElement } from "./util/frontendUtil.js";
 
 const accountJSON = sessionStorage.getItem("account");
 

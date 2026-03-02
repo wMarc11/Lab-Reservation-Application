@@ -1,4 +1,4 @@
-import { queryElement } from "../util/frontendUtil";
+import { queryElement } from "./util/frontendUtil.js";
 
 const BASE_URL = "http://localhost:3000";
 
@@ -345,14 +345,14 @@ export class LogInModal {
     private modeLogIn() {
         this.hiddableH4.classList.add("is-transparent");
         this.logInTransition.classList.add("is-transparent");
-        this.logInCard.classList.add("formpanel--active");
+        this.logInCard.classList.add("form__panel--active");
         this.signInContent.classList.add("is-transparent");
     }
 
     private modeSignUp() {
         this.hiddableH4.classList.remove("is-transparent");
         this.logInTransition.classList.remove("is-transparent");
-        this.logInCard.classList.remove("formpanel--active")
+        this.logInCard.classList.remove("form__panel--active")
         this.signInContent.classList.remove("is-transparent");
     }
 

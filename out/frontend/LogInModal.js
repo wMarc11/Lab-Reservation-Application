@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.LogInModal = void 0;
-const frontendUtil_1 = require("../util/frontendUtil");
+import { queryElement } from "./util/frontendUtil.js";
 const BASE_URL = "http://localhost:3000";
 const DIV = `
         <div class="overlay">
@@ -84,7 +81,7 @@ const ERROR_ICON = `<i class="fa-solid fa-circle-exclamation"></i>`;
  * Methods:
  * - close(): closes and removes the modal from the DOM
  */
-class LogInModal {
+export class LogInModal {
     /**
     * Creates in log in modal
     *
@@ -194,21 +191,21 @@ class LogInModal {
             this.modeLogIn();
     }
     initListners() {
-        this.logInTransition = (0, frontendUtil_1.queryElement)("#log-in-transition", this.modal);
-        this.signUpTransition = (0, frontendUtil_1.queryElement)("#sign-up-transition", this.modal);
-        this.logInCard = (0, frontendUtil_1.queryElement)("#log-in-card", this.modal);
-        this.signInContent = (0, frontendUtil_1.queryElement)("#sign-in-content", this.modal);
-        this.hiddableH4 = (0, frontendUtil_1.queryElement)("#hiddable", this.modal);
-        this.errorSignUp = (0, frontendUtil_1.queryElement)("#error-sign-up", this.modal);
-        this.errorLogIn = (0, frontendUtil_1.queryElement)("#error-log-in", this.modal);
-        this.signUp = (0, frontendUtil_1.queryElement)("#sign-up", this.modal);
-        this.logIn = (0, frontendUtil_1.queryElement)("#log-in", this.modal);
-        this.logInEmailField = (0, frontendUtil_1.queryElement)("#log-in-email-field", this.modal);
-        this.logInPasswordField = (0, frontendUtil_1.queryElement)("#log-in-password-field", this.modal);
-        this.signUpEmailField = (0, frontendUtil_1.queryElement)("#sign-up-email-field", this.modal);
-        this.signUpPasswordField = (0, frontendUtil_1.queryElement)("#sign-up-password-field", this.modal);
-        this.rememberMe1 = (0, frontendUtil_1.queryElement)("#remember-me1", this.modal);
-        this.rememberMe2 = (0, frontendUtil_1.queryElement)("#remember-me2", this.modal);
+        this.logInTransition = queryElement("#log-in-transition", this.modal);
+        this.signUpTransition = queryElement("#sign-up-transition", this.modal);
+        this.logInCard = queryElement("#log-in-card", this.modal);
+        this.signInContent = queryElement("#sign-in-content", this.modal);
+        this.hiddableH4 = queryElement("#hiddable", this.modal);
+        this.errorSignUp = queryElement("#error-sign-up", this.modal);
+        this.errorLogIn = queryElement("#error-log-in", this.modal);
+        this.signUp = queryElement("#sign-up", this.modal);
+        this.logIn = queryElement("#log-in", this.modal);
+        this.logInEmailField = queryElement("#log-in-email-field", this.modal);
+        this.logInPasswordField = queryElement("#log-in-password-field", this.modal);
+        this.signUpEmailField = queryElement("#sign-up-email-field", this.modal);
+        this.signUpPasswordField = queryElement("#sign-up-password-field", this.modal);
+        this.rememberMe1 = queryElement("#remember-me1", this.modal);
+        this.rememberMe2 = queryElement("#remember-me2", this.modal);
         this.logInTransition.addEventListener("click", () => {
             this.modeLogIn();
         });
@@ -296,13 +293,13 @@ class LogInModal {
     modeLogIn() {
         this.hiddableH4.classList.add("is-transparent");
         this.logInTransition.classList.add("is-transparent");
-        this.logInCard.classList.add("formpanel--active");
+        this.logInCard.classList.add("form__panel--active");
         this.signInContent.classList.add("is-transparent");
     }
     modeSignUp() {
         this.hiddableH4.classList.remove("is-transparent");
         this.logInTransition.classList.remove("is-transparent");
-        this.logInCard.classList.remove("formpanel--active");
+        this.logInCard.classList.remove("form__panel--active");
         this.signInContent.classList.remove("is-transparent");
     }
     /**
@@ -319,7 +316,6 @@ class LogInModal {
             this.rememberMe1.checked = !this.rememberMe1.checked;
     }
 }
-exports.LogInModal = LogInModal;
 // document.addEventListener("DOMContentLoaded", () => {
 //     document.getElementById("sign-in").addEventListener("click", () => {
 //         new LogInModal("LOG_IN");

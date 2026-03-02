@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const frontendUtil_1 = require("../util/frontendUtil");
+import { queryElement } from "./util/frontendUtil.js";
 /*
   My Reservations (prototype)
 
@@ -19,38 +17,38 @@ const frontendUtil_1 = require("../util/frontendUtil");
         GK302B: 20,
     };
     const els = {
-        tbody: (0, frontendUtil_1.queryElement)("#reservations-tbody"),
-        emptyState: (0, frontendUtil_1.queryElement)("#empty-state"),
-        statUpcoming: (0, frontendUtil_1.queryElement)("#stat-upcoming"),
-        statToday: (0, frontendUtil_1.queryElement)("#stat-today"),
-        statTotal: (0, frontendUtil_1.queryElement)("#stat-total"),
-        statUpcomingBadge: (0, frontendUtil_1.queryElement)("#stat-upcoming-badge"),
-        statTodayBadge: (0, frontendUtil_1.queryElement)("#stat-today-badge"),
-        statTotalBadge: (0, frontendUtil_1.queryElement)("#stat-total-badge"),
-        statCancelled: (0, frontendUtil_1.queryElement)("#stat-cancelled"),
-        statCancelledBadge: (0, frontendUtil_1.queryElement)("#stat-cancelled-badge"),
-        filterLab: (0, frontendUtil_1.queryElement)("#filter-lab"),
-        filterStatus: (0, frontendUtil_1.queryElement)("#filter-status"),
-        filterSearch: (0, frontendUtil_1.queryElement)("#filter-search"),
+        tbody: queryElement("#reservations-tbody"),
+        emptyState: queryElement("#empty-state"),
+        statUpcoming: queryElement("#stat-upcoming"),
+        statToday: queryElement("#stat-today"),
+        statTotal: queryElement("#stat-total"),
+        statUpcomingBadge: queryElement("#stat-upcoming-badge"),
+        statTodayBadge: queryElement("#stat-today-badge"),
+        statTotalBadge: queryElement("#stat-total-badge"),
+        statCancelled: queryElement("#stat-cancelled"),
+        statCancelledBadge: queryElement("#stat-cancelled-badge"),
+        filterLab: queryElement("#filter-lab"),
+        filterStatus: queryElement("#filter-status"),
+        filterSearch: queryElement("#filter-search"),
         // modal
-        overlay: (0, frontendUtil_1.queryElement)("#modal-overlay"),
-        modalClose: (0, frontendUtil_1.queryElement)("#modal-close"),
-        tabView: (0, frontendUtil_1.queryElement)("#tab-view"),
-        tabEdit: (0, frontendUtil_1.queryElement)("#tab-edit"),
-        viewPane: (0, frontendUtil_1.queryElement)("#view-pane"),
-        modalViewGrid: (0, frontendUtil_1.queryElement)("#modal-view-grid"),
-        editForm: (0, frontendUtil_1.queryElement)("#edit-form"),
-        formError: (0, frontendUtil_1.queryElement)("#form-error"),
-        btnCancel: (0, frontendUtil_1.queryElement)("#btn-cancel"),
+        overlay: queryElement("#modal-overlay"),
+        modalClose: queryElement("#modal-close"),
+        tabView: queryElement("#tab-view"),
+        tabEdit: queryElement("#tab-edit"),
+        viewPane: queryElement("#view-pane"),
+        modalViewGrid: queryElement("#modal-view-grid"),
+        editForm: queryElement("#edit-form"),
+        formError: queryElement("#form-error"),
+        btnCancel: queryElement("#btn-cancel"),
         // form fields
-        editId: (0, frontendUtil_1.queryElement)("#edit-id"),
-        editLab: (0, frontendUtil_1.queryElement)("#edit-lab"),
-        editDate: (0, frontendUtil_1.queryElement)("#edit-date"),
-        editSeat: (0, frontendUtil_1.queryElement)("#edit-seat"),
-        editStart: (0, frontendUtil_1.queryElement)("#edit-start"),
-        editEnd: (0, frontendUtil_1.queryElement)("#edit-end"),
-        editAnon: (0, frontendUtil_1.queryElement)("#edit-anon"),
-        seatHint: (0, frontendUtil_1.queryElement)("#seat-hint"),
+        editId: queryElement("#edit-id"),
+        editLab: queryElement("#edit-lab"),
+        editDate: queryElement("#edit-date"),
+        editSeat: queryElement("#edit-seat"),
+        editStart: queryElement("#edit-start"),
+        editEnd: queryElement("#edit-end"),
+        editAnon: queryElement("#edit-anon"),
+        seatHint: queryElement("#seat-hint"),
     };
     let reservations = [];
     let activeReservationId = null;

@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { queryElement } from "../util/frontendUtil";
+import { queryElement } from "./util/frontendUtil.js";
 
 /*
 ##########################################################################

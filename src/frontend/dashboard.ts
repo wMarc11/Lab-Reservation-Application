@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { Reservation } from "../types/reservation";
-import { queryElement } from "../util/frontendUtil";
+import { Reservation } from "../types/reservation.js";
+import { queryElement } from "./util/frontendUtil.js";
 
 const dateInput = queryElement<HTMLInputElement>("#current-date");
 

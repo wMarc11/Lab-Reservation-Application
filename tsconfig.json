@@ -1,21 +1,6 @@
 {
   "compilerOptions": {
-    // File layout
-    "rootDir": "./src",       // where your TS files live
-    "outDir": "./out",       // compiled JS files go here
-
-    // Environment
-    "module": "commonjs",     // Node.js uses CommonJS
-    "target": "ES2020",       // modern JS runtime
-    "lib": ["ES2020", "DOM"],        // standard JS lib features
-    "types": ["node"],        // Node type definitions
-
-    // Output
-    "sourceMap": true,        // useful for debugging
-    "declaration": true,      // generate .d.ts for TS modules
-    "declarationMap": true,   // map TS -> d.ts for IDEs
-
-    // Stricter type checking
+    "target": "ES2020",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
@@ -23,14 +8,45 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-
-    // Node + interop
-    "esModuleInterop": true,     // allow `import express from "express"`
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-
-    // Ignore library type checking to speed up compilation
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+    "skipLibCheck": true,
+    "sourceMap": true
+  }
 }
+// {
+//   "compilerOptions": {
+//     // File layout
+//     "rootDir": "./src",       // where your TS files live
+//     "outDir": "./out",       // compiled JS files go here
+//
+//     // Environment
+//     "module": "commonjs",     // Node.js uses CommonJS
+//     "target": "ES2020",       // modern JS runtime
+//     "lib": ["ES2020", "DOM"],        // standard JS lib features
+//     "types": ["node"],        // Node type definitions
+//
+//     // Output
+//     "sourceMap": true,        // useful for debugging
+//     "declaration": true,      // generate .d.ts for TS modules
+//     "declarationMap": true,   // map TS -> d.ts for IDEs
+//
+//     // Stricter type checking
+//     "strict": true,
+//     "noUncheckedIndexedAccess": true,
+//     "exactOptionalPropertyTypes": true,
+//     "noUnusedLocals": true,
+//     "noUnusedParameters": true,
+//     "noImplicitReturns": true,
+//     "noFallthroughCasesInSwitch": true,
+//
+//     // Node + interop
+//     "esModuleInterop": true,     // allow `import express from "express"`
+//     "forceConsistentCasingInFileNames": true,
+//
+//     // Ignore library type checking to speed up compilation
+//     "skipLibCheck": true
+//   },
+//   "include": ["src/**/*"],
+//   "exclude": ["node_modules"]
+// }

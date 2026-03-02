@@ -1,4 +1,4 @@
-import { queryElement } from "../util/frontendUtil";
+import { queryElement } from "./util/frontendUtil.js";
 import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/reservation.d.ts";
 /*
   My Reservations (prototype)
