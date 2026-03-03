@@ -1,4 +1,5 @@
-const dateInput = document.getElementById("current-date");
+import { queryElement } from "./util/frontendUtil.js";
+const dateInput = queryElement("#current-date");
 
 const today = new Date();
 const yyyy = today.getFullYear();
@@ -9,7 +10,7 @@ dateInput.value = `${yyyy}-${mm}-${dd}`;
 
 const userID = sessionStorage.getItem("user");
 
-const profileImage = document.querySelector('#user-pic');
+const profileImage = queryElement('#user-pic');
 
 async function loadUserImg(){
     try{
@@ -36,7 +37,7 @@ if (loggedInUserJSON) {
 }
 
 if (loggedInUser) {
-    const infoEl = document.querySelector(".profile .info p b");
+    const infoEl = queryElement(".profile .info p b");
     const userTypeEl = document.getElementById("user-type");
 
     if (infoEl) infoEl.textContent = loggedInUser.firstName; 
@@ -44,7 +45,7 @@ if (loggedInUser) {
 }
 
 if (loggedInUser && loggedInUser.accountType === "Admin") {
-    const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]');
+    const dashboardLink = queryElement('.sidebar a[href="dashboard.html"]');
     if (dashboardLink) {
         dashboardLink.href = "dashboard-admin.html";
     }
@@ -66,8 +67,8 @@ document.addEventListener("DOMContentLoaded", async() => {
             return;
         }
 
-        document.querySelector('#user-name').textContent = `${user.firstName}`;
-        document.querySelector('#user-type').textContent = `${user.role}`;
+        queryElement('#user-name').textContent = `${user.firstName}`;
+        queryElement('#user-type').textContent = `${user.role}`;
 
         const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
         const reservations = await reservationRes.json();
@@ -85,11 +86,11 @@ document.addEventListener("DOMContentLoaded", async() => {
 });
 
 function updateReservations(reservations){
-    const upcomingTable = document.querySelector("#upcoming-reservations");
-    const upcomingTableBody = document.querySelector("#upcoming-reservations").querySelector("tbody");
-    const noUpcoming = document.querySelector('#no-upcoming');
-    const noReservations = document.querySelector('#no-reservations');
-    const filler = document.querySelector("#filler");
+    const upcomingTable = queryElement("#upcoming-reservations");
+    const upcomingTableBody = queryElement("#upcoming-reservations").querySelector("tbody");
+    const noUpcoming = queryElement('#no-upcoming');
+    const noReservations = queryElement('#no-reservations');
+    const filler = queryElement("#filler");
 
     upcomingTableBody.innerHTML = "";
 
@@ -128,7 +129,7 @@ function updateReservations(reservations){
 
 let visibleCount = 3;
 function updateRecentActivity(activities){
-    const activityList = document.querySelector('#recent-activity-list');
+    const activityList = queryElement('#recent-activity-list');
     
     if(!activityList){
         return;

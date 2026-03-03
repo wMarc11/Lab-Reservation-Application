@@ -1,4 +1,5 @@
-const dateInput = document.getElementById("current-date");
+import { queryElement } from "../util/frontendUtil.js";
+const dateInput = queryElement("#current-date");
 
 const today = new Date();
 const yyyy = today.getFullYear();

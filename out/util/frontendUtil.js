@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.queryElement = queryElement;
+//Object.defineProperty(exports, "__esModule", { value: true });
+//exports.queryElement = queryElement;
 /**
  * Use this to get an html element, instead of something like document.querySelector("#idk")
  *
@@ -12,7 +12,7 @@ exports.queryElement = queryElement;
  * @param parent - where to search (defaults to document)
  *
  */
-function queryElement(query, parent = document) {
+export function queryElement(query, parent = document) {
     const element = parent.querySelector(query);
     if (element === null)
         throw new Error(`Couldn't fine element with query ${query}`);
