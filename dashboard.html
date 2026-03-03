@@ -42,7 +42,7 @@
                     </div>
                     <div class="profile">
                         <div class="profile-photo">
-                            <img src="images/profilepic.webp">
+                            <img id="user-pic">
                         </div>
                         <div class="info">
                             <p>Hello, <b id="user-name">User</b></p>
@@ -72,7 +72,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>14</p>
+                                    <p>14</p> <!--TODO: change this dynamically-->
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>3</p>
+                                    <p>3</p> <!--TODO: change this dynamically-->
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p id="no-reservations">2</p>
+                                    <p id="no-reservations"></p>
                                 </div>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p id="no-upcoming">1</p>
+                                    <p id="no-upcoming"></p>
                                 </div>
                             </div>
                         </div>
@@ -144,39 +144,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>GK302B</td>
-                                        <td>Yesterday · 6:30 AM</td>
-                                        <td>Today · 10:00-11:30</td>
-                                        <td>Seat 14</td>
-                                        <td class="warning">Today</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GK301</td>
-                                        <td>Today · 11:30 AM</td>
-                                        <td>Tomorrow · 1:00-2:30</td>
-                                        <td>Seat 8</td>
-                                        <td class="success">Upcoming</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="view-more"><a href="my-reservations.html">View All</a></td>
-                                    </tr>
                                 </tbody>
                             </table>
+                            <div id="filler"></div>
                         </div>
 
                         <div>
+                            <!--TODO: make this dynamically changeable-->
                             <h2>Recent Activity</h2>
                             <div class="recent-activity">
-                                <ul>
-                                    <li>Reserved Seat 8 in GK301 <small>30 mins ago</small></li>
-                                    <li>Reserved Seat 14 in GK302B <small>1 day ago</small></li>
-                                    <li>Cancelled reservation for Seat 18 in GK302B <small>1 day ago</small></li>
-                                    <li class="view-more-activity"><a href="#">View All</a></li>
+                                <ul id="recent-activity-list">
                                 </ul>
                             </div>
                         </div>
@@ -201,6 +178,7 @@
                             </div>
                         </div>
 
+                        <!--TODO: make this dynamaically changeable-->
                         <div class="lab-container">
                             <h2>Lab Availability</h2>
                             <div class="lab-availability">
@@ -261,7 +239,6 @@
                 </div>
             </main>
         </div>
-        <script src="scripts/dashboard.js"></script>
-        <script type= "module" src="examples-testing-purposes/out-js/PageUpdater.js"></script>
+        <script type="module" src="out/frontend/dashboard.js"></script>
     </body>
 </html> 

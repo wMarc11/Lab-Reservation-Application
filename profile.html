@@ -30,7 +30,7 @@
                 </div>
             </aside>
 
-            <main data-profileid = "12345678">
+            <main>
                 <div class="header"> 
                     <h1>My Profile</h1>
                 </div>
@@ -112,24 +112,16 @@
                                             First Name
                                         </label>
 
-                                        <input type="text" placeholder="First Name">
+                                        <input type="text" name="firstName" placeholder="First Name">
                                     </div>
                                     <div>
                                         <label>
                                             Last Name
                                         </label>
 
-                                        <input type="text" placeholder="Last Name">
+                                        <input type="text" name="lastName" placeholder="Last Name">
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="form">
-                                <label>
-                                    Email
-                                </label>
-
-                                <input type="email" placeholder="Enter your email">
                             </div>
 
                             <div class="form">
@@ -137,7 +129,7 @@
                                     Student ID
                                 </label>
 
-                                <input type="text" placeholder="Enter your student ID">
+                                <input type="text" name="studentID" placeholder="Enter your student ID">
                             </div>
 
                             <div class="form">
@@ -145,7 +137,7 @@
                                     Course
                                 </label>
 
-                                <input type="text" placeholder="Enter your course">
+                                <input type="text" name="course" placeholder="Enter your course">
                             </div>
 
                             <div class="form">
@@ -153,7 +145,7 @@
                                     Contact Number
                                 </label>
 
-                                <input type="tel" placeholder="Enter your contact number">
+                                <input type="tel" name="contactNumber" placeholder="Enter your contact number">
                             </div>
 
                             <div class="form-actions">
@@ -170,7 +162,7 @@
                 </div>
             </main>
         </div>
-        <script type="module" src="scripts/profile.js"></script>
-        <script type= "module" src="examples-testing-purposes/out-js/PageUpdater.js"></script>
+        <script type="module" src="out/frontend/profile.js"></script>
+        <!-- <script type= "module" src="examples-testing-purposes/out-js/PageUpdater.js"></script> -->
     </body>
 </html>

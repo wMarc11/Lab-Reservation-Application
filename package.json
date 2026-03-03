@@ -2,10 +2,14 @@
   "name": "mco",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js"
+    "serve": "node server.ts",
+    "dev": "nodemon --exec tsx src/server/server.ts",
+    "dev-server": "tsx src/server/server.ts",
+    "dev-frontend": "tsc --project tsconfig.frontend.json --watch",
+    "build": "tsc -p tsconfig.frontend.json && tsc -p tsconfig.server.json"
   },
   "repository": {
     "type": "git",
@@ -22,7 +26,16 @@
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "mongoose": "^9.2.1",
+    "mongoose": "^9.2.3",
+    "multer": "^2.1.0",
     "nodemon": "^3.1.14"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^25.3.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
