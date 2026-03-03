@@ -2,10 +2,10 @@
   "name": "mco",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "node server.js",
+    "serve": "node server.ts",
     "dev": "nodemon --exec tsx src/server/server.ts",
     "dev-server": "tsx src/server/server.ts",
     "dev-frontend": "tsc --project tsconfig.frontend.json --watch",

@@ -32,7 +32,7 @@ const UserSchema = mongoose.Schema(
 
         profileImage: {
             type: String,
-            default: "default.png"
+            default: "default.webp"
         },
 
         isActive: {

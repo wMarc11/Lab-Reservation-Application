@@ -113,7 +113,7 @@ app.put("/reservations/:id", async (request, response) => {
         const updated = await Reservation.findByIdAndUpdate(
             request.params.id,
             request.body,
-            { new: true }
+            { returnDocument: 'after' }
         );
         if (!updated) 
             return response.status(404).json({ message: "Reservation not found" });
@@ -185,7 +185,7 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
       updateData.profileImage = req.file.filename; 
     }
 
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { returnDocument: 'after' });
     res.json(updatedUser);
   } catch (err) {
     console.error(err);

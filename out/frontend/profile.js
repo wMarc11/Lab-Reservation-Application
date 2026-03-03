@@ -64,7 +64,10 @@ saveBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     const formData = new FormData();
     inputs.forEach(input => {
-        formData.append(input.name, input.value);
+        const value = input.value.trim();
+        if (value !== "") {
+            formData.append(input.name, value);
+        }
     });
     if (photoInput.files[0]) {
         formData.append('profileImage', photoInput.files[0]);
@@ -77,33 +80,16 @@ saveBtn.addEventListener("click", async (e) => {
         if (!res.ok)
             throw new Error('Failed to update profile');
         const updatedUser = await res.json();
-        inputs.forEach(input => {
-            const value = input.value.trim();
-            if (value !== "") {
-                switch (input.name) {
-                    case "firstName":
-                        document.querySelector('#firstName').textContent = value;
-                        break;
-                    case "lastName":
-                        document.querySelector('#lastName').textContent = value;
-                        break;
-                    case "studentID":
-                        document.querySelector('#studentID').textContent = value;
-                        break;
-                    case "course":
-                        document.querySelector('#course').textContent = value;
-                        break;
-                    case "contactNumber":
-                        document.querySelector('#contactNumber').textContent = value;
-                        break;
-                    case "email":
-                        document.querySelector('#email').textContent = value;
-                        break;
-                }
-            }
-        });
+        document.querySelector('#firstName').textContent = updatedUser.firstName;
+        document.querySelector('#lastName').textContent = updatedUser.lastName;
+        document.querySelector('#studentID').textContent = updatedUser.studentID;
+        document.querySelector('#course').textContent = updatedUser.course;
+        document.querySelector('#contactNumber').textContent = updatedUser.contactNumber;
+        document.querySelector('#email').textContent = updatedUser.email;
         profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
         cancelBtn.click();
+
+        loadProfile();
     }
     catch (err) {
         alert(err.message);
