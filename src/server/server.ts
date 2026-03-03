@@ -193,6 +193,30 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
     res.status(500).json({ error: 'Failed to update user' });
   }
 });
+
+
+// DASHBOARD-ADMIN
+app.get("/reservations", async (req, res) =>{
+    try{
+        const reservations = await Reservation.find()
+            .populate("lab", "name")
+            .populate("user", "firstName, lastName")
+            .sort({date: 1})
+        res.json(reservations);
+    } catch(error){
+        res.status(400).json({message: (error as any).message});
+    }
+});
+
+app.get("/activities", async(req, res) =>{
+    try {
+        const activities = await Activity.find()
+            .populate("user", "firstName lastName")
+        res.json(activities);
+    } catch (error) {
+        res.status(400).json({ message: (error as any).message });
+    }
+});
     
 mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
 .then(() =>{

@@ -42,11 +42,11 @@
                     </div>
                     <div class="profile">
                         <div class="profile-photo">
-                            <img src="images/profilepic.webp">
+                            <img id="user-pic">
                         </div>
                         <div class="info">
-                            <p>Hello, <b>User</b></p>
-                            <small class="text-muted">Admin</small>
+                            <p>Hello, <b id="user-name"></b></p>
+                            <small id="user-type" class="text-muted"></small>
                         </div>  
                         <div class="dropdown-menu">
                             <a href="profile.html">
@@ -72,7 +72,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>33</p>
+                                    <p id="totalReservations"></p>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>3</p>
+                                    <p id="noShowReservations">3</p>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +106,7 @@
                                     <circle cx="38" cy="38" r="36"></circle>
                                 </svg>
                                 <div class="number">
-                                    <p>15</p>
+                                    <p id="no-upcoming">15</p>
                                 </div>
                             </div>
                         </div>
@@ -136,50 +136,27 @@
                     <div>
                         <h2>Upcoming Reservations</h2>
                         <div class="upcoming-reservations">
-                            <table>
+                            <table id="upcoming-reservations">
                                 <thead>
                                     <tr>
                                         <th>Laboratory</th>
-                                        <th>Student ID</th>
+                                        <th>Student</th>
+                                        <th>Date & Time Requested</th>
                                         <th>Date & Time</th>
                                         <th>Seat</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>GK302A</td>
-                                        <td>12345678</td>
-                                        <td>Today · 10:00–11:30</td>
-                                        <td>Seat 14</td>
-                                        <td class="success">Upcoming</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GK301</td>
-                                        <td>12345679</td>
-                                        <td>Today · 1:00–2:30</td>
-                                        <td>Seat 18</td>
-                                        <td class="success">Upcoming</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td class="view-more"><a href="all-reservations.html">View All</a></td>
-                                    </tr>
                                 </tbody>
                             </table>
+                            <div id="filler"></div>
                         </div>
 
                         <div>
                             <h2>Recent Activity</h2>
                             <div class="recent-activity">
-                                <ul>
-                                    <li>Student ID 12234421 reserved Seat 18 in GK301 <small>30 mins ago</small></li>
-                                    <li>Student ID 12434422 reserved Seat 4 in GK302B <small>1 day ago</small></li>
-                                    <li>Student ID 12134423 cancelled reservation for Seat 1 in GK302B <small>1 day ago</small></li>
-                                    <li class="view-more-activity"><a href="#">View All</a></li>
+                                <ul id="recent-activity-list">
                                 </ul>
                             </div>
                         </div>
