@@ -5,12 +5,11 @@ const loggedInUserID = sessionStorage.getItem("user");
 if (!loggedInUserID) {
     window.location.href = "index.html";
 }
-const params = new URLSearchParams(window.location.search);
-const profileUserID = params.get("id");
+const urlParams = new URLSearchParams(window.location.search);
+const profileUserID = urlParams.get("id");
 const profileID = profileUserID || loggedInUserID;
 const profileDetails = document.querySelector(".profile-details");
 const block = document.querySelector(".block1");
-const formActions = document.querySelector(".form-actions");
 const editBtn = document.getElementById("editBtn");
 const saveBtn = document.getElementById("saveBtn");
 const cancelBtn = document.getElementById("cancelBtn");
@@ -18,7 +17,6 @@ const changePhotoBtn = document.getElementById("changePhotoBtn");
 const photoInput = document.getElementById("photoInput");
 const profileImage = document.getElementById("profileImage");
 const inputs = document.querySelectorAll(".profile-form input");
-let tableVisible = false;
 let formsActive = false;
 const accountJSON = sessionStorage.getItem("account");
 if (accountJSON) {
@@ -33,44 +31,58 @@ const upcomingBtn = document.getElementById("upcomingBtn");
 const reservationList = document.getElementById("reservationList");
 const listTitle = document.getElementById("listTitle");
 const upcomingTableBody = document.getElementById("upcomingTableBody");
-if (loggedInUserID === profileID) {
-    editBtn.style.display = "block";
+if (editBtn) {
+    if (loggedInUserID === profileID) {
+        editBtn.style.display = "block";
+    }
+    else {
+        editBtn.style.display = "none";
+    }
 }
-else {
-    editBtn.style.display = "none";
-}
-editBtn.addEventListener("click", () => {
+editBtn?.addEventListener("click", () => {
     inputs.forEach(input => input.removeAttribute("disabled"));
-    block.style.gridTemplateColumns = "auto 45rem";
+    if (block)
+        block.style.gridTemplateColumns = "auto 45rem";
     profileDetails.style.display = "flex";
-    saveBtn.style.display = "block";
-    cancelBtn.style.display = "block";
-    changePhotoBtn.style.display = "block";
+    if (saveBtn)
+        saveBtn.style.display = "block";
+    if (cancelBtn)
+        cancelBtn.style.display = "block";
+    if (changePhotoBtn)
+        changePhotoBtn.style.display = "block";
     editBtn.style.display = "none";
-    reservationList.style.display = "none";
+    if (reservationList)
+        reservationList.style.display = "none";
     formsActive = true;
 });
-cancelBtn.addEventListener("click", () => {
+cancelBtn?.addEventListener("click", () => {
     inputs.forEach(input => input.setAttribute("disabled", "true"));
-    block.style.gridTemplateColumns = "auto";
+    if (block)
+        block.style.gridTemplateColumns = "auto";
     profileDetails.style.display = "none";
-    saveBtn.style.display = "none";
-    cancelBtn.style.display = "none";
-    changePhotoBtn.style.display = "none";
-    editBtn.style.display = "block";
+    if (saveBtn)
+        saveBtn.style.display = "none";
+    if (cancelBtn)
+        cancelBtn.style.display = "none";
+    if (changePhotoBtn)
+        changePhotoBtn.style.display = "none";
+    if (editBtn)
+        editBtn.style.display = "block";
     formsActive = false;
 });
-saveBtn.addEventListener("click", async (e) => {
+saveBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
     const formData = new FormData();
     inputs.forEach(input => {
-        const value = input.value.trim();
+        const htmlInput = input;
+        const value = htmlInput.value.trim();
         if (value !== "") {
-            formData.append(input.name, value);
+            formData.append(htmlInput.name, value);
         }
     });
-    if (photoInput.files[0]) {
-        formData.append('profileImage', photoInput.files[0]);
+    const file = photoInput.files?.[0];
+    if (file) {
+        formData.append('profileImage', file);
     }
     try {
         const res = await fetch(`http://localhost:3000/users/${profileID}`, {
@@ -80,41 +92,60 @@ saveBtn.addEventListener("click", async (e) => {
         if (!res.ok)
             throw new Error('Failed to update profile');
         const updatedUser = await res.json();
-        document.querySelector('#firstName').textContent = updatedUser.firstName;
-        document.querySelector('#lastName').textContent = updatedUser.lastName;
-        document.querySelector('#studentID').textContent = updatedUser.studentID;
-        document.querySelector('#course').textContent = updatedUser.course;
-        document.querySelector('#contactNumber').textContent = updatedUser.contactNumber;
-        document.querySelector('#email').textContent = updatedUser.email;
-        profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
-        cancelBtn.click();
-
+        const firstNameEl = document.querySelector('#firstName');
+        if (firstNameEl)
+            firstNameEl.textContent = updatedUser.firstName;
+        const lastNameEl = document.querySelector('#lastName');
+        if (lastNameEl)
+            lastNameEl.textContent = updatedUser.lastName;
+        const studentIDEl = document.querySelector('#studentID');
+        if (studentIDEl)
+            studentIDEl.textContent = updatedUser.studentID;
+        const courseEl = document.querySelector('#course');
+        if (courseEl)
+            courseEl.textContent = updatedUser.course;
+        const contactNumberEl = document.querySelector('#contactNumber');
+        if (contactNumberEl)
+            contactNumberEl.textContent = updatedUser.contactNumber;
+        const emailEl = document.querySelector('#email');
+        if (emailEl)
+            emailEl.textContent = updatedUser.email;
+        if (profileImage)
+            profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
+        if (cancelBtn)
+            cancelBtn.click();
         loadProfile();
     }
     catch (err) {
-        alert(err.message);
         console.error(err);
     }
 });
-changePhotoBtn.addEventListener("click", () => {
-    photoInput.click();
+changePhotoBtn?.addEventListener("click", () => {
+    photoInput?.click();
 });
-photoInput.addEventListener("change", (event) => {
-    const file = photoInput.files[0];
+photoInput?.addEventListener("change", () => {
+    const files = photoInput.files;
+    const file = files?.[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            profileImage.src = e.target.result;
+            if (typeof e.target?.result === 'string') {
+                profileImage.src = e.target.result;
+            }
         };
         reader.readAsDataURL(file);
     }
 });
 async function showUpcomingReservations() {
+    if (!upcomingTableBody || !reservationList)
+        return;
     upcomingTableBody.innerHTML = "";
     reservationList.style.display = "flex";
-    block.style.gridTemplateColumns = "auto 45rem";
+    if (block)
+        block.style.gridTemplateColumns = "auto 45rem";
     profileDetails.style.display = "none";
-    listTitle.textContent = "Reservations";
+    if (listTitle)
+        listTitle.textContent = "Reservations";
     try {
         const res = await fetch(`http://localhost:3000/reservations/user/${profileID}`);
         if (!res.ok) {
@@ -126,7 +157,7 @@ async function showUpcomingReservations() {
                 `<tr><td colspan="4">No reservations found.</td></tr>`;
             return;
         }
-        reservations.forEach(r => {
+        reservations.forEach((r) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${r.lab || "N/A"}</td>
@@ -145,17 +176,16 @@ async function showUpcomingReservations() {
 }
 function toggleReservations() {
     if (formsActive) {
-        cancelBtn.click();
-        tableVisible = false;
+        if (cancelBtn)
+            cancelBtn.click();
     }
-    if (reservationList.style.display === "flex") {
+    if (reservationList && reservationList.style.display === "flex") {
         reservationList.style.display = "none";
-        block.style.gridTemplateColumns = "auto";
-        tableVisible = false;
+        if (block)
+            block.style.gridTemplateColumns = "auto";
     }
     else {
         showUpcomingReservations();
-        tableVisible = true;
     }
 }
 ;
@@ -166,32 +196,45 @@ async function loadProfile() {
             throw new Error("Failed to load profile");
         }
         const user = await res.json();
-        document.querySelector('#firstName').textContent = user.firstName;
-        document.querySelector('#lastName').textContent = user.lastName;
-        document.querySelector('#email').textContent = user.email;
-        document.querySelector('#studentID').textContent = user.studentID;
-        document.querySelector('#course').textContent = user.course;
-        document.querySelector('#contactNumber').textContent = user.contactNumber;
+        const firstNameEl = document.querySelector('#firstName');
+        if (firstNameEl)
+            firstNameEl.textContent = user.firstName;
+        const lastNameEl = document.querySelector('#lastName');
+        if (lastNameEl)
+            lastNameEl.textContent = user.lastName;
+        const emailEl = document.querySelector('#email');
+        if (emailEl)
+            emailEl.textContent = user.email;
+        const studentIDEl = document.querySelector('#studentID');
+        if (studentIDEl)
+            studentIDEl.textContent = user.studentID;
+        const courseEl = document.querySelector('#course');
+        if (courseEl)
+            courseEl.textContent = user.course;
+        const contactNumberEl = document.querySelector('#contactNumber');
+        if (contactNumberEl)
+            contactNumberEl.textContent = user.contactNumber;
         profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
         inputs.forEach(input => {
-            switch (input.name) {
+            const htmlInput = input;
+            switch (htmlInput.name) {
                 case "firstName":
-                    input.value = user.firstName || "";
+                    htmlInput.value = user.firstName || "";
                     break;
                 case "lastName":
-                    input.value = user.lastName || "";
+                    htmlInput.value = user.lastName || "";
                     break;
                 case "email":
-                    input.value = user.email || "";
+                    htmlInput.value = user.email || "";
                     break;
                 case "studentID":
-                    input.value = user.studentID || "";
+                    htmlInput.value = user.studentID || "";
                     break;
                 case "course":
-                    input.value = user.course || "";
+                    htmlInput.value = user.course || "";
                     break;
                 case "contactNumber":
-                    input.value = user.contactNumber || "";
+                    htmlInput.value = user.contactNumber || "";
                     break;
             }
         });
@@ -200,7 +243,9 @@ async function loadProfile() {
         console.error("Error loading profile: ", error);
     }
 }
-upcomingBtn.addEventListener("click", toggleReservations);
-reservationsBtn.addEventListener("click", toggleReservations);
+if (upcomingBtn)
+    upcomingBtn.addEventListener("click", toggleReservations);
+if (reservationsBtn)
+    reservationsBtn.addEventListener("click", toggleReservations);
 loadProfile();
 //# sourceMappingURL=profile.js.map

@@ -1,30 +1,24 @@
-import { queryElement } from "../util/frontendUtil.js";
+import { queryElement } from "./util/frontendUtil.js";
 const dateInput = queryElement("#current-date");
-
 const today = new Date();
 const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
-
 dateInput.value = `${yyyy}-${mm}-${dd}`;
-
 const userID = sessionStorage.getItem("user");
-
 const profileImage = document.querySelector('#user-pic');
-
-async function loadUserImg(){
-    try{
+async function loadUserImg() {
+    try {
         const res = await fetch(`http://localhost:3000/users/${userID}`);
-
-        if(!res.ok){
+        if (!res.ok) {
             throw new Error("Failed to load profile");
         }
-
         const user = await res.json();
-
-        profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
-
-    } catch(error){
+        if (profileImage) {
+            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        }
+    }
+    catch (error) {
         console.error("Error loading profile: ", error);
     }
 }
@@ -40,8 +34,8 @@ if (loggedInUser) {
     const infoEl = document.querySelector(".profile .info p b");
     const userTypeEl = document.getElementById("user-type");
 
-    if (infoEl) infoEl.textContent = loggedInUser.firstName; 
-    if (userTypeEl) userTypeEl.textContent = loggedInUser.accountType; 
+    if (infoEl) infoEl.textContent = loggedInUser.firstName;
+    if (userTypeEl) userTypeEl.textContent = loggedInUser.accountType;
 }
 
 if (loggedInUser && loggedInUser.accountType === "Admin") {
@@ -50,67 +44,58 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
         dashboardLink.href = "dashboard-admin.html";
     }
 }*/
-
-document.addEventListener("DOMContentLoaded", async() => {
-
-    if(!userID){
+document.addEventListener("DOMContentLoaded", async () => {
+    if (!userID) {
         window.location.href = "index.html";
         return;
     }
-
-    try{
+    try {
         const userRes = await fetch(`http://localhost:3000/users/${userID}`);
         const user = await userRes.json();
-
-        if(user.role === "Admin"){
+        if (user.role === "Admin") {
             window.location.href = "./dashboard-admin.html";
             return;
         }
-
-        document.querySelector('#user-name').textContent = `${user.firstName}`;
-        document.querySelector('#user-type').textContent = `${user.role}`;
-
+        const userNameEl = document.querySelector('#user-name');
+        const userTypeEl = document.querySelector('#user-type');
+        if (userNameEl)
+            userNameEl.textContent = `${user.firstName}`;
+        if (userTypeEl)
+            userTypeEl.textContent = `${user.role}`;
         const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
         const reservations = await reservationRes.json();
-        
         const activityRes = await fetch(`http://localhost:3000/activities/user/${userID}`);
         const activities = await activityRes.json();
-
         updateReservations(reservations);
-
         visibleCount = 3;
         updateRecentActivity(activities);
-    } catch (e){
+    }
+    catch (e) {
         console.error("Error: ", e);
     }
 });
-
-function updateReservations(reservations){
+function updateReservations(reservations) {
     const upcomingTable = document.querySelector("#upcoming-reservations");
-    const upcomingTableBody = document.querySelector("#upcoming-reservations").querySelector("tbody");
+    const upcomingTableBody = upcomingTable?.querySelector("tbody");
     const noUpcoming = document.querySelector('#no-upcoming');
     const noReservations = document.querySelector('#no-reservations');
     const filler = document.querySelector("#filler");
-
+    if (!upcomingTable || !upcomingTableBody)
+        return;
     upcomingTableBody.innerHTML = "";
-
-    if(reservations.length === 0){
-        filler.innerHTML = "<h3>None</h3>"
+    if (reservations.length === 0) {
+        if (filler)
+            filler.innerHTML = "<h3>None</h3>";
     }
-
     let count = 0;
-
     const today = new Date();
-
     reservations.forEach(r => {
         const reservationDate = new Date(r.date);
         const startTime = new Date(r.startTime);
         const endTime = new Date(r.endTime);
-
-        if(reservationDate.toDateString() === today.toDateString()) 
+        if (reservationDate.toDateString() === today.toDateString())
             count += 1;
-        
-        const tableRow = document.createElement(tr);
+        const tr = document.createElement("tr");
         tr.innerHTML =
             `
                 <td>${r.lab.name}</td>
@@ -121,78 +106,67 @@ function updateReservations(reservations){
             `;
         upcomingTable.appendChild(tr);
     });
-
-    noUpcoming.textContent = count;
-    noReservations.textContent = reservations.length;
+    if (noUpcoming)
+        noUpcoming.textContent = String(count);
+    if (noReservations)
+        noReservations.textContent = String(reservations.length);
 }
-
-
 let visibleCount = 3;
-function updateRecentActivity(activities){
+function updateRecentActivity(activities) {
     const activityList = document.querySelector('#recent-activity-list');
-    
-    if(!activityList){
+    if (!activityList) {
         return;
     }
-        
     activityList.innerHTML = '';
     console.log(activities);
-    const sortedActivities = [...activities].sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-
+    const sortedActivities = [...activities].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
     const showedActivities = sortedActivities.slice(0, visibleCount);
-
     showedActivities.forEach(a => {
         const li = document.createElement('li');
-
         const timePassed = formatTimePassed(new Date(a.timestamp));
-
         let text = "";
-        if(a.action === "cancelled"){
+        if (a.action === "cancelled") {
             text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
-        } else{
+        }
+        else {
             text = `Reseved Seat ${a.seatNumber} in ${a.labName}`;
         }
-
         li.innerHTML = `${text} <small>${timePassed}</small>`;
         activityList.appendChild(li);
     });
-
-    if(visibleCount < sortedActivities.length){
+    if (visibleCount < sortedActivities.length) {
         const viewMore = document.createElement('li');
         viewMore.classList.add("view-more-activity");
-
         const a = document.createElement('a');
         a.textContent = "View More";
-
-        a.addEventListener("click", (e) =>{
+        a.addEventListener("click", (e) => {
             e.preventDefault();
             visibleCount += 2;
             updateRecentActivity(activities);
         });
-
         viewMore.appendChild(a);
         activityList.appendChild(viewMore);
     }
 }
-
 function formatTimePassed(date) {
     const now = new Date();
-    const diffMs = now - date;
-
+    const diffMs = now.getTime() - date.getTime();
     const seconds = Math.floor(diffMs / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-
     if (seconds < 60) {
         return "Just now";
-    } else if (minutes < 60) {
+    }
+    else if (minutes < 60) {
         return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
-    } else if (hours < 24) {
+    }
+    else if (hours < 24) {
         return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
-    } else {
+    }
+    else {
         return `${days} day${days !== 1 ? "s" : ""} ago`;
     }
 }
-
 loadUserImg();
+//# sourceMappingURL=dashboard.js.map

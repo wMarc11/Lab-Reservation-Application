@@ -1,16 +1,36 @@
-// @ts-nocheck
-import { Reservation } from "../types/reservation.js";
 import { queryElement } from "./util/frontendUtil.js";
-
-const dateInput = queryElement<HTMLInputElement>("#current-date");
+const dateInput = queryElement("#current-date") as HTMLInputElement;
 
 const today = new Date();
 const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 
+
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 
+const userID = sessionStorage.getItem("user");
+
+const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
+
+async function loadUserImg(){
+    try{
+        const res = await fetch(`http://localhost:3000/users/${userID}`);
+
+        if(!res.ok){
+            throw new Error("Failed to load profile");
+        }
+
+        const user = await res.json();
+
+        if(profileImage) {
+            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        }
+
+    } catch(error){
+        console.error("Error loading profile: ", error);
+    }
+}
 /*
 const loggedInUserJSON = sessionStorage.getItem("loggedInUser");
 let loggedInUser = null;
@@ -35,7 +55,6 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
 }*/
 
 document.addEventListener("DOMContentLoaded", async() => {
-    const userID = sessionStorage.getItem("user");
 
     if(!userID){
         window.location.href = "index.html";
@@ -51,29 +70,39 @@ document.addEventListener("DOMContentLoaded", async() => {
             return;
         }
 
-        queryElement('#user-name').textContent = `${user.firstName}`;
-        queryElement('#user-type').textContent = `${user.role}`;
+        const userNameEl = document.querySelector('#user-name');
+        const userTypeEl = document.querySelector('#user-type');
+        
+        if (userNameEl) userNameEl.textContent = `${user.firstName}`;
+        if (userTypeEl) userTypeEl.textContent = `${user.role}`;
 
         const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
         const reservations = await reservationRes.json();
+        
+        const activityRes = await fetch(`http://localhost:3000/activities/user/${userID}`);
+        const activities = await activityRes.json();
 
-        updateDashboard(reservations);
+        updateReservations(reservations);
+
+        visibleCount = 3;
+        updateRecentActivity(activities);
     } catch (e){
         console.error("Error: ", e);
     }
 });
 
-function updateDashboard(reservations: Reservation[]){
-    const upcomingTable = queryElement("#upcoming-reservations");
-    const upcomingTableBody = queryElement("tbody", upcomingTable);
-    const noUpcoming = queryElement('#no-upcoming');
-    const noReservations = queryElement('#no-reservations');
-    const filler = queryElement("#filler");
+function updateReservations(reservations: any[]){
+    const upcomingTable = document.querySelector("#upcoming-reservations");
+    const upcomingTableBody = upcomingTable?.querySelector("tbody");
+    const noUpcoming = document.querySelector('#no-upcoming');
+    const noReservations = document.querySelector('#no-reservations');
+    const filler = document.querySelector("#filler");
 
+    if(!upcomingTable || !upcomingTableBody) return;
     upcomingTableBody.innerHTML = "";
 
     if(reservations.length === 0){
-        filler.innerHTML = "<h3>None</h3>"
+        if(filler) filler.innerHTML = "<h3>None</h3>"
     }
 
     let count = 0;
@@ -88,8 +117,8 @@ function updateDashboard(reservations: Reservation[]){
         if(reservationDate.toDateString() === today.toDateString()) 
             count += 1;
         
-        const tableRow = document.createElement(`tr`);
-        tableRow.innerHTML =
+        const tr = document.createElement("tr");
+        tr.innerHTML =
             `
                 <td>${r.lab.name}</td>
                 <td>${new Date(r.dateRequested).toLocaleString()}</td>
@@ -100,6 +129,77 @@ function updateDashboard(reservations: Reservation[]){
         upcomingTable.appendChild(tr);
     });
 
-    noUpcoming.textContent = count;
-    noReservations.textContent = reservations.length;
+    if(noUpcoming) noUpcoming.textContent = String(count);
+    if(noReservations) noReservations.textContent = String(reservations.length);
 }
+
+
+let visibleCount = 3;
+function updateRecentActivity(activities: any[]){
+    const activityList = document.querySelector('#recent-activity-list');
+    
+    if(!activityList){
+        return;
+    }
+        
+    activityList.innerHTML = '';
+    console.log(activities);
+    const sortedActivities = [...activities].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    const showedActivities = sortedActivities.slice(0, visibleCount);
+
+    showedActivities.forEach(a => {
+        const li = document.createElement('li');
+
+        const timePassed = formatTimePassed(new Date(a.timestamp));
+
+        let text = "";
+        if(a.action === "cancelled"){
+            text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
+        } else{
+            text = `Reseved Seat ${a.seatNumber} in ${a.labName}`;
+        }
+
+        li.innerHTML = `${text} <small>${timePassed}</small>`;
+        activityList.appendChild(li);
+    });
+
+    if(visibleCount < sortedActivities.length){
+        const viewMore = document.createElement('li');
+        viewMore.classList.add("view-more-activity");
+
+        const a = document.createElement('a');
+        a.textContent = "View More";
+
+        a.addEventListener("click", (e) =>{
+            e.preventDefault();
+            visibleCount += 2;
+            updateRecentActivity(activities);
+        });
+
+        viewMore.appendChild(a);
+        activityList.appendChild(viewMore);
+    }
+}
+
+function formatTimePassed(date: Date) {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (seconds < 60) {
+        return "Just now";
+    } else if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+    } else if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+    } else {
+        return `${days} day${days !== 1 ? "s" : ""} ago`;
+    }
+}
+
+loadUserImg();

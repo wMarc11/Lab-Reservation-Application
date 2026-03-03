@@ -1,256 +1,221 @@
+"use strict";
 // @ts-nocheck
 // I hardcoded this for now to be the same as the logged in user
-
 const loggedInUserID = sessionStorage.getItem("user");
-
-if(!loggedInUserID){
+if (!loggedInUserID) {
     window.location.href = "index.html";
 }
-
-const params = new URLSearchParams(window.location.search);
-const profileUserID = params.get("id");
-
-
+const urlParams = new URLSearchParams(window.location.search);
+const profileUserID = urlParams.get("id");
 const profileID = profileUserID || loggedInUserID;
-
-const profileDetails = document.querySelector(".profile-details");
-const block = document.querySelector(".block1");    
-const formActions = document.querySelector(".form-actions");
+const profileDetails = document.querySelector(".profile-details") as HTMLElement;
+const block = document.querySelector(".block1") as HTMLElement;
 const editBtn = document.getElementById("editBtn");
 const saveBtn = document.getElementById("saveBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 const changePhotoBtn = document.getElementById("changePhotoBtn");
 const photoInput = document.getElementById("photoInput");
-const profileImage = document.getElementById("profileImage");
-
+const profileImage = document.getElementById("profileImage") as HTMLImageElement;
 const inputs = document.querySelectorAll(".profile-form input");
-
-let tableVisible = false;
 let formsActive = false;
-
 const accountJSON = sessionStorage.getItem("account");
-
 if (accountJSON) {
     const account = JSON.parse(accountJSON);
-
-    const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]');
+    const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]') as HTMLAnchorElement;
     if (dashboardLink && account.accountType === "Admin") {
         dashboardLink.href = "dashboard-admin.html";
     }
 }
-
 const reservationsBtn = document.getElementById("reservationsBtn");
 const upcomingBtn = document.getElementById("upcomingBtn");
-
 const reservationList = document.getElementById("reservationList");
 const listTitle = document.getElementById("listTitle");
 const upcomingTableBody = document.getElementById("upcomingTableBody");
-
-if (loggedInUserID === profileID) {
-    editBtn.style.display = "block";
-} else{
-    editBtn.style.display = "none";
+if (editBtn) {
+    if (loggedInUserID === profileID) {
+        editBtn.style.display = "block";
+    }
+    else {
+        editBtn.style.display = "none";
+    }
 }
-
-editBtn.addEventListener("click", () => {
+editBtn?.addEventListener("click", () => {
     inputs.forEach(input => input.removeAttribute("disabled"));
-    block.style.gridTemplateColumns = "auto 45rem";
+    if (block) block.style.gridTemplateColumns = "auto 45rem";
     profileDetails.style.display = "flex";
-    saveBtn.style.display = "block";
-    cancelBtn.style.display = "block";
-    changePhotoBtn.style.display = "block";
+    if (saveBtn) saveBtn.style.display = "block";
+    if (cancelBtn) cancelBtn.style.display = "block";
+    if (changePhotoBtn) changePhotoBtn.style.display = "block";
     editBtn.style.display = "none";
-    reservationList.style.display = "none";
+    if (reservationList) reservationList.style.display = "none";
     formsActive = true;
 });
-
-cancelBtn.addEventListener("click", () => {
+cancelBtn?.addEventListener("click", () => {
     inputs.forEach(input => input.setAttribute("disabled", "true"));
-    block.style.gridTemplateColumns = "auto";
+    if (block) block.style.gridTemplateColumns = "auto";
     profileDetails.style.display = "none";
-    saveBtn.style.display = "none";
-    cancelBtn.style.display = "none";
-    changePhotoBtn.style.display = "none";
-    editBtn.style.display = "block";
+    if (saveBtn) saveBtn.style.display = "none";
+    if (cancelBtn) cancelBtn.style.display = "none";
+    if (changePhotoBtn) changePhotoBtn.style.display = "none";
+    if (editBtn) editBtn.style.display = "block";
     formsActive = false;
 });
-
-saveBtn.addEventListener("click", async (e) => {
+saveBtn?.addEventListener("click", async (e) => {
     e.preventDefault();
-
     const formData = new FormData();
-
     inputs.forEach(input => {
-        formData.append(input.name, input.value);
+        const htmlInput = input as HTMLInputElement;
+        const value = htmlInput.value.trim();
+        if (value !== "") {
+            formData.append(htmlInput.name, value);
+        }
     });
-
-    if (photoInput.files[0]) {
-        formData.append('profileImage', photoInput.files[0]);
+    const file = (photoInput as HTMLInputElement).files?.[0];
+    if (file) {
+        formData.append('profileImage', file);
     }
-
     try {
         const res = await fetch(`http://localhost:3000/users/${profileID}`, {
             method: 'PUT',
             body: formData
         });
-
-        if (!res.ok) throw new Error('Failed to update profile');
-
+        if (!res.ok)
+            throw new Error('Failed to update profile');
         const updatedUser = await res.json();
-        
-        inputs.forEach(input => {
-            const value = input.value.trim();
-            if (value !== "") {  
-                switch (input.name) {
-                    case "firstName":
-                        document.querySelector('#firstName').textContent = value;
-                        break;
-                    case "lastName":
-                        document.querySelector('#lastName').textContent = value;
-                        break;
-                    case "studentID":
-                        document.querySelector('#studentID').textContent = value;
-                        break;
-                    case "course":
-                        document.querySelector('#course').textContent = value;
-                        break;
-                    case "contactNumber":
-                        document.querySelector('#contactNumber').textContent = value;
-                        break;
-                    case "email":
-                        document.querySelector('#email').textContent = value;
-                        break;
-                }
-            }
-        });
-        
-        profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
+        const firstNameEl = document.querySelector('#firstName');
+        if (firstNameEl) firstNameEl.textContent = updatedUser.firstName;
+        const lastNameEl = document.querySelector('#lastName');
+        if (lastNameEl) lastNameEl.textContent = updatedUser.lastName;
+        const studentIDEl = document.querySelector('#studentID');
+        if (studentIDEl) studentIDEl.textContent = updatedUser.studentID;
+        const courseEl = document.querySelector('#course');
+        if (courseEl) courseEl.textContent = updatedUser.course;
+        const contactNumberEl = document.querySelector('#contactNumber');
+        if (contactNumberEl) contactNumberEl.textContent = updatedUser.contactNumber;
+        const emailEl = document.querySelector('#email');
+        if (emailEl) emailEl.textContent = updatedUser.email;
+        if (profileImage) profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
+        if (cancelBtn) cancelBtn.click();
 
-        cancelBtn.click();
-    } catch (err) {
-        alert(err.message);
+        loadProfile();
+    }
+    catch (err) {
         console.error(err);
     }
 });
-
-changePhotoBtn.addEventListener("click", () => {
-    photoInput.click();
+changePhotoBtn?.addEventListener("click", () => {
+    photoInput?.click();
 });
-
-photoInput.addEventListener("change", (event) => {
-    const file = photoInput.files[0]
+photoInput?.addEventListener("change", () => {
+    const files = (photoInput as HTMLInputElement).files;
+    const file = files?.[0];
     if (file) {
-        const reader = new FileReader();        
-        reader.onload = function(e) {
-            profileImage.src = e.target.result;
-        }
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            if (typeof e.target?.result === 'string') {
+                profileImage.src = e.target.result;
+            }
+        };
         reader.readAsDataURL(file);
     }
 });
-
 async function showUpcomingReservations() {
+    if (!upcomingTableBody || !reservationList) return;
     upcomingTableBody.innerHTML = "";
     reservationList.style.display = "flex";
-    block.style.gridTemplateColumns = "auto 45rem";
+    if (block) block.style.gridTemplateColumns = "auto 45rem";
     profileDetails.style.display = "none";
-    listTitle.textContent = "Reservations";
-
-    try{
+    if (listTitle) listTitle.textContent = "Reservations";
+    try {
         const res = await fetch(`http://localhost:3000/reservations/user/${profileID}`);
-        
-        if(!res.ok){
+        if (!res.ok) {
             throw new Error("Failed to fetch reservations");
         }
-
         const reservations = await res.json();
-
-        if(reservations.length === 0){
-            upcomingTableBody.innerHTML = 
+        if (reservations.length === 0) {
+            upcomingTableBody.innerHTML =
                 `<tr><td colspan="4">No reservations found.</td></tr>`;
             return;
         }
-
-        reservations.forEach(r => {
+        reservations.forEach((r: { lab: string; date: string; time: string; status: string }) => {
             const row = document.createElement('tr');
-
-            row.innerHTML =`
+            row.innerHTML = `
                 <td>${r.lab || "N/A"}</td>
                 <td>${r.date || "N/A"}</td>
                 <td>${r.time || "N/A"}</td>
                 <td>${r.status || "Pending"}</td>
             `;
-
             upcomingTableBody.appendChild(row);
         });
-    } catch(error){
+    }
+    catch (error) {
         console.error("Error fetching reservations:", error);
-        upcomingTableBody.innerHTML = 
-            `<tr><td colspan = "4">Error loading reservations.</td></tr>`
+        upcomingTableBody.innerHTML =
+            `<tr><td colspan = "4">Error loading reservations.</td></tr>`;
     }
 }
-
 function toggleReservations() {
     if (formsActive) {
-        cancelBtn.click();
-        tableVisible = false;
+        if (cancelBtn) cancelBtn.click();
     }
-
-    if (reservationList.style.display === "flex") {
+    if (reservationList && reservationList.style.display === "flex") {
         reservationList.style.display = "none";
-        block.style.gridTemplateColumns = "auto";
-        tableVisible = false;
-    } else {
-        showUpcomingReservations();
-        tableVisible = true;
+        if (block) block.style.gridTemplateColumns = "auto";
     }
-
-};
-
-async function loadProfile(){
-    try{
+    else {
+        showUpcomingReservations();
+    }
+}
+;
+async function loadProfile() {
+    try {
         const res = await fetch(`http://localhost:3000/users/${profileID}`);
-
-        if(!res.ok){
+        if (!res.ok) {
             throw new Error("Failed to load profile");
         }
-
         const user = await res.json();
-
-        document.querySelector('#firstName').textContent = user.firstName;
-        document.querySelector('#lastName').textContent = user.lastName;
-        document.querySelector('#email').textContent = user.email;
-        document.querySelector('#studentID').textContent = user.studentID;
-        document.querySelector('#course').textContent = user.course;
-        document.querySelector('#contactNumber').textContent = user.contactNumber;
+        const firstNameEl = document.querySelector('#firstName');
+        if (firstNameEl) firstNameEl.textContent = user.firstName;
+        const lastNameEl = document.querySelector('#lastName');
+        if (lastNameEl) lastNameEl.textContent = user.lastName;
+        const emailEl = document.querySelector('#email');
+        if (emailEl) emailEl.textContent = user.email;
+        const studentIDEl = document.querySelector('#studentID');
+        if (studentIDEl) studentIDEl.textContent = user.studentID;
+        const courseEl = document.querySelector('#course');
+        if (courseEl) courseEl.textContent = user.course;
+        const contactNumberEl = document.querySelector('#contactNumber');
+        if (contactNumberEl) contactNumberEl.textContent = user.contactNumber;
         profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
-    
         inputs.forEach(input => {
-            switch (input.name) {
+            const htmlInput = input as HTMLInputElement;
+            switch (htmlInput.name) {
                 case "firstName":
-                    input.value = user.firstName || "";
+                    htmlInput.value = user.firstName || "";
                     break;
                 case "lastName":
-                    input.value = user.lastName || "";
+                    htmlInput.value = user.lastName || "";
                     break;
                 case "email":
-                    input.value = user.email || "";
+                    htmlInput.value = user.email || "";
                     break;
                 case "studentID":
-                    input.value = user.studentID || "";
+                    htmlInput.value = user.studentID || "";
                     break;
                 case "course":
-                    input.value = user.course || "";
+                    htmlInput.value = user.course || "";
                     break;
                 case "contactNumber":
-                    input.value = user.contactNumber || "";
+                    htmlInput.value = user.contactNumber || "";
                     break;
             }
         });
-    } catch(error){
+    }
+    catch (error) {
         console.error("Error loading profile: ", error);
     }
 }
-
-upcomingBtn.addEventListener("click", toggleReservations);
-reservationsBtn.addEventListener("click", toggleReservations);
+if (upcomingBtn) upcomingBtn.addEventListener("click", toggleReservations);
+if (reservationsBtn) reservationsBtn.addEventListener("click", toggleReservations);
 loadProfile();
+//# sourceMappingURL=profile.js.map
