@@ -99,7 +99,7 @@ function updateReservations(reservations: any[]) {
         const tr = document.createElement("tr");
         tr.innerHTML =
             `
-                <td>${r.lab.name}</td>
+                <td>${r.lab.room}</td>
                 <td>${r.user.firstName} ${r.user.lastName}</td>
                 <td>${new Date(r.dateRequested).toLocaleString()}</td>
                 <td>${r.Date.toLocaleString()} · ${startTime.getHours()}:${startTime.getMinutes()}-${endTime.getHours()}:${endTime.getMinutes()}</td>
