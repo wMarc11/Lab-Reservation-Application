@@ -206,13 +206,10 @@ app.put("/reservations/:id", async (request, response) => {
             lab: request.body.lab ?? existingReservation.lab.toString()
         });
 
-        const nextSeatNumber = request.body.seatNumber === undefined
-            ? existingReservation.seatNumber
-            : Number(request.body.seatNumber);
-
-        if (!Number.isInteger(nextSeatNumber) || nextSeatNumber <= 0) {
-            return response.status(400).json({ message: "Seat number must be a positive whole number" });
-        }
+        const nextSeatNumbers =
+            request.body.seatNumbers === undefined && request.body.seatNumber === undefined
+                ? existingReservation.seatNumbers
+                : normalizeSeatNumbers(request.body);
 
         const nextDate = request.body.date === undefined
             ? parseDateOnly(existingReservation.date)
@@ -226,27 +223,29 @@ app.put("/reservations/:id", async (request, response) => {
             ? new Date(existingReservation.endTime)
             : combineDateAndTime(nextDate, request.body.endTime);
 
-        if (nextEndTime <= nextStartTime) {
-            return response.status(400).json({ message: "End time must be after start time" });
-        }
+        ensureThirtyMinuteSlotRange(nextStartTime, nextEndTime);
 
-        const conflictingReservation = await findConflictingReservation(
+        const conflictingReservations = await findConflictingReservations(
             nextLab.id,
-            nextSeatNumber,
+            nextSeatNumbers,
             nextDate,
             nextStartTime,
             nextEndTime,
             request.params.id
         );
 
-        if (conflictingReservation) {
+        const conflictingSeatNumbers = extractConflictingSeatNumbers(conflictingReservations, nextSeatNumbers);
+
+        if (conflictingSeatNumbers.length > 0) {
             return response.status(409).json({
-                message: "That seat is already reserved for the selected time slot"
+                message: "One or more selected seats are already reserved for the selected time slot",
+                conflictingSeatNumbers
             });
         }
 
         existingReservation.lab = nextLab._id;
-        existingReservation.seatNumber = nextSeatNumber;
+        existingReservation.seatNumbers = nextSeatNumbers;
+        existingReservation.isAnonymous = Boolean(request.body.isAnonymous ?? existingReservation.isAnonymous ?? false);
         existingReservation.date = nextDate;
         existingReservation.startTime = nextStartTime;
         existingReservation.endTime = nextEndTime;
@@ -314,9 +313,7 @@ app.get("/reservations/occupied", async (request, response) => {
             const startDateTime = combineDateAndTime(date, startTime);
             const endDateTime = combineDateAndTime(date, endTime);
 
-            if (endDateTime <= startDateTime) {
-                return response.status(400).json({ message: "End time must be after start time" });
-            }
+            ensureThirtyMinuteSlotRange(startDateTime, endDateTime);
 
             query.startTime = { $lt: endDateTime };
             query.endTime = { $gt: startDateTime };
@@ -324,9 +321,38 @@ app.get("/reservations/occupied", async (request, response) => {
 
         const reservations = await Reservation.find(query)
             .populate("lab", "room")
-            .sort({ seatNumber: 1, startTime: 1 });
+            .populate("user", "firstName lastName")
+            .sort({ startTime: 1 });
 
-        return response.json(reservations.map(serializeReservation));
+        const occupiedSeats = reservations
+            .flatMap((reservation: any) => {
+                const seatNumbers = Array.isArray(reservation.seatNumbers) ? reservation.seatNumbers : [];
+
+                return seatNumbers.map((seatNumber: number) => ({
+                    reservationId: reservation._id,
+                    seatNumber,
+                    date: reservation.date,
+                    startTime: reservation.startTime,
+                    endTime: reservation.endTime,
+                    room: reservation.lab?.room,
+                    isAnonymous: Boolean(reservation.isAnonymous),
+                    user: reservation.isAnonymous
+                        ? null
+                        : reservation.user
+                            ? {
+                                _id: reservation.user._id,
+                                firstName: reservation.user.firstName,
+                                lastName: reservation.user.lastName
+                            }
+                            : null
+                }));
+            })
+            .sort((a, b) =>
+                a.seatNumber - b.seatNumber ||
+                new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
+            );
+
+        return response.json(occupiedSeats);
     } catch (error) {
         return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
@@ -626,9 +652,53 @@ async function resolveLabFromPayload(payload: any) {
     return existingLab;
 }
 
-async function findConflictingReservation(
+function normalizeSeatNumbers(payload: any) {
+    const rawSeatNumbers = payload.seatNumbers ?? payload.seatNumber;
+
+    if (rawSeatNumbers === undefined || rawSeatNumbers === null || rawSeatNumbers === "") {
+        throw createHttpError(400, "At least one seat must be selected");
+    }
+
+    const candidateSeatValues = Array.isArray(rawSeatNumbers)
+        ? rawSeatNumbers
+        : typeof rawSeatNumbers === "string" && rawSeatNumbers.includes(",")
+            ? rawSeatNumbers.split(",")
+            : [rawSeatNumbers];
+
+    const parsedSeatNumbers = candidateSeatValues.map((seat) => Number(String(seat).trim()));
+
+    if (parsedSeatNumbers.length === 0) {
+        throw createHttpError(400, "At least one seat must be selected");
+    }
+
+    if (parsedSeatNumbers.some((seat) => !Number.isInteger(seat) || seat <= 0)) {
+        throw createHttpError(400, "Seat numbers must be positive whole numbers");
+    }
+
+    const uniqueSeatNumbers = [...new Set(parsedSeatNumbers)].sort((a, b) => a - b);
+
+    if (uniqueSeatNumbers.length !== parsedSeatNumbers.length) {
+        throw createHttpError(400, "Seat numbers must not contain duplicates");
+    }
+
+    return uniqueSeatNumbers;
+}
+
+function ensureThirtyMinuteSlotRange(startTime: Date, endTime: Date) {
+    const durationMinutes = (endTime.getTime() - startTime.getTime()) / 60000;
+
+    if (durationMinutes <= 0) {
+        throw createHttpError(400, "End time must be after start time");
+    }
+
+    if (durationMinutes % 30 !== 0) {
+        throw createHttpError(400, "Reservations must use 30-minute slot intervals");
+    }
+}
+
+async function findConflictingReservations(
     labId: string,
-    seatNumber: number,
+    seatNumbers: number[],
     dateValue: string | Date,
     startTime: Date,
     endTime: Date,
@@ -637,18 +707,96 @@ async function findConflictingReservation(
     const dayRange = getDayRange(dateValue);
     const query: any = {
         lab: labId,
-        seatNumber,
         status: { $ne: "cancelled" },
         date: { $gte: dayRange.start, $lt: dayRange.end },
         startTime: { $lt: endTime },
-        endTime: { $gt: startTime }
+        endTime: { $gt: startTime },
+        seatNumbers: { $in: seatNumbers }
     };
 
     if (excludeReservationId) {
         query._id = { $ne: excludeReservationId };
     }
 
-    return Reservation.findOne(query);
+    return Reservation.find(query);
+}
+
+function extractConflictingSeatNumbers(existingReservations: any[], requestedSeatNumbers: number[]) {
+    const requestedSeatSet = new Set(requestedSeatNumbers);
+    const conflictingSeatSet = new Set<number>();
+
+    for (const reservation of existingReservations) {
+        const seatNumbers = Array.isArray(reservation.seatNumbers) ? reservation.seatNumbers : [];
+
+        for (const seatNumber of seatNumbers) {
+            const parsedSeatNumber = Number(seatNumber);
+
+            if (requestedSeatSet.has(parsedSeatNumber)) {
+                conflictingSeatSet.add(parsedSeatNumber);
+            }
+        }
+    }
+
+    return [...conflictingSeatSet].sort((a, b) => a - b);
+}
+
+async function createReservationFromPayload(payload: any, sessionUserID?: string) {
+    const userID = typeof payload.user === "string" && payload.user.length > 0
+        ? payload.user
+        : sessionUserID;
+
+    if (!userID) {
+        throw createHttpError(401, "You must be logged in to create a reservation");
+    }
+
+    const lab = await resolveLabFromPayload(payload);
+    const seatNumbers = normalizeSeatNumbers(payload);
+
+    if (!payload.date || !payload.startTime || !payload.endTime) {
+        throw createHttpError(400, "date, startTime, and endTime are required");
+    }
+
+    const reservationDate = parseDateOnly(payload.date);
+    const startTime = combineDateAndTime(reservationDate, payload.startTime);
+    const endTime = combineDateAndTime(reservationDate, payload.endTime);
+
+    ensureThirtyMinuteSlotRange(startTime, endTime);
+
+    const conflictingReservations = await findConflictingReservations(
+        lab.id,
+        seatNumbers,
+        reservationDate,
+        startTime,
+        endTime
+    );
+
+    const conflictingSeatNumbers = extractConflictingSeatNumbers(conflictingReservations, seatNumbers);
+
+    if (conflictingSeatNumbers.length > 0) {
+        throw createHttpError(
+            409,
+            `Seat(s) ${conflictingSeatNumbers.join(", ")} are already reserved for the selected time slot`
+        );
+    }
+
+    const dateRequested = payload.dateRequested
+        ? parseFlexibleDate(payload.dateRequested, "dateRequested")
+        : new Date();
+
+    const newReservation = await Reservation.create({
+        user: userID,
+        lab: lab._id,
+        seatNumbers,
+        isAnonymous: Boolean(payload.isAnonymous),
+        date: reservationDate,
+        dateRequested,
+        startTime,
+        endTime,
+        status: payload.status === "cancelled" ? "cancelled" : "upcoming"
+    });
+
+    await newReservation.populate("lab", "room");
+    return newReservation;
 }
 
 function calculateReservationStatus(reservation: any) {
@@ -682,65 +830,6 @@ function serializeReservation(reservation: any) {
 
     plainReservation.status = calculateReservationStatus(plainReservation);
     return plainReservation;
-}
-
-async function createReservationFromPayload(payload: any, sessionUserID?: string) {
-    const userID = typeof payload.user === "string" && payload.user.length > 0
-        ? payload.user
-        : sessionUserID;
-
-    if (!userID) {
-        throw createHttpError(401, "You must be logged in to create a reservation");
-    }
-
-    const lab = await resolveLabFromPayload(payload);
-    const seatNumber = Number(payload.seatNumber);
-
-    if (!Number.isInteger(seatNumber) || seatNumber <= 0) {
-        throw createHttpError(400, "Seat number must be a positive whole number");
-    }
-
-    if (!payload.date || !payload.startTime || !payload.endTime) {
-        throw createHttpError(400, "date, startTime, and endTime are required");
-    }
-
-    const reservationDate = parseDateOnly(payload.date);
-    const startTime = combineDateAndTime(reservationDate, payload.startTime);
-    const endTime = combineDateAndTime(reservationDate, payload.endTime);
-
-    if (endTime <= startTime) {
-        throw createHttpError(400, "End time must be after start time");
-    }
-
-    const conflictingReservation = await findConflictingReservation(
-        lab.id,
-        seatNumber,
-        reservationDate,
-        startTime,
-        endTime
-    );
-
-    if (conflictingReservation) {
-        throw createHttpError(409, "That seat is already reserved for the selected time slot");
-    }
-
-    const dateRequested = payload.dateRequested
-        ? parseFlexibleDate(payload.dateRequested, "dateRequested")
-        : new Date();
-
-    const newReservation = await Reservation.create({
-        user: userID,
-        lab: lab._id,
-        seatNumber,
-        date: reservationDate,
-        dateRequested,
-        startTime,
-        endTime,
-        status: payload.status === "cancelled" ? "cancelled" : "upcoming"
-    });
-
-    await newReservation.populate("lab", "room");
-    return newReservation;
 }
 
 // RESERVATION FORM
@@ -847,13 +936,18 @@ app.get('/seat-reservation', async (_req, res) => {
 
 app.post('/seat-reservation', async (req: any, res) => {
     try {
-        const { building, floor, room, date, startTime, endTime, seatNumber } = req.body;
+        const { building, floor, room, date, startTime, endTime } = req.body;
 
         if (!building || !floor || !room || !date || !startTime || !endTime) {
             return res.status(400).json({ message: "Missing required seat reservation details" });
         }
 
-        if (seatNumber === undefined || seatNumber === null || seatNumber === "") {
+        const rawSeatSelection = req.body.seatNumbers ?? req.body.seatNumber;
+        const hasSeatSelection = Array.isArray(rawSeatSelection)
+            ? rawSeatSelection.length > 0
+            : rawSeatSelection !== undefined && rawSeatSelection !== null && rawSeatSelection !== "";
+
+        if (!hasSeatSelection) {
             return res.status(200).json({
                 message: "Seat reservation details staged successfully",
                 details: { building, floor, room, date, startTime, endTime }
@@ -872,7 +966,7 @@ app.post('/seat-reservation', async (req: any, res) => {
         console.error(error);
         return res.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
-})
+});
 
 
 
