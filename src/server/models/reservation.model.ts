@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Reservation } from "../../shared/modelTypes";
 
-type ReservationDB = Reservation<mongoose.Types.ObjectId, Date>
+type ReservationDB = Reservation<mongoose.Types.ObjectId, Date>;
 
 const ReservationSchema = new mongoose.Schema<ReservationDB>(
     {
@@ -17,9 +17,28 @@ const ReservationSchema = new mongoose.Schema<ReservationDB>(
             required: true
         },
 
-        seatNumber: {
-            type: Number,
-            required: true
+        seatNumbers: {
+            type: [Number],
+            required: true,
+            validate: [
+                {
+                    validator: (value: number[]) => Array.isArray(value) && value.length > 0,
+                    message: "At least one seat must be selected"
+                },
+                {
+                    validator: (value: number[]) => value.every((seat) => Number.isInteger(seat) && seat > 0),
+                    message: "Seat numbers must be positive whole numbers"
+                },
+                {
+                    validator: (value: number[]) => new Set(value).size === value.length,
+                    message: "Seat numbers must be unique within one reservation"
+                }
+            ]
+        },
+
+        isAnonymous: {
+            type: Boolean,
+            default: false
         },
 
         date: {
@@ -53,18 +72,19 @@ const ReservationSchema = new mongoose.Schema<ReservationDB>(
     }
 );
 
-ReservationSchema.index(
-    {
-        lab: 1,
-        date: 1,
-        seatNumber: 1,
-        startTime: 1,
-        endTime: 1,
-    },
-    {
-        unique: true
-    }
-)
+ReservationSchema.index({
+    lab: 1,
+    date: 1,
+    startTime: 1,
+    endTime: 1,
+    status: 1
+});
+
+ReservationSchema.index({
+    user: 1,
+    date: 1,
+    startTime: 1
+});
 
 const Reservation = mongoose.model("Reservation", ReservationSchema);
 export default Reservation;

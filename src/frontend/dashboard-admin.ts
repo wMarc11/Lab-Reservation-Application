@@ -103,7 +103,7 @@ function updateReservations(reservations: any[]) {
                 <td>${r.user.firstName} ${r.user.lastName}</td>
                 <td>${new Date(r.dateRequested).toLocaleString()}</td>
                 <td>${r.Date.toLocaleString()} · ${startTime.getHours()}:${startTime.getMinutes()}-${endTime.getHours()}:${endTime.getMinutes()}</td>
-                <td>Seat ${r.seatNumber}</td>
+                <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
                 <td class="${r.status === 'today' ? 'warning' : 'success'}">${r.status}</td>
             `;
         upcomingTable.appendChild(tr);
