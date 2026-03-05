@@ -5,7 +5,7 @@ const M104D_HEADER = `M104D - ECE Thesis Room`;
 const GK302A_HEADER = `GK302A - Computer Lab`;
 const SJ605_HEADER = `SJ605 - Microbiology Research Lab`;
 
-let roomNumber = `I get wet at the thought of you uh huh`
+let roomNumber = `bruh fuck you`
 
 const tableModal = `
     <div class="table">
@@ -18,7 +18,7 @@ const tableModal = `
 const greenSeatModal = `
     <svg viewBox="0 0 100 100">
         <circle r="45" cx="50" cy="50" fill="#8FC991" />
-            <text class="number" x="50" y="55">${roomNumber} Yaoi</text>
+            <text class="number" x="50" y="55">${roomNumber}</text>
     </svg>
 `
 
@@ -591,69 +591,9 @@ const GK306A_TEXT = `
 </div>
 `
 
-const SJ605_TEXT = `
-<div class="display-seat-row row-spread">
-    ${tableModal}
-    ${tableModal}
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat">
-        ${greenSeatModal}
-        ${availableButtonModal}
-    </div>
-
-    <div class="seat">
-        ${redSeatModal}
-        ${unavailableButtonModal}
-    </div>
-</div>
-`;
-
-const M104D_TEXT = `
-<div class="display-seat-row row-spread">
-    ${tableModal}
-    ${tableModal}
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat">
-        ${greenSeatModal}
-        ${availableButtonModal}
-    </div>
-
-    <div class="seat">
-        ${redSeatModal}
-        ${unavailableButtonModal}
-    </div>
-</div>
-`;
-
-const M101_TEXT = `
-<div class="display-seat-row row-spread">
-    ${tableModal}
-    ${tableModal}
-</div>
-
-<div class="display-seat-row row-spread">
-    <div class="seat">
-        ${greenSeatModal}
-        ${availableButtonModal}
-    </div>
-
-    <div class="seat">
-        ${redSeatModal}
-        ${unavailableButtonModal}
-    </div>
-</div>
-`;
-
 const seats = {
-    'SJ605': { SJ605_HEADER, SJ605_TEXT},
     'GK301': { GK301_HEADER, GK301_TEXT},
     'GK302A': { GK302A_HEADER, GK302A_TEXT},
-    'M104D': { M104D_HEADER, M104D_TEXT},
-    'M101': { M101_HEADER, M101_TEXT},
     'GK306A': { GK306A_HEADER, GK306A_TEXT}
 }
 

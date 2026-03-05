@@ -10,6 +10,8 @@ import Lab from './models/lab.model';
 import { ActivityDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 import Building from './models/building.model';
+import { request } from 'http';
+import { promisify } from 'util';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 
@@ -80,6 +82,17 @@ app.post("/login", async (request: any, response: any) => {
             return response.status(400).json({message: "Account with email already exists!"})
 
         return response.status(404).json({ message: error.message });
+    }
+})
+
+app.post('/logout', async (req: any, res) => {
+    try {
+        const destroySession = promisify(req.session.destroy.bind(req.session));
+        await destroySession();
+        res.clearCookie('connect.sid', { path: '/' });
+    }
+    catch (error) {
+        res.status(400).json({message: (error as any).message})
     }
 })
 
