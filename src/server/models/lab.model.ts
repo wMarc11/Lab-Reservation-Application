@@ -19,6 +19,7 @@ const LabSchema = new mongoose.Schema<LabDB>(
 
         room: {
             type: String,
+            enum: LAB_NAMES,
             required: true
         }
     },

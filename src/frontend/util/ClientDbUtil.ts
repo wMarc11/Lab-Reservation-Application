@@ -142,7 +142,7 @@ export namespace ClientDBUtil {
             user: reservationInfo.user, 
             action: "cancelled", 
             reservation: reservationID,
-            labName: reservationInfo.lab.name,
+            labName: reservationInfo.lab.room,
             seatNumber: reservationInfo.seatNumber,
         })
     }

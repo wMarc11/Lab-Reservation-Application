@@ -8,7 +8,6 @@ import User from './models/user.model';
 import Reservation from './models/reservation.model';
 import Lab from './models/lab.model';
 import { ReservationDTO } from '../shared/modelTypes';
-import { LabDTO } from '../shared/modelTypes';
 import { ActivityDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 
@@ -59,7 +58,7 @@ app.post("/signup", async (request: any, response: any) => {
 })
 
 
-app.post("/login", async (request, response) => {
+app.post("/login", async (request: any, response: any) => {
     const {email, password} = request.body;
     try {
         const user = await User.findOne({email})
@@ -70,6 +69,8 @@ app.post("/login", async (request, response) => {
         if (user.password !== password) {
             return response.status(400).json({message: "Invalid Password!"})
         }
+
+        request.session.userID = user.id;
 
         return response.status(201).json({ message: "User found!", user: user._id});
     } catch (errorRecieved) {
@@ -98,15 +99,29 @@ app.post(`/activity`, async (request, response) => {
 //LAB
 app.get(`/lab/name/:name`, async (request, response) => {
     try {
-        const lab = await Lab.findOne({name: request.params.name});
+        const lab = await Lab.findOne({room: request.params.name});
 
         if(!lab){
-            return response.status(400).json({message: "User not found"});
+            return response.status(404).json({message: "Lab not found"});
         }
 
         return response.json(lab);
     } catch (error) {
         return response.status(400).json({message: (error as any).message});
+    }
+})
+
+app.get(`/lab/id/:id`, async (request, response) => {
+    try {
+        const lab = await Lab.findById(request.params.id);
+
+        if (!lab) {
+            return response.status(404).json({ message: "Lab not found" });
+        }
+
+        return response.json(lab);
+    } catch (error) {
+        return response.status(400).json({ message: (error as any).message });
     }
 })
 
@@ -179,7 +194,7 @@ app.put("/reservations/:id", async (request, response) => {
 app.get("/reservations/user/:id", async(req, res) => {
     try {
         const reservations = await Reservation.find({user: req.params.id})
-            .populate("lab", "name")
+            .populate("lab", "room")
             .sort({date: 1});
         res.json(reservations);
     } catch(error){
@@ -249,7 +264,7 @@ app.put('/users/:id', upload.single('profileImage'), async (req, res) => {
 app.get("/reservations", async (_, res) =>{
     try{
         const reservations = await Reservation.find()
-            .populate("lab", "name")
+            .populate("lab", "room")
             .populate("user", "firstName, lastName")
             .sort({date: 1})
         res.json(reservations);
@@ -390,41 +405,24 @@ app.get('/seat-reservation', async (_req, res) => {
     }
 })
 
-app.post('/seat-reservation', async (req: any, res: any) => {
+app.post('/seat-reservation', async (req, res) => {
     try {
-        const {building, floor, seatNumber, totalSeats, room, date, startTime, endTime} = req.body;
+        const { building, floor, room, date, startTime, endTime } = req.body;
 
-        const lab_info = {building, floor, room} as LabDTO;
-        const newLab = new Lab(lab_info);
-        
-        let userID: string = req.session.userID;
-        let labID: string = newLab.id;
-        let today = new Date().toISOString();
+        if (!building || !floor || !room || !date || !startTime || !endTime) {
+            return res.status(400).json({ message: "Missing required seat reservation details" });
+        }
 
-        type NewReservationDTO = Omit<ReservationDTO, "_id">;
-
-        const reservation_info: NewReservationDTO = {
-            user: userID, 
-            lab: {
-                _id: labID,
-                name: room
-            },
-            seatNumber: Number(seatNumber),
-            totalSeats: Number(totalSeats),
-            date: date,
-            dateRequested: today,
-            startTime: startTime,
-            endTime: endTime
-        } 
-
-        const newReservation = new Reservation(reservation_info);
-        res.status(200).json({message: "Reservation successful", reservation: newReservation.id});
+        return res.status(200).json({
+            message: "Seat reservation details staged successfully",
+            details: { building, floor, room, date, startTime, endTime }
+        });
     }
     catch(err) {
         console.error(err);
-        res.status(500).json({message: "Redirect unsuccessful"});
+        return res.status(500).json({message: "Redirect unsuccessful"});
     }
-}) 
+})
 
 
 
