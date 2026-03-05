@@ -19,22 +19,22 @@ export type BuildingDTO = Building & {_id: string};
 export type Lab<TID = string> = {
     building: TID,
     floor: number,
-    room: String
+    room: LabName
 }
 export type LabDTO = Lab & {_id: string};
 
 export type Reservation<TID = string, TDate = string> = {
     user: TID;
     lab: TID;
-    seatNumber: number;
-    totalSeats: number;
+    seatNumbers: number[];
+    isAnonymous?: boolean;
     date: TDate;
     dateRequested: TDate;
     startTime: TDate;
     endTime: TDate;
-    status?: "upcoming" | "today" | "past" | "cancelled";  
+    status?: "upcoming" | "today" | "past" | "cancelled";
 }
-export type ReservationDTO = Omit<Reservation, "lab"> & {_id: string, lab: {_id: string, name: LabName}};
+export type ReservationDTO = Omit<Reservation, "lab"> & { _id: string, lab: { _id: string, room: LabName } };
 
 export type User<TID = string, TDate = string> = {
     firstName: string;

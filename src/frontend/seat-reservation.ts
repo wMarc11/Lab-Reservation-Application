@@ -1553,7 +1553,6 @@ async function redirectToReservationForm() {
             body: JSON.stringify({ 
                 building: sessionStorage.getItem('building'),
                 floor: sessionStorage.getItem('floor'),
-                totalSeats: reservation_count,
                 room: sessionStorage.getItem('room'),
                 date: sessionStorage.getItem('date'),
                 startTime: start,

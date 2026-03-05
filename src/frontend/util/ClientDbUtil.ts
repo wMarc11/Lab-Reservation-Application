@@ -115,13 +115,15 @@ export namespace ClientDBUtil {
             throw new Error(data.message ?? "Failed to create reservation");
         }
 
-        await logActivity({
-            user: userID, 
-            action: "reserved", 
-            reservation: data.id,
-            labName: labRoomCode,
-            seatNumber: reservationData.seatNumber,
-        })
+        for (const seatNumber of reservationData.seatNumbers) {
+            await logActivity({
+                user: userID,
+                action: "reserved",
+                reservation: data.id,
+                labName: labRoomCode,
+                seatNumber
+            });
+        }
 
         return data.id;
     }
@@ -138,13 +140,15 @@ export namespace ClientDBUtil {
         if (!response.ok) {
             throw new Error(data.message ?? "Failed to cancel reservation");
         }
-        await logActivity({
-            user: reservationInfo.user, 
-            action: "cancelled", 
-            reservation: reservationID,
-            labName: reservationInfo.lab.name,
-            seatNumber: reservationInfo.seatNumber,
-        })
+        for (const seatNumber of reservationInfo.seatNumbers) {
+            await logActivity({
+                user: reservationInfo.user,
+                action: "cancelled",
+                reservation: reservationID,
+                labName: reservationInfo.lab.room,
+                seatNumber
+            });
+        }
     }
 
     /**

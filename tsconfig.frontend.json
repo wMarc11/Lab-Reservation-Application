@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./out/frontend",
+    "outDir": "./out", // "./out/frontend"
     "module": "ESNext",
     "lib": ["ES2020", "DOM"]
   },
