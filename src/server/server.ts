@@ -440,7 +440,7 @@ app.get("/activities", async(_req, res) =>{
     }
 });
     
-mongoose.connect("mongodb+srv://marc:PfNo93spmJUkuMLR@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
+mongoose.connect("mongodb+srv://marc:marcdb@labreservation.8crxdrf.mongodb.net/?appName=LabReservation")
 .then(() =>{
     console.log("Connected to database!");
     app.listen(3000, () => {
