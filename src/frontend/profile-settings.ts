@@ -1,6 +1,18 @@
 const deleteAccountButton = document.getElementById('deleteAccountBtn');
 
-deleteAccountButton?.addEventListener('click', async () => {
+const modal = document.querySelector('#confirmModal') as HTMLDivElement;
+const yesBtn = document.querySelector('#confirmYes') as HTMLButtonElement;
+const noBtn = document.querySelector('#confirmNo') as HTMLButtonElement;
+
+deleteAccountButton?.addEventListener('click' ,() => {
+    modal.style.display = "flex";
+});
+
+noBtn.addEventListener('click', () => {
+    modal.style.display = "none";
+});
+
+yesBtn.addEventListener('click', async () => {
     try {
         const response = await fetch('/delete-account', {
             method: 'DELETE'
