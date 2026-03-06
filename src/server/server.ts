@@ -10,7 +10,6 @@ import Lab from './models/lab.model';
 import { ActivityDTO } from '../shared/modelTypes';
 import Activity from './models/activity.model';
 import Building from './models/building.model';
-import { request } from 'http';
 import { promisify } from 'util';
 
 require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
@@ -90,6 +89,29 @@ app.post('/logout', async (req: any, res) => {
         const destroySession = promisify(req.session.destroy.bind(req.session));
         await destroySession();
         res.clearCookie('connect.sid', { path: '/' });
+    }
+    catch (error) {
+        res.status(400).json({message: (error as any).message})
+    }
+})
+
+app.delete('/delete-account', async (req: any, res) => {
+    try {
+        const userID = req.session?.userID;
+
+        if (!userID) {
+            res.status(400).json({message: `No user with that name or ID, ${userID} uh huh` });
+        }
+        else {
+            await Activity.deleteMany({ user: userID });
+            await Reservation.deleteMany({ user: userID });
+            await User.findByIdAndDelete(userID);
+            
+            const destroySession = promisify(req.session.destroy.bind(req.session));
+            await destroySession();
+            res.clearCookie('connect.sid', { path: '/' });
+            res.status(200).json({ message: 'Account data deleted successfully' });
+        }
     }
     catch (error) {
         res.status(400).json({message: (error as any).message})
