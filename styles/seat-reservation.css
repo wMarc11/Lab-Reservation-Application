@@ -336,6 +336,10 @@ svg {
     cursor: pointer;    
 }
 
+.seat.occupied {
+    cursor: default;
+}
+
 .seat .col{
     display: flex;
     position: relative;
@@ -347,30 +351,70 @@ svg {
 .seat-dropdown {
     display: none; 
     position: absolute;
-    top: 110%;           
+    bottom: calc(100% + 0.65rem);
     left: 50%;
-    gap: 2px;
+    gap: 0.45rem;
     transform: translateX(-50%);
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 8px 12px;
-    border-radius: 4px;
-    box-shadow: 0px 4px 6px rgba(0,0,0,0.2);
-    z-index: 999999999;
-    white-space: nowrap;    
+    min-width: 13.5rem;
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.96) 0%, rgba(15, 23, 42, 0.97) 100%);
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    padding: 0.75rem 0.85rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1rem 2rem rgba(2, 6, 23, 0.35);
+    z-index: 50;
+    white-space: nowrap;
+}
+
+.seat-dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 7px;
+    border-style: solid;
+    border-color: rgba(15, 23, 42, 0.97) transparent transparent transparent;
 }
 
 .seat-dropdown p{
-    color: black;
-    text-align: center;
+    color: var(--color-info-light);
+    text-align: left;
+    font-family: Inter, sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.35;
 }
 
+
+.seat.occupied:hover .seat-dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
+.seat-dropdown-chip {
+    display: inline-flex;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #fef2f2;
+    background: rgba(255, 119, 130, 0.22);
+    border: 1px solid rgba(255, 119, 130, 0.45);
+    padding: 0.12rem 0.45rem;
+    border-radius: 999px;
+}
+
+.seat-dropdown-time {
+    color: rgba(220, 225, 235, 0.82);
+    font-size: 0.78rem;
+}
+
+
 .user{  
-    color: blue;
+    color: var(--color-primary);
     text-decoration: underline;
     transition: all 0.3s ease;
     display: inline-block;
-    margin-left: 5px;
 }
 
 .user:hover {
@@ -399,16 +443,83 @@ button {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 3rem;
+    justify-content: space-between;
+    gap: 2rem;
     min-height: 5vh;
+    flex-wrap: wrap;
+}
+
+.reservation-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.reservation-heading {
+    font-size: 1.4rem;
+}
+
+.reservation-actions {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+
+.reservation-message {
+    min-height: 1.4rem;
+    color: var(--color-white);
+    font-family: Inter, sans-serif;
+    font-size: 0.85rem;
+}
+
+#reserve-all-button,
+#anonymous-toggle-button {
+    text-align: center;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
 #reserve-all-button {
-    text-align: center;
-    padding: 10px 30px;
-    border-radius: 6px;
-    font-family: inherit;
-    background-color: var(--color-info-light);
+    background: linear-gradient(135deg, #dce1eb 0%, #f2f5fb 100%);
+    color: #1e293b;
 }
 
+#reserve-all-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 0.6rem 1.2rem rgba(2, 6, 23, 0.2);
+    border-color: rgba(115, 128, 236, 0.35);
+}
+
+#reserve-all-button:disabled,
+#anonymous-toggle-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#anonymous-toggle-button {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.22) 0%, rgba(71, 85, 105, 0.35) 100%);
+    color: var(--color-info-light);
+    border-color: rgba(148, 163, 184, 0.35);
+}
+
+#anonymous-toggle-button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 0.6rem 1.2rem rgba(2, 6, 23, 0.25);
+    border-color: rgba(115, 128, 236, 0.5);
+}
+
+#anonymous-toggle-button[aria-pressed="true"] {
+    background: linear-gradient(135deg, rgba(115, 128, 236, 0.92) 0%, rgba(17, 30, 136, 0.95) 100%);
+    color: var(--color-white);
+    border-color: rgba(191, 219, 254, 0.55);
+    box-shadow: 0 0.55rem 1.2rem rgba(67, 56, 202, 0.35);
+}

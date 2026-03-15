@@ -25,6 +25,7 @@ const reservationCounterSection = document.querySelector(".reservation-counter")
 let occupiedSeats = [];
 let selectedSeats = new Set();
 let refreshTimer = null;
+let isAnonymousReservation = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const authOkay = await ensureAuthenticated();
@@ -84,15 +85,12 @@ function renderControls() {
     }
 
     reservationCounterSection.innerHTML = `
-        <div style="display:flex; flex-direction:column; gap:0.6rem; align-items:flex-start; flex:1;">
-            <h1 style="font-size:1.4rem;">Reservation Count: <span id="reservation-counter">0</span></h1>
-            <label style="display:flex; align-items:center; gap:0.5rem; color: var(--color-white);">
-                <input id="anonymous-toggle" type="checkbox" />
-                <span>Make this reservation anonymous</span>
-            </label>
-            <p id="reservation-message" style="min-height:1.4rem; color: var(--color-white);"></p>
+        <div class="reservation-meta">
+            <h1 class="reservation-heading">Reservation Count: <span id="reservation-counter">0</span></h1>
+            <p id="reservation-message" class="reservation-message"></p>
         </div>
-        <div style="display:flex; gap:1rem; align-items:center;">
+        <div class="reservation-actions">
+            <button id="anonymous-toggle-button" class="secondary-reserve-button" type="button" aria-pressed="false">Reserve Anonymously: Off</button>
             <button id="reserve-all-button" type="button">Reserve Selected Seats</button>
         </div>
     `;
@@ -100,16 +98,15 @@ function renderControls() {
 
 function attachControlEvents() {
     const reserveButton = document.getElementById("reserve-all-button");
+    const anonymousToggleButton = document.getElementById("anonymous-toggle-button");
 
     reserveButton?.addEventListener("click", submitReservation);
-
-    document.addEventListener("click", (event) => {
-        if (!event.target.closest(".seat")) {
-            document.querySelectorAll(".seat-dropdown").forEach((dropdown) => {
-                dropdown.style.display = "none";
-            });
-        }
+    anonymousToggleButton?.addEventListener("click", () => {
+        isAnonymousReservation = !isAnonymousReservation;
+        anonymousToggleButton.setAttribute("aria-pressed", String(isAnonymousReservation));
+        anonymousToggleButton.textContent = `Reserve Anonymously: ${isAnonymousReservation ? "On" : "Off"}`;
     });
+
 }
 
 async function refreshSeatMap() {
@@ -206,13 +203,12 @@ function buildSeatMarkup(seatNumber, occupiedSeat, style = "") {
     const isOccupied = Boolean(occupiedSeat);
     const isSelected = selectedSeats.has(seatNumber);
     const status = isOccupied ? "occupied" : isSelected ? "selected" : "available";
+    const seatClassName = isOccupied ? "seat occupied" : "seat";
 
     return `
-        <div class="seat" data-seat-number="${seatNumber}" data-status="${status}" ${style ? `style="${style}"` : ""}>
+        <div class="${seatClassName}" data-seat-number="${seatNumber}" data-status="${status}" ${style ? `style="${style}"` : ""}>
             ${buildSeatSvg(seatNumber, isOccupied, isSelected)}
-            <div class="seat-dropdown">
-                ${buildSeatDropdown(seatNumber, occupiedSeat, isSelected)}
-            </div>
+            ${isOccupied ? `<div class="seat-dropdown">${buildSeatDropdown(seatNumber, occupiedSeat, isSelected)}</div>` : ""}
         </div>
     `;
 }
@@ -224,17 +220,8 @@ function attachSeatEvents() {
 
             const seatNumber = Number(seatElement.getAttribute("data-seat-number"));
             const status = seatElement.getAttribute("data-status");
-            const dropdown = seatElement.querySelector(".seat-dropdown");
-
-            document.querySelectorAll(".seat-dropdown").forEach((otherDropdown) => {
-                if (otherDropdown !== dropdown) {
-                    otherDropdown.style.display = "none";
-                }
-            });
 
             if (status === "occupied") {
-                dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
-                dropdown.style.flexDirection = "column";
                 return;
             }
 
@@ -261,7 +248,7 @@ function buildSeatSvg(seatNumber, isOccupied, isSelected) {
     `;
 }
 
-function buildSeatDropdown(seatNumber, occupiedSeat, isSelected) {
+function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
     if (occupiedSeat) {
         const reserverName = occupiedSeat.isAnonymous || !occupiedSeat.user
             ? "Anonymous"
@@ -272,17 +259,13 @@ function buildSeatDropdown(seatNumber, occupiedSeat, isSelected) {
             : `<p>By: <a href="other-profile.html?id=${occupiedSeat.user._id}" class="user">${reserverName}</a></p>`;
 
         return `
-            <p>Status: Reserved</p>
+            <div class="seat-dropdown-chip">Reserved</div>
             ${userMarkup}
-            <p>${formatTimeRange(occupiedSeat.startTime, occupiedSeat.endTime)}</p>
+            <p class="seat-dropdown-time">${formatTimeRange(occupiedSeat.startTime, occupiedSeat.endTime)}</p>
         `;
     }
 
-    return `
-        <p>Status: ${isSelected ? "Selected" : "Available"}</p>
-        <p>Seat ${seatNumber}</p>
-        <p>${isSelected ? "Click again to remove" : "Click to select"}</p>
-    `;
+    return "";
 }
 
 function updateCounter() {
@@ -300,10 +283,14 @@ async function submitReservation() {
     }
 
     const reserveButton = document.getElementById("reserve-all-button");
-    const anonymousToggle = document.getElementById("anonymous-toggle");
+    const anonymousToggleButton = document.getElementById("anonymous-toggle-button");
 
     if (reserveButton) {
         reserveButton.disabled = true;
+    }
+
+    if (anonymousToggleButton) {
+        anonymousToggleButton.setAttribute("disabled", "true");
     }
 
     try {
@@ -320,7 +307,7 @@ async function submitReservation() {
                 startTime,
                 endTime,
                 seatNumbers: Array.from(selectedSeats).sort((left, right) => left - right),
-                isAnonymous: Boolean(anonymousToggle?.checked)
+                isAnonymous: isAnonymousReservation
             })
         });
 
@@ -342,6 +329,10 @@ async function submitReservation() {
     } finally {
         if (reserveButton) {
             reserveButton.disabled = false;
+        }
+
+        if (anonymousToggleButton) {
+            anonymousToggleButton.removeAttribute("disabled");
         }
     }
 }
