@@ -17,4 +17,12 @@ export function queryElement<T extends HTMLElement>(query: string, parent: HTMLE
     return element;
 }
 
+export async function sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+export async function delay(ms: number, callback: () => any): Promise<any> {
+    await sleep(ms);
+    return callback();
+}
 

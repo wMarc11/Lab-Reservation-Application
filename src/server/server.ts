@@ -30,11 +30,18 @@ app.use(session({
     }
 }));
 
+const MINIMUM_PASSWORD_LENGTH = 4;
+
 app.post("/signup", async (request: any, response: any) => {
     const { email, password } = request.body;
 
     if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
+        return;
+    }
+
+    if (password.length < MINIMUM_PASSWORD_LENGTH) {
+        response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} long!` });
         return;
     }
 
@@ -130,6 +137,28 @@ app.delete('/delete-account', async (req: any, res) => {
     catch (error) {
         res.status(400).json({message: (error as any).message})
     }
+})
+
+app.put(`/change-password`, async (request, response) => {
+    const {currentPassword, newPassword, confirmNewPassword} = request.body;
+    const user = await requireAuth(request);
+    if (newPassword !== confirmNewPassword)
+        return response.status(400).json({message: `Confirm new password does not match new password`});
+
+    if (currentPassword !== user.password)
+        return response.status(400).json({message: `Invalid current password`});
+
+    if (newPassword === currentPassword)
+        return response.status(400).json({message: `New password cannot be the same as old password`});
+
+    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+        response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} characters long!` });
+        return;
+    }
+
+    user.password = newPassword;
+    await user.save();
+    return response.status(200).json({message: `Password changed successfully! Redirecting to home page...`});
 })
 
 app.get(`/auth/check`, (request, response) => {

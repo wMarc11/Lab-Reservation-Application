@@ -7,7 +7,7 @@ logout?.addEventListener('click', (e) => {
     requestLogOut();
 })
 
-async function requestLogOut() {
+export async function requestLogOut(sendToIndex: boolean = true) {
     try {
         const response = await fetch('/logout', {
             method: 'POST',
@@ -18,7 +18,8 @@ async function requestLogOut() {
 
         if (response.ok) {
             console.log('successful', data.message);
-            window.location.href = `index.html`;
+            if (sendToIndex)
+                window.location.href = `index.html`;
         }
         else {
             console.error('unsuccesful response', data.message);
