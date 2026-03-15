@@ -1,5 +1,5 @@
 import { LabName } from "../../shared/labNames";
-import { ActivityDTO, LabDTO, UserDTO } from "../../shared/modelTypes";
+import { LabDTO, UserDTO } from "../../shared/modelTypes";
 import { ReservationDTO } from "../../shared/modelTypes";
 
 export type UserID = string & {_brand: "UserID"}
@@ -115,16 +115,6 @@ export namespace ClientDBUtil {
             throw new Error(data.message ?? "Failed to create reservation");
         }
 
-        for (const seatNumber of reservationData.seatNumbers) {
-            await logActivity({
-                user: userID,
-                action: "reserved",
-                reservation: data.id,
-                labName: labRoomCode,
-                seatNumber
-            });
-        }
-
         return data.id;
     }
 
@@ -134,20 +124,10 @@ export namespace ClientDBUtil {
      * @param reservationID - the reservation _id to cancel
      */
     export async function cancelReservation(reservationID: string) {
-        const reservationInfo = await getReservationFromID(reservationID);
         const response = await fetch(`/reservations/${reservationID}`, { method: "DELETE" });
         const data = await response.json();
         if (!response.ok) {
             throw new Error(data.message ?? "Failed to cancel reservation");
-        }
-        for (const seatNumber of reservationInfo.seatNumbers) {
-            await logActivity({
-                user: reservationInfo.user,
-                action: "cancelled",
-                reservation: reservationID,
-                labName: reservationInfo.lab.room,
-                seatNumber
-            });
         }
     }
 
@@ -173,15 +153,4 @@ export namespace ClientDBUtil {
         return json;
     }
 
-    /** private helper functions for logging activity */
-    async function logActivity(activity: Omit<ActivityDTO, "_id">) {
-        const response = await fetch(`/activity`, {
-            method: "POST",
-            body: JSON.stringify(activity),
-            headers: {"Content-Type": "application/json"},
-        });
-
-        if (!response.ok)
-            throw new Error(`Request failed (${response.status})`)
-    }
 }

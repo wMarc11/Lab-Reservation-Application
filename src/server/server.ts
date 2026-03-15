@@ -172,22 +172,7 @@ app.post(`/reservations`, async (request: any, response) => {
 
         const newReservation = await createReservationFromPayload(request.body, currentUser);
 
-        const seatNumbers = request.body.seatNumbers || [];
-
-        const activityPromises = seatNumbers.map((seatNumber: number) => {
-            const activity = new Activity({
-                user: currentUser._id,
-                reservation: newReservation._id,
-                action: "reserved",
-                seatNumber: seatNumber,
-                labName: request.body.room,
-                timestamp: new Date()
-            });
-
-            return activity.save();
-        });
-
-        await Promise.all(activityPromises);
+        await createReservationActivities(newReservation, "reserved");
 
         return response.status(201).json({
             message: `Reservation created`,
@@ -196,9 +181,13 @@ app.post(`/reservations`, async (request: any, response) => {
         });
 
     } catch (error) {
+        const details = typeof error === "object" && error !== null && "details" in error
+            ? (error as { details?: unknown }).details
+            : undefined;
+
         return response
             .status(getErrorStatus(error))
-            .json({ message: (error as Error).message });
+            .json({ message: (error as Error).message, ...(details ? { details } : {}) });
     }
 });
 
@@ -218,6 +207,7 @@ app.delete("/reservations/:id", async (request: any, response) => {
         if (reservation.status !== "cancelled") {
             reservation.status = "cancelled";
             await reservation.save();
+            await createReservationActivities(reservation, "cancelled");
         }
 
         return response.json({
@@ -662,9 +652,14 @@ function getErrorStatus(error: unknown) {
         : 500;
 }
 
-function createHttpError(status: number, message: string) {
-    const error = new Error(message) as Error & { status: number };
+function createHttpError(status: number, message: string, details?: Record<string, unknown>) {
+    const error = new Error(message) as Error & { status: number; details?: Record<string, unknown> };
     error.status = status;
+
+    if (details) {
+        error.details = details;
+    }
+
     return error;
 }
 
@@ -1296,7 +1291,8 @@ async function createReservationFromPayload(payload: any, currentUser: any) {
     if (conflictingSeatNumbers.length > 0) {
         throw createHttpError(
             409,
-            `Seat(s) ${conflictingSeatNumbers.join(", ")} are already reserved for the selected time slot`
+            `Seat(s) ${conflictingSeatNumbers.join(", ")} are already reserved for the selected time slot`,
+            { conflictingSeatNumbers }
         );
     }
 
@@ -1320,6 +1316,30 @@ async function createReservationFromPayload(payload: any, currentUser: any) {
     return newReservation;
 }
 
+
+async function createReservationActivities(reservation: any, action: "reserved" | "cancelled") {
+    const reservationObject = typeof reservation.toObject === "function"
+        ? reservation.toObject()
+        : reservation;
+
+    const seatNumbers = Array.isArray(reservationObject.seatNumbers) ? reservationObject.seatNumbers : [];
+    const labName = reservationObject.lab?.room ?? reservationObject.room ?? "";
+
+    if (seatNumbers.length === 0 || !labName) {
+        return;
+    }
+
+    await Promise.all(
+        seatNumbers.map((seatNumber: number) => Activity.create({
+            user: reservationObject.user,
+            reservation: reservationObject._id,
+            action,
+            seatNumber,
+            labName,
+            timestamp: new Date()
+        }))
+    );
+}
 function calculateReservationStatus(reservation: any) {
     if (reservation.status === "cancelled") {
         return "cancelled";
@@ -1457,6 +1477,7 @@ app.get('/seat-reservation', async (_req, res) => {
 
 app.post('/seat-reservation', async (req: any, res) => {
     try {
+        const currentUser = await requireAuth(req);
         const { building, floor, room, date, startTime, endTime } = req.body;
 
         if (!building || !floor || !room || !date || !startTime || !endTime) {
@@ -1475,7 +1496,8 @@ app.post('/seat-reservation', async (req: any, res) => {
             });
         }
 
-        const createdReservation = await createReservationFromPayload(req.body, req.session?.userID);
+        const createdReservation = await createReservationFromPayload(req.body, currentUser);
+        await createReservationActivities(createdReservation, "reserved");
 
         return res.status(201).json({
             message: "Reservation created",
@@ -1512,5 +1534,3 @@ app.get("/auth/me", async (request: any, response: any) => {
         return response.status(500).json({ message: (error as Error).message });
     }
 });
-
-
