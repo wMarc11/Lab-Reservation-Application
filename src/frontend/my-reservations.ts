@@ -1,30 +1,19 @@
+import { LAB_NAMES, LabName } from "../shared/labNames.js";
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
-import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/reservation.d.ts";
-/*
-  My Reservations (prototype)
+import type { ReservationDTO } from "../shared/modelTypes.d.ts";
 
-  - Stores reservations in localStorage under: labynx_reservations_v1
-  - Implements View + Edit Reservation with basic validation and conflict checks.
-  - Uses RegEx for searching.
-  - IMPORTANT: LABS array to be replaced with NoSql query, it's there for the MCO1 demo.
-*/
+type Status = "UPCOMING" | "TODAY" | "PAST" | "CANCELLED";
+type ReservationWithStatus = ReservationDTO & { _status: Status };
 
 (function () {
-  const STORAGE_KEY = "labynx_reservations_v1";
-  const loggedInUserID = "12345678"; // placeholder until auth is implemented
-
-  // const LABS = ["GK301", "GK302A", "GK302B"];
-  const LAB_CAPACITY: Record<Lab, number> = {
-    GK301: 20,
-    GK302A: 20,
-    GK302B: 20,
-  };
+  const userID = ClientDBUtil.getCurrentUserID();
 
   const els = {
     tbody: queryElement<HTMLTableSectionElement>("#reservations-tbody"),
     emptyState: queryElement<HTMLElement>("#empty-state"),
 
-   statUpcoming: queryElement<HTMLElement>("#stat-upcoming"),
+    statUpcoming: queryElement<HTMLElement>("#stat-upcoming"),
     statToday: queryElement<HTMLElement>("#stat-today"),
     statTotal: queryElement<HTMLElement>("#stat-total"),
     statUpcomingBadge: queryElement<HTMLElement>("#stat-upcoming-badge"),
@@ -37,7 +26,6 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     filterStatus: queryElement<HTMLSelectElement>("#filter-status"),
     filterSearch: queryElement<HTMLInputElement>("#filter-search"),
 
-    // modal
     overlay: queryElement<HTMLDivElement>("#modal-overlay"),
     modalClose: queryElement<HTMLButtonElement>("#modal-close"),
     tabView: queryElement<HTMLButtonElement>("#tab-view"),
@@ -48,7 +36,6 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     formError: queryElement<HTMLElement>("#form-error"),
     btnCancel: queryElement<HTMLButtonElement>("#btn-cancel"),
 
-    // form fields
     editId: queryElement<HTMLInputElement>("#edit-id"),
     editLab: queryElement<HTMLSelectElement>("#edit-lab"),
     editDate: queryElement<HTMLInputElement>("#edit-date"),
@@ -59,39 +46,44 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     seatHint: queryElement<HTMLElement>("#seat-hint"),
   };
 
-  let reservations: Reservation[] = [];
+  let reservations: ReservationDTO[] = [];
   let activeReservationId: string | null = null;
 
-  // ---------- Helpers ----------
   function pad2(n: number) {
     return String(n).padStart(2, "0");
   }
 
-  function toISODate(d: Date) {
-    return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
-  }
-
-  function addDays(d: Date, n: number) {
-    const copy = new Date(d);
-    copy.setDate(copy.getDate() + n);
-    return copy;
+  function toISODate(dateInput: string | Date) {
+    const date = new Date(dateInput);
+    return `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`;
   }
 
   function formatDateLabel(isoDate: string) {
     const today = toISODate(new Date());
-    const tomorrow = toISODate(addDays(new Date(), 1));
+    const tomorrowDate = new Date();
+    tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+    const tomorrow = toISODate(tomorrowDate);
 
     if (isoDate === today) return "Today";
     if (isoDate === tomorrow) return "Tomorrow";
     return isoDate;
   }
 
-  function minutesFromHHMM(t: string) {
-    const [h, m] = t.split(":").map(Number);
-    if (h === undefined || m === undefined)
-        throw new Error("Invalid time format");
+  function minutesFromTimeValue(value: string) {
+    const parsed = new Date(value);
 
-    return h * 60 + m;
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed.getHours() * 60 + parsed.getMinutes();
+    }
+
+    if (/^\d{1,2}:\d{2}$/.test(value)) {
+      const parts = value.split(":");
+      const hours = Number(parts[0]);
+      const minutes = Number(parts[1]);
+      return hours * 60 + minutes;
+    }
+
+    throw new Error("Invalid time format");
   }
 
   function hhmmFromMinutes(mins: number) {
@@ -100,18 +92,17 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     return `${pad2(h)}:${pad2(m)}`;
   }
 
-  function overlaps(aStart: number, aEnd: number, bStart: number, bEnd: number) {
-    // intervals overlap if start < otherEnd AND end > otherStart
-    return aStart < bEnd && aEnd > bStart;
+  function toTimeInputValue(dateOrTime: string | Date) {
+    const mins = minutesFromTimeValue(String(dateOrTime));
+    return hhmmFromMinutes(mins);
   }
 
-  function statusFor(res: Reservation): Status {
-    if (res.cancelled) return "CANCELLED";
-    const todayISO = toISODate(new Date());
-    const resDate = res.date;
-    if (resDate === todayISO) return "TODAY";
-    if (resDate > todayISO) return "UPCOMING";
-    return "PAST";
+  function statusFor(res: ReservationDTO): Status {
+    const status = (res.status ?? "upcoming").toString().toLowerCase();
+    if (status === "cancelled") return "CANCELLED";
+    if (status === "today") return "TODAY";
+    if (status === "past") return "PAST";
+    return "UPCOMING";
   }
 
   function prettyStatus(status: Status) {
@@ -128,23 +119,13 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     return "cancelled";
   }
 
-  function visibilityLabel(res: Reservation) {
-    return res.anonymous ? "Anonymous" : "Public";
-  }
-
-  function newId() {
-    let id = "";
-    do {
-      const ts = Date.now().toString(36).toUpperCase();
-      const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-      id = `R-${ts}${rand}`;
-    } while (reservations && reservations.some(r => r.id === id));
-    return id;
+  function visibilityLabel(reservation: ReservationDTO) {
+    return reservation.isAnonymous ? "Anonymous" : "Public";
   }
 
   function setHidden(el: HTMLElement, hidden: boolean) {
     if (!el) return;
-    el.hidden = !!hidden;
+    el.hidden = hidden;
   }
 
   function setTab(which: "edit" | "view") {
@@ -163,297 +144,185 @@ import type { Reservation, Lab, ReservationWithStatus, Status } from "../types/r
     activeReservationId = null;
   }
 
-  function openModal(resId: string, mode: "edit" | "view") {
-    activeReservationId = resId;
-    const res = reservations.find(r => r.id === resId);
-    if (!res) return;
+  function getSeatNumbers(reservation: ReservationDTO) {
+    return Array.isArray(reservation.seatNumbers) ? reservation.seatNumbers : [];
+  }
 
-    const stat = statusFor(res);
+  function openModal(reservationID: string, mode: "edit" | "view") {
+    activeReservationId = reservationID;
+    const reservation = reservations.find((item) => item._id === reservationID);
+
+    if (!reservation) return;
+
+    const status = statusFor(reservation);
+    const seatNumbers = getSeatNumbers(reservation);
+
     const viewItems = [
-      { label: "Reservation ID", value: res.id },
-      { label: "Laboratory", value: res.lab },
-     { label: "Date & Time Requested", value: res.dateTimeReq ? new Date(res.dateTimeReq).toLocaleString() : "N/A" },
-
-      { label: "Date", value: formatDateLabel(res.date) },
-      { label: "Time", value: `${res.startTime} - ${res.endTime}` },
-      { label: "Seat", value: String(res.seat) },
-      { label: "Visibility", value: visibilityLabel(res) },
-      { label: "Status", value: prettyStatus(stat) },
+      { label: "Reservation ID", value: reservation._id },
+      { label: "Laboratory", value: reservation.lab.room },
+      {
+        label: "Date & Time Requested",
+        value: reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A",
+      },
+      { label: "Date", value: formatDateLabel(toISODate(reservation.date)) },
+      {
+        label: "Time",
+        value: `${toTimeInputValue(reservation.startTime)} - ${toTimeInputValue(reservation.endTime)}`,
+      },
+      { label: "Seats", value: seatNumbers.length > 0 ? seatNumbers.join(", ") : "N/A" },
+      { label: "Visibility", value: visibilityLabel(reservation) },
+      { label: "Status", value: prettyStatus(status) },
     ];
 
     els.modalViewGrid.innerHTML = viewItems
-      .map(i => `<div class="detail-item"><span>${i.label}</span><b>${i.value}</b></div>`)
+      .map((item) => `<div class="detail-item"><span>${item.label}</span><b>${item.value}</b></div>`)
       .join("");
 
-    // Fill edit form
-    els.editId.value = res.id;
-    els.editLab.value = res.lab;
-    els.editDate.value = res.date;
-    els.editSeat.value = String(res.seat);
-    els.editStart.value = res.startTime;
-    els.editEnd.value = res.endTime;
-    els.editAnon.checked = !!res.anonymous;
-    els.seatHint.textContent = `Seat must be within ${res.lab} capacity (${LAB_CAPACITY[res.lab]}).`;
+    els.editId.value = reservation._id;
+    els.editLab.value = reservation.lab.room;
+    els.editDate.value = toISODate(reservation.date);
+    els.editSeat.value = String(seatNumbers[0] ?? "");
+    els.editStart.value = toTimeInputValue(reservation.startTime);
+    els.editEnd.value = toTimeInputValue(reservation.endTime);
+    els.editAnon.checked = Boolean(reservation.isAnonymous);
+    els.seatHint.textContent = `You can edit one seat number for this reservation.`;
 
-    // Ensure end times are valid vs start
     syncEndTimes();
 
     setHidden(els.overlay, false);
     els.overlay.classList.add("is-open");
     document.body.classList.add("modal-open");
-    setTab(mode === "edit" ? "edit" : "view");
+    setTab(mode);
   }
 
   function buildTimeOptions(selectEl: HTMLSelectElement) {
-    // 07:00 to 21:00 in 30-min steps (adjust freely)
     const startMin = 7 * 60;
     const endMin = 21 * 60;
-
     let html = "";
-    for (let t = startMin; t <= endMin; t += 30) {
-      const v = hhmmFromMinutes(t);
-      html += `<option value="${v}">${v}</option>`;
+
+    for (let mins = startMin; mins <= endMin; mins += 30) {
+      const value = hhmmFromMinutes(mins);
+      html += `<option value="${value}">${value}</option>`;
     }
+
     selectEl.innerHTML = html;
   }
 
   function syncEndTimes() {
-    // Ensure end time is always > start time.
-    const s = minutesFromHHMM(els.editStart.value);
-    const e = minutesFromHHMM(els.editEnd.value);
+    const start = minutesFromTimeValue(els.editStart.value);
+    const end = minutesFromTimeValue(els.editEnd.value);
 
-    // Rebuild end options and disable those <= start
     const options = Array.from(els.editEnd.options);
-    options.forEach(opt => {
-      const mins = minutesFromHHMM(opt.value);
-      opt.disabled = mins <= s;
+    options.forEach((option) => {
+      const optionMinutes = minutesFromTimeValue(option.value);
+      option.disabled = optionMinutes <= start;
     });
 
-    if (e <= s) {
-      // pick next available
-      const next = options.find(opt => !opt.disabled);
-      if (next) els.editEnd.value = next.value;
+    if (end <= start) {
+      const firstValid = options.find((option) => !option.disabled);
+      if (firstValid) {
+        els.editEnd.value = firstValid.value;
+      }
     }
   }
 
-  function validateAndSaveEdit(evt: SubmitEvent) {
-    evt.preventDefault();
+  function showError(message: string) {
+    els.formError.textContent = message;
+    setHidden(els.formError, false);
+  }
+
+  async function refreshReservations() {
+    reservations = await ClientDBUtil.getCurrentReservations(userID);
+    render();
+  }
+
+  async function validateAndSaveEdit(event: SubmitEvent) {
+    event.preventDefault();
     setHidden(els.formError, true);
 
     const id = els.editId.value;
-    const res = reservations.find(r => r.id === id);
-    if (!res) return;
+    const existing = reservations.find((reservation) => reservation._id === id);
 
-    const lab = res.lab;
+    if (!existing) return;
+
     const date = els.editDate.value;
     const seat = Number(els.editSeat.value);
     const startTime = els.editStart.value;
     const endTime = els.editEnd.value;
-    const anonymous = els.editAnon.checked;
 
-    // Basic checks
     if (!date || !startTime || !endTime || !Number.isFinite(seat)) {
       return showError("Please complete all required fields.");
     }
 
-    const today = new Date();
-    const minDate = toISODate(today);
-    const maxDate = toISODate(addDays(today, 7));
-
-    if (date < minDate || date > maxDate) {
-      return showError("Date must be within the next 7 days (prototype rule).");
-    }
-
-    const capacity = LAB_CAPACITY[lab] ?? 20;
-    if (seat < 1 || seat > capacity) {
-      return showError(`Seat must be between 1 and ${capacity} for ${lab}.`);
-    }
-
-    const sMin = minutesFromHHMM(startTime);
-    const eMin = minutesFromHHMM(endTime);
-
-    if (eMin <= sMin) {
+    if (minutesFromTimeValue(endTime) <= minutesFromTimeValue(startTime)) {
       return showError("End time must be after start time.");
     }
-    if ((eMin - sMin) % 30 !== 0) {
-      return showError("Time must be in 30-minute intervals.");
+
+    try {
+      await ClientDBUtil.updateReservation(id, {
+        date,
+        startTime,
+        endTime,
+        seatNumbers: [seat],
+        isAnonymous: els.editAnon.checked,
+      });
+
+      await refreshReservations();
+      openModal(id, "view");
+    } catch (error) {
+      showError(error instanceof Error ? error.message : "Unable to update reservation.");
     }
-
-    // Conflict check against other reservations (same lab, same seat, same date)
-    const conflict = reservations.some(other => {
-      if (other.id === id) return false;
-      if (other.cancelled) return false;
-      if (other.lab !== lab) return false;
-      if (other.date !== date) return false;
-      if (Number(other.seat) !== seat) return false;
-
-      const oS = minutesFromHHMM(other.startTime);
-      const oE = minutesFromHHMM(other.endTime);
-      return overlaps(sMin, eMin, oS, oE);
-    });
-
-    if (conflict) {
-      return showError("That seat and time overlaps an existing reservation (prototype check).");
-    }
-
-    // Save
-    res.date = date;
-    res.seat = seat;
-    res.startTime = startTime;
-    res.endTime = endTime;
-    res.anonymous = anonymous;
-
-    persist();
-    render();
-openModal(id, "view"); // switch back to view
-  }
-
-  function showError(msg: string) {
-    els.formError.textContent = msg;
-    setHidden(els.formError, false);
-  }
-
-  function persist() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(reservations));
-  }
-
-  function seedIfNeeded() {
-    const existing = localStorage.getItem(STORAGE_KEY);
-    if (existing) {
-      try {
-        reservations = JSON.parse(existing) || [];
-        // If older seeded data had duplicate IDs (possible when Date.now() collided), fix it.
-        const seen = new Set();
-        let changed = false;
-        reservations.forEach(r => {
-          if (seen.has(r.id)) {
-            r.id = newId();
-            changed = true;
-          }
-          seen.add(r.id);
-
-          //Dont think this is necessary since we moved to typescript, but ill keep it in case i break something lol
-          // if(!("r.dateTimeReq" in r)){
-          //   r.dateTimeReq = new Date().toISOString();
-          //   if (r.lab === "GK302B" && r.seat == 14) {
-          //     r.dateTimeReq = "2026-02-04T06:30:00";
-          //   } else if (r.lab === "GK301" && r.seat == 8) {
-          //     r.dateTimeReq = "2026-02-05T11:30:00";
-          //   } else if (r.lab === "GK302A" && r.seat == 3) {
-          //     r.dateTimeReq = "2026-02-01T07:00:00";
-          //   } else {
-          //     r.dateTimeReq = null;
-          //   }
-          // }
-        });
-        if (changed) persist();
-        return;
-      } catch (e) {
-        // fall through and reseed
-      }
-    }
-
-    const today = new Date();
-    const todayISO = toISODate(today);
-    const tomorrowISO = toISODate(addDays(today, 1));
-
-    reservations = [
-      {
-        id: newId(),
-        userId: loggedInUserID,
-        lab: "GK302B",
-        seat: 14,
-        dateTimeReq: "2026-02-04T06:30:00",
-        date: todayISO,
-        startTime: "10:00",
-        endTime: "11:30",
-        anonymous: false,
-        cancelled: false,
-      },
-      {
-        id: newId(),
-        userId: loggedInUserID,
-        lab: "GK301",
-        seat: 8,
-        dateTimeReq: "2026-02-05T11:30:00",
-        date: tomorrowISO,
-        startTime: "13:00",
-        endTime: "14:30",
-        anonymous: true,
-        cancelled: false,
-      },
-      {
-        id: newId(),
-        userId: loggedInUserID,
-        lab: "GK302A",
-        seat: 3,
-        dateTimeReq: "2026-02-01T07:00:00",
-        date: toISODate(addDays(today, -2)),
-        startTime: "09:00",
-        endTime: "10:00",
-        anonymous: false,
-        cancelled: false,
-      },
-    ];
-
-    persist();
   }
 
   function getFilteredReservations() {
-    const labFilter = els.filterLab.value;
-    const statusFilter = els.filterStatus.value;
-    const q = (els.filterSearch.value || "").trim().toLowerCase();
+    const selectedLab = els.filterLab.value;
+    const selectedStatus = els.filterStatus.value;
+    const query = (els.filterSearch.value || "").trim().toLowerCase();
 
     return reservations
-      .filter(r => r.userId === loggedInUserID)
-      .map(r => ({ ...r, _status: statusFor(r) }))
-      .filter(r => (labFilter === "ALL" ? true : r.lab === labFilter))
-      .filter(r => (statusFilter === "ALL" ? true : r._status === statusFilter))
-      .filter(r => {
-        if (!q) return true;
+      .map((reservation) => ({ ...reservation, _status: statusFor(reservation) }))
+      .filter((reservation) => (selectedLab === "ALL" ? true : reservation.lab.room === selectedLab))
+      .filter((reservation) => (selectedStatus === "ALL" ? true : reservation._status === selectedStatus))
+      .filter((reservation) => {
+        if (!query) return true;
+
+        const seatText = getSeatNumbers(reservation).join(",");
         return (
-          r.id.toLowerCase().includes(q) ||
-          r.lab.toLowerCase().includes(q) ||
-          String(r.seat).includes(q)
+          reservation._id.toLowerCase().includes(query) ||
+          reservation.lab.room.toLowerCase().includes(query) ||
+          seatText.includes(query)
         );
       })
-      .sort((a, b) => {
-        // upcoming first by date/time
-        if (a._status !== b._status) {
-          const order = { TODAY: 0, UPCOMING: 1, PAST: 2, CANCELLED: 3 };
-          return (order[a._status] ?? 99) - (order[b._status] ?? 99);
+      .sort((left, right) => {
+        if (left._status !== right._status) {
+          const order: Record<Status, number> = { TODAY: 0, UPCOMING: 1, PAST: 2, CANCELLED: 3 };
+          return order[left._status] - order[right._status];
         }
-        if (a.date !== b.date) return a.date.localeCompare(b.date);
-        return minutesFromHHMM(a.startTime) - minutesFromHHMM(b.startTime);
+
+        return new Date(left.date).getTime() - new Date(right.date).getTime();
       });
   }
 
   function renderStats() {
-    const mine = reservations.filter(r => r.userId === loggedInUserID);
-    const counts = { UPCOMING: 0, TODAY: 0, PAST: 0, CANCELLED: 0 };
+    const counts: Record<Status, number> = { UPCOMING: 0, TODAY: 0, PAST: 0, CANCELLED: 0 };
 
-    mine.forEach(r => {
-      counts[statusFor(r)]++;
+    reservations.forEach((reservation) => {
+      counts[statusFor(reservation)] += 1;
     });
 
-    const upcoming = counts.UPCOMING;
-    const today = counts.TODAY;
-    const total = mine.length;
-    const cancelled = counts.CANCELLED;
+    els.statUpcoming.textContent = String(counts.UPCOMING);
+    els.statToday.textContent = String(counts.TODAY);
+    els.statTotal.textContent = String(reservations.length);
+    els.statCancelled.textContent = String(counts.CANCELLED);
 
-    els.statUpcoming.textContent = String(upcoming);
-    els.statToday.textContent = String(today);
-    els.statTotal.textContent = String(total);
-    els.statCancelled.textContent = String(cancelled);
-
-    els.statUpcomingBadge.textContent = String(upcoming);
-    els.statTodayBadge.textContent = String(today);
-    els.statTotalBadge.textContent = String(total);
-    els.statCancelledBadge.textContent = String(cancelled);
+    els.statUpcomingBadge.textContent = String(counts.UPCOMING);
+    els.statTodayBadge.textContent = String(counts.TODAY);
+    els.statTotalBadge.textContent = String(reservations.length);
+    els.statCancelledBadge.textContent = String(counts.CANCELLED);
   }
 
   function renderTableRows(list: ReservationWithStatus[]) {
-    if (!list.length) {
+    if (list.length === 0) {
       els.tbody.innerHTML = "";
       setHidden(els.emptyState, false);
       return;
@@ -462,34 +331,31 @@ openModal(id, "view"); // switch back to view
     setHidden(els.emptyState, true);
 
     els.tbody.innerHTML = list
-      .map(r => {
-        const stat = r._status;
+      .map((reservation) => {
+        const seats = getSeatNumbers(reservation);
+
         return `
           <tr>
-            <td><b>${r.id}</b></td>
-            <td>${r.lab}</td>
+            <td><b>${reservation._id}</b></td>
+            <td>${reservation.lab.room}</td>
+            <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
+            <td>${formatDateLabel(toISODate(reservation.date))}</td>
+            <td>${toTimeInputValue(reservation.startTime)} - ${toTimeInputValue(reservation.endTime)}</td>
+            <td>Seat${seats.length > 1 ? "s" : ""} ${seats.join(", ")}</td>
+            <td>${visibilityLabel(reservation)}</td>
             <td>
-              ${r.dateTimeReq 
-                ? new Date(r.dateTimeReq).toLocaleString() 
-                : "N/A"}
-            </td>
-            <td>${formatDateLabel(r.date)}</td>
-            <td>${r.startTime} - ${r.endTime}</td>
-            <td>Seat ${r.seat}</td>
-            <td>${visibilityLabel(r)}</td>
-            <td>
-              <span class="badge ${badgeClass(stat)}">
-                <span class="material-symbols-outlined" style="font-size:18px;">${stat === "CANCELLED" ? "cancel" : "schedule"}</span>
-                ${prettyStatus(stat)}
+              <span class="badge ${badgeClass(reservation._status)}">
+                <span class="material-symbols-outlined" style="font-size:18px;">${reservation._status === "CANCELLED" ? "cancel" : "schedule"}</span>
+                ${prettyStatus(reservation._status)}
               </span>
             </td>
             <td>
               <div class="row-actions">
-                <button class="action-btn" type="button" data-action="view" data-id="${r.id}">
+                <button class="action-btn" type="button" data-action="view" data-id="${reservation._id}">
                   <span class="material-symbols-outlined">visibility</span>
                   View
                 </button>
-                <button class="action-btn primary" type="button" data-action="edit" data-id="${r.id}">
+                <button class="action-btn primary" type="button" data-action="edit" data-id="${reservation._id}">
                   <span class="material-symbols-outlined">edit</span>
                   Edit
                 </button>
@@ -500,92 +366,102 @@ openModal(id, "view"); // switch back to view
       })
       .join("");
 
-    // Hook action buttons
-    els.tbody.querySelectorAll("button[data-action]").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.getAttribute("data-id")!;
-        const action = btn.getAttribute("data-action");
-// keep details panel in sync
+    els.tbody.querySelectorAll("button[data-action]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-id");
+        const action = button.getAttribute("data-action");
+
+        if (!id) return;
         openModal(id, action === "edit" ? "edit" : "view");
       });
     });
   }
 
+  function populateLabSelections() {
+    const labOptions = LAB_NAMES.map((labName) => `<option value="${labName}">${labName}</option>`).join("");
+    els.filterLab.innerHTML = `<option value="ALL">All Labs</option>${labOptions}`;
+    els.editLab.innerHTML = labOptions;
+  }
+
   function render() {
     renderStats();
-    const list = getFilteredReservations();
-    renderTableRows(list);
+    const filtered = getFilteredReservations();
+    renderTableRows(filtered);
 
-    // If details panel is showing a reservation that no longer exists, reset.
-    if (activeReservationId && !reservations.find(r => r.id === activeReservationId)) {
+    if (activeReservationId && !reservations.find((reservation) => reservation._id === activeReservationId)) {
       activeReservationId = null;
+      closeModal();
     }
   }
 
-  // ---------- Events ----------
   function bindEvents() {
-    [els.filterLab, els.filterStatus, els.filterSearch].forEach(el => {
-      el.addEventListener("input", render);
-      el.addEventListener("change", render);
+    [els.filterLab, els.filterStatus, els.filterSearch].forEach((input) => {
+      input.addEventListener("input", render);
+      input.addEventListener("change", render);
     });
 
-    // modal close (use capture + stopPropagation for reliability)
-    els.modalClose.addEventListener(
-      "click",
-      (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        closeModal();
-      },
-      true
-    );
+    els.modalClose.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      closeModal();
+    });
+
     els.btnCancel.addEventListener("click", () => {
-      // back to view, but keep modal open if there's an active reservation
-      if (activeReservationId) openModal(activeReservationId, "view");
-      else closeModal();
+      if (activeReservationId) {
+        openModal(activeReservationId, "view");
+        return;
+      }
+
+      closeModal();
     });
 
-    // close on overlay click
-    els.overlay.addEventListener("click", (e) => {
-      if (e.target === els.overlay) closeModal();
-    });
-
-    // close on Esc
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && !els.overlay.hidden) {
+    els.overlay.addEventListener("click", (event) => {
+      if (event.target === els.overlay) {
         closeModal();
       }
     });
 
-    // tabs
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !els.overlay.hidden) {
+        closeModal();
+      }
+    });
+
     els.tabView.addEventListener("click", () => setTab("view"));
     els.tabEdit.addEventListener("click", () => setTab("edit"));
 
-    // edit form
     els.editForm.addEventListener("submit", validateAndSaveEdit);
+    els.editStart.addEventListener("change", syncEndTimes);
 
-    // time dropdowns
-    els.editStart.addEventListener("change", () => {
-      syncEndTimes();
-    });
-
-    // when lab is (disabled) but could change later; still keep seat hint updated if ever enabled
     els.editLab.addEventListener("change", () => {
-      const lab = els.editLab.value as Lab;
-      els.seatHint.textContent = `Seat must be within ${lab} capacity (${LAB_CAPACITY[lab]}).`;
-      els.editSeat.max = String(LAB_CAPACITY[lab] ?? 20);
+      const lab = els.editLab.value as LabName;
+      els.seatHint.textContent = `Editing reservation in ${lab}.`;
     });
   }
 
-  // ---------- Init ----------
-  function init() {
+  async function hydrateProfileHeader() {
+    const nameElement = document.getElementById("user-name");
+    const roleElement = document.getElementById("user-type");
+
+    try {
+      const user = await ClientDBUtil.getCurrentUser(userID);
+      if (nameElement) nameElement.textContent = user.firstName;
+      if (roleElement) roleElement.textContent = user.role ?? "Student";
+    } catch {
+      // no-op: this should not block reservations rendering
+    }
+  }
+
+  async function init() {
     buildTimeOptions(els.editStart);
     buildTimeOptions(els.editEnd);
-
-    seedIfNeeded();
-    render();
+    populateLabSelections();
     bindEvents();
+
+    await Promise.all([hydrateProfileHeader(), refreshReservations()]);
   }
 
-  init();
+  init().catch((error) => {
+    console.error("Failed to initialize My Reservations page", error);
+  });
 })();
