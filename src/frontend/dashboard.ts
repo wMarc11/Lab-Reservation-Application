@@ -1,3 +1,4 @@
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
 const dateInput = queryElement("#current-date") as HTMLInputElement;
 
@@ -9,13 +10,12 @@ const dd = String(today.getDate()).padStart(2, '0');
 
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 
-const userID = sessionStorage.getItem("user");
 
 const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
 
 async function loadUserImg(){
     try{
-        const res = await fetch(`http://localhost:3000/users/${userID}`);
+        const res = await fetch(`http://localhost:3000/users`);
 
         if(!res.ok){
             throw new Error("Failed to load profile");
@@ -56,13 +56,11 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
 
 document.addEventListener("DOMContentLoaded", async() => {
 
-    if(!userID){
-        window.location.href = "index.html";
-        return;
-    }
+    //This checks if the user is logged in
+    await ClientDBUtil.validateSession();
 
     try{
-        const userRes = await fetch(`http://localhost:3000/users/${userID}`);
+        const userRes = await fetch(`http://localhost:3000/users`);
         const user = await userRes.json();
 
         if(user.role === "Admin"){
@@ -76,10 +74,10 @@ document.addEventListener("DOMContentLoaded", async() => {
         if (userNameEl) userNameEl.textContent = `${user.firstName}`;
         if (userTypeEl) userTypeEl.textContent = `${user.role}`;
 
-        const reservationRes = await fetch(`http://localhost:3000/reservations/user/${userID}`);
+        const reservationRes = await fetch(`http://localhost:3000/reservations/user`);
         const reservations = await reservationRes.json();
         
-        const activityRes = await fetch(`http://localhost:3000/activities/user/${userID}`);
+        const activityRes = await fetch(`http://localhost:3000/activities/user`);
         const activities = await activityRes.json();
 
         updateReservations(reservations);
