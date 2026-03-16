@@ -31,7 +31,7 @@ async function loadUserImg(){
 }
 
 (function () {
-  const userID = ClientDBUtil.getCurrentUserID();
+  ClientDBUtil.validateSession();
 
   const els = {
     tbody: queryElement<HTMLTableSectionElement>("#reservations-tbody"),
@@ -256,7 +256,7 @@ async function loadUserImg(){
   }
 
   async function refreshReservations() {
-    reservations = await ClientDBUtil.getCurrentReservations(userID);
+    reservations = await ClientDBUtil.getCurrentReservations();
     render();
   }
 
@@ -468,7 +468,7 @@ async function loadUserImg(){
     const roleElement = document.getElementById("user-type");
 
     try {
-      const user = await ClientDBUtil.getCurrentUser(userID);
+      const user = await ClientDBUtil.getCurrentUser();
       if (nameElement) nameElement.textContent = user.firstName;
       if (roleElement) roleElement.textContent = user.role ?? "Student";
     } catch {

@@ -24,14 +24,24 @@ app.use(cors());
 app.use(session({
     secret: 'keyboard cat',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false,    
+    cookie: {
+        httpOnly: true
+    }
 }));
+
+const MINIMUM_PASSWORD_LENGTH = 4;
 
 app.post("/signup", async (request: any, response: any) => {
     const { email, password } = request.body;
 
     if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
+        return;
+    }
+
+    if (password.length < MINIMUM_PASSWORD_LENGTH) {
+        response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} long!` });
         return;
     }
 
@@ -63,8 +73,8 @@ app.post("/signup", async (request: any, response: any) => {
 });
 
 
-app.post("/login", async (request: any, response: any) => {
-    const {email, password} = request.body;
+app.post("/login", async (request, response) => {
+    const {email, password, rememberMe} = request.body;
     try {
         const user = await User.findOne({email})
         if (!user) {
@@ -76,6 +86,13 @@ app.post("/login", async (request: any, response: any) => {
         }
 
         request.session.userID = user.id;
+        if (rememberMe) {
+            //TEST: This is for 10 seconds
+            request.session.cookie.maxAge = 1000 * 10;
+            // request.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //30 days
+        } else {
+            request.session.cookie.maxAge = undefined;
+        }
 
         return response.status(201).json({ message: "User found!", user: user._id});
     } catch (errorRecieved) {
@@ -88,15 +105,15 @@ app.post("/login", async (request: any, response: any) => {
     }
 })
 
-app.post('/logout', async (req: any, res) => {
-    try {
-        const destroySession = promisify(req.session.destroy.bind(req.session));
-        await destroySession();
+app.post('/logout', (req: any, res) => {
+    req.session.destroy((err: any) => {
+        if (err) {
+            console.log(`destroy called: ${err}`)
+            return res.status(400).json({ message: err.message });
+        }
         res.clearCookie('connect.sid', { path: '/' });
-    }
-    catch (error) {
-        res.status(400).json({message: (error as any).message})
-    }
+        return res.json({ message: "Logged out" });
+    });
 })
 
 app.delete('/delete-account', async (req: any, res) => {
@@ -120,6 +137,37 @@ app.delete('/delete-account', async (req: any, res) => {
     catch (error) {
         res.status(400).json({message: (error as any).message})
     }
+})
+
+app.put(`/change-password`, async (request, response) => {
+    const {currentPassword, newPassword, confirmNewPassword} = request.body;
+    const user = await requireAuth(request);
+    if (newPassword !== confirmNewPassword)
+        return response.status(400).json({message: `Confirm new password does not match new password`});
+
+    if (currentPassword !== user.password)
+        return response.status(400).json({message: `Invalid current password`});
+
+    if (newPassword === currentPassword)
+        return response.status(400).json({message: `New password cannot be the same as old password`});
+
+    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+        response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} characters long!` });
+        return;
+    }
+
+    user.password = newPassword;
+    await user.save();
+    return response.status(200).json({message: `Password changed successfully! Redirecting to home page...`});
+})
+
+app.get(`/auth/check`, (request, response) => {
+    console.log("Session ID:", request.sessionID);
+    console.log("User ID in session:", request.session.userID);
+    if (request.session.userID)
+        return response.json({ loggedIn: true, userID: request.session.userID}); //USER ID FOR TESTING PURPOSES WILL BE REMOVED
+
+    return response.json({ loggedIn: false });
 })
 
 //ACTIVITY
@@ -239,9 +287,10 @@ app.get("/reservations/id/:id", async (request: any, response) => {
 });
 
 // FOR DASHBOARD
-app.get("/users/:id", async (req, res) => {
+app.get("/users", async (req, res) => {
     try{
-        const user = await User.findById(req.params.id).select("-password");
+        const id = (await requireAuth(req))._id;
+        const user = await User.findById(id).select("-password");
         
         if(!user){
             return res.status(400).json({message: "User not found"});
@@ -335,15 +384,15 @@ app.put("/reservations/:id", async (request: any, response) => {
     }
 });
 
-app.get("/reservations/user/:id", async (request: any, response) => {
+app.get("/reservations/user", async (request, response) => {
     try {
         const currentUser = await requireAuth(request);
 
-        if (!canViewReservationCollection(currentUser, request.params.id)) {
+        if (!canViewReservationCollection(currentUser, currentUser._id.toString())) {
             return response.status(403).json({ message: "You are not allowed to view these reservations" });
         }
 
-        const reservations = await Reservation.find({ user: request.params.id })
+        const reservations = await Reservation.find({ user: currentUser._id })
             .populate("lab", "room")
             .sort({ date: 1, startTime: 1 });
 
@@ -539,9 +588,10 @@ app.get("/availability", async (request, response) => {
 });
 
 
-app.get("/activities/user/:id", async (req, res) =>{
+app.get("/activities/user", async (req, res) =>{
     try{
-        const activities = await Activity.find({user: req.params.id})
+        const user = await requireAuth(req);
+        const activities = await Activity.find({user: user._id})
             .sort({timestamp: -1})
 
         res.json(activities);

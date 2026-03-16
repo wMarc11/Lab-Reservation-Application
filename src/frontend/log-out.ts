@@ -1,21 +1,25 @@
 
 const logout = document.getElementById('logout-anchor');
 
-logout?.addEventListener('click', () => {
+logout?.addEventListener('click', (e) => {
+    e.preventDefault();
     sessionStorage.removeItem('user');
     requestLogOut();
 })
 
-async function requestLogOut() {
+export async function requestLogOut(sendToIndex: boolean = true) {
     try {
         const response = await fetch('/logout', {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'include',
         });
 
         const data = await response.json();
 
         if (response.ok) {
             console.log('successful', data.message);
+            if (sendToIndex)
+                window.location.href = `index.html`;
         }
         else {
             console.error('unsuccesful response', data.message);

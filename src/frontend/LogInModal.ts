@@ -282,14 +282,14 @@ export class LogInModal {
 
         this.signUp.addEventListener("click", () => {
             console.log(this.getSignUpFields());
-            const {email, password} = this.getSignUpFields();
-            this._signUpUser(email, password);
+            const {email, password, rememberMe} = this.getSignUpFields();
+            this._signUpUser(email, password, rememberMe);
         })
 
         this.logIn.addEventListener("click", () => {
             console.log(this.getLogInFields());
-            const {email, password} = this.getLogInFields();
-            this._logInUser(email, password);
+            const {email, password, rememberMe} = this.getLogInFields();
+            this._logInUser(email, password, rememberMe);
         })
 
         this.rememberMe1.addEventListener("click", () => {
@@ -300,12 +300,13 @@ export class LogInModal {
         );
     }
 
-    async _signUpUser(email: string, password: string) {
+    async _signUpUser(email: string, password: string, rememberMe: boolean) {
         try {
             const response = await fetch(`${BASE_URL}/signup`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ email: email, password: password }),
+                body: JSON.stringify({ email: email, password: password, rememberMe: rememberMe}),
+                credentials: `include`,
             });
 
             const data = await response.json();
@@ -321,12 +322,13 @@ export class LogInModal {
         }
     }
 
-    async _logInUser(email: string, password: string) {
+    async _logInUser(email: string, password: string, rememberMe: boolean) {
         try {
             const response = await fetch(`${BASE_URL}/login`, {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({ email: email, password: password , role: "student"}),
+                body: JSON.stringify({ email: email, password: password , rememberMe: rememberMe, role: "student"}),
+                credentials: `include`,
             })
 
             const data = await response.json();

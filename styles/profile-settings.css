@@ -284,6 +284,23 @@ button:hover{
     margin-bottom: 1rem;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+}
+
+.actions p {
+    font-size: 0.8rem;
+}
+
+.error {
+    color: red;
+}
+
+.success {
+    color: darkolivegreen;
+}
+
+.hidden {
+    display: none;
 }
 
 .settings-card-danger-zone{

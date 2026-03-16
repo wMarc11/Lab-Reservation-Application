@@ -6,17 +6,19 @@ export type UserID = string & {_brand: "UserID"}
 export type ReservationID = string & {_brand: "ReservationID"}
 
 export namespace ClientDBUtil {
+
     /**
-     * Gets the current logged in user ID from sessionStorage.
-     * Redirects to home page if not logged in.
+     * Validates if the user is logged in.
+     * Redirects to home page if not
      */
-    export function getCurrentUserID(): UserID {
-        const currentUserID = sessionStorage.getItem("user");
-        if (currentUserID === null) {
+    export async function validateSession(sendBackToHomePage: boolean = true): Promise<string | undefined> {
+        const response = await fetch(`/auth/check`, {credentials: 'include'});
+        const data = await response.json();
+
+        if (!data.loggedIn && sendBackToHomePage)
             window.location.href = "index.html";
-            throw new Error("Not logged in");
-        }
-        return currentUserID as UserID;
+
+        return data.userID;
     }
 
     /**
@@ -25,8 +27,8 @@ export namespace ClientDBUtil {
      * @param userID - defaults to the currently logged in user
      * @returns the user object without password
      */
-    export async function getCurrentUser(userID = getCurrentUserID()): Promise<Omit<UserDTO, "password">> {
-        const response = await fetch(`/users/${userID}`);
+    export async function getCurrentUser(): Promise<Omit<UserDTO, "password">> {
+        const response = await fetch(`/users`);
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
         return response.json() as Promise<Omit<UserDTO, "password">>;
     }
@@ -72,8 +74,8 @@ export namespace ClientDBUtil {
      * @param userID - defaults to the currently logged in user
      * @returns an array of ReservationDTO objects
      */
-    export async function getCurrentReservations(userID = getCurrentUserID()): Promise<ReservationDTO[]> {
-        const response = await fetch(`/reservations/user/${userID}`);
+    export async function getCurrentReservations(): Promise<ReservationDTO[]> {
+        const response = await fetch(`/reservations/user`);
         if (!response.ok) throw new Error(`Request failed (${response.status})`);
         return response.json() as Promise<ReservationDTO[]>;
     }
@@ -101,12 +103,11 @@ export namespace ClientDBUtil {
     export async function createReservation(
         labRoomCode: LabName,
         reservationData: Omit<ReservationDTO, "user" | "lab" | "_id">,
-        userID = getCurrentUserID(),
     ): Promise<ReservationID> {
         const labID = await getLabIDFromLabCode(labRoomCode);
         const response = await fetch(`/reservations`, {
             method: "POST",
-            body: JSON.stringify({...reservationData, lab: labID, user: userID}),
+            body: JSON.stringify({...reservationData, lab: labID}),
             headers: {"Content-Type": "application/json"},
         });
 
