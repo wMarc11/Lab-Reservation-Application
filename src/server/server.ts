@@ -163,7 +163,6 @@ app.get(`/lab/id/:id`, async (request, response) => {
         return response.status(400).json({ message: (error as any).message });
     }
 })
-
 //RESERVATIONS
 
 app.post(`/reservations`, async (request: any, response) => {
