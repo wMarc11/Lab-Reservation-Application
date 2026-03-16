@@ -31,9 +31,11 @@ app.use(session({
 }));
 
 const MINIMUM_PASSWORD_LENGTH = 4;
+const REMEMBER_ME_LENGTH = 1000 * 60 * 60 * 24 * 30; //30 days
+// const REMEMBER_ME_LENGTH = 1000 * 10; //10 seconds
 
 app.post("/signup", async (request: any, response: any) => {
-    const { email, password } = request.body;
+    const { email, password, rememberMe } = request.body;
 
     if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
         response.status(400).json({ message: "Invalid email format!" });
@@ -60,6 +62,11 @@ app.post("/signup", async (request: any, response: any) => {
         await newUser.save();
 
         request.session.userID = newUser.id;
+        if (rememberMe) {
+            request.session.cookie.maxAge = REMEMBER_ME_LENGTH;
+        } else {
+            request.session.cookie.maxAge = undefined;
+        }
 
         return response.status(201).json({ message: "User created!", user: newUser._id });
     } catch (errorRecieved) {
@@ -87,9 +94,7 @@ app.post("/login", async (request, response) => {
 
         request.session.userID = user.id;
         if (rememberMe) {
-            //TEST: This is for 10 seconds
-           // request.session.cookie.maxAge = 1000 * 10;
-            request.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 30; //30 days
+            request.session.cookie.maxAge = REMEMBER_ME_LENGTH;
         } else {
             request.session.cookie.maxAge = undefined;
         }
