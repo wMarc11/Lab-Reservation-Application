@@ -109,7 +109,7 @@ function updateReservations(reservations: any[]){
 
     const today = new Date();
 
-    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
     let showedReservations = sortedByDateReservations;
     showedReservations.forEach(r => {
@@ -240,17 +240,28 @@ function formatTime(dateInput: string | Date): string {
 }
 
 function generateTimeSlots() {
-    const select = document.querySelector("#timeslot-select") as HTMLSelectElement;
+    const select = document.querySelector("#timeslot") as HTMLSelectElement;
 
     const startHour = 7;
-    const endHour = 20;
+    const endHour = 18;
+    const selectedDate = new Date(reserveDateInput.value);
+    const now = new Date()
 
     for (let h = startHour; h < endHour; h++) {
 
         for (let m of [0, 30]) {
+            if(h === endHour - 1 && m > 0)
+                continue;
 
-            const start = new Date();
-            start.setHours(h, m, 0, 0);
+            const start = new Date(selectedDate);
+            
+            if(h === startHour)
+                start.setHours(7, 30, 0, 0);
+            else
+                start.setHours(h, m, 0, 0);
+
+            if(start < now)
+                continue;
 
             const end = new Date(start);
             end.setMinutes(start.getMinutes() + 30);
@@ -264,6 +275,117 @@ function generateTimeSlots() {
         }
     }
 }
+
+const reserveDateInput = document.querySelector("#reserve-date") as HTMLInputElement;
+
+const yyyy1 = today.getFullYear();
+const mm1 = String(today.getMonth() + 1).padStart(2, '0');
+const dd1 = String(today.getDate()).padStart(2, '0');
+
+reserveDateInput.value = `${yyyy1}-${mm1}-${dd1}`;
+reserveDateInput.min = `${yyyy1}-${mm1}-${dd1}`;
+reserveDateInput.disabled = false;
+
+reserveDateInput.addEventListener("change", () => {
+    generateTimeSlots();
+});
+
+async function loadBuildings() {
+
+    const res = await fetch("http://localhost:3000/buildings");
+    const buildings = await res.json();
+
+    const select = document.querySelector("#building") as HTMLSelectElement;
+
+    buildings.forEach((b: any) => {
+
+        const option = document.createElement("option");
+        option.value = b._id;
+        option.textContent = b.name;
+
+        select.appendChild(option);
+    });
+}
+
+const buildingSelect = document.querySelector("#building") as HTMLSelectElement;
+const labSelect = document.querySelector("#lab") as HTMLSelectElement;
+
+buildingSelect.addEventListener("change", async () => {
+
+    const buildingId = buildingSelect.value;
+
+    if (!buildingId) return;
+
+    const res = await fetch(`http://localhost:3000/labs?building=${buildingId}`);
+    const labs = await res.json();
+
+    labSelect.innerHTML = '<option value="">Select Lab</option>';
+
+    labs.forEach((lab: any) => {
+
+        const option = document.createElement("option");
+        option.value = lab._id;
+        option.textContent = lab.room;
+
+        labSelect.appendChild(option);
+    });
+
+    labSelect.disabled = false;
+});
+
+const reserveBtn = document.querySelector("#quick-reserve-btn");
+
+reserveBtn?.addEventListener("click", async () => {
+
+    const labId = (document.querySelector("#lab") as HTMLSelectElement).value;
+    const time = (document.querySelector("#timeslot") as HTMLSelectElement).value;
+
+    if (!labId || !time) {
+        alert("Please select lab and time slot");
+        return;
+    }
+
+    const startTime = new Date(time);
+    const endTime = new Date(startTime);
+    endTime.setMinutes(startTime.getMinutes() + 30);
+
+    const reservation = {
+        lab: labId,
+        date: startTime,
+        isAnonymous: false,
+        startTime: startTime,
+        endTime: endTime
+    };
+
+    try {
+
+        const res = await fetch("http://localhost:3000/reservations/quick", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reservation)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Reservation failed");
+            return;
+        }
+
+        alert(`Seat ${data.seatNumbers.join(", ")} reserved successfully`);
+
+        window.location.reload();
+
+    } catch (error) {
+        console.error("Quick reserve error:", error);
+        alert("Something went wrong");
+    }
+    window.location.reload();
+});
+
+loadBuildings();
 
 generateTimeSlots();
 

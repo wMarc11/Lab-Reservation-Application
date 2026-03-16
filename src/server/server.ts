@@ -1579,8 +1579,83 @@ app.post('/seat-reservation', async (req: any, res) => {
     }
 });
 
+app.get("/buildings", async (req: any, res: any) => {
+    try{
+        const buildings = await Building.find();
+        return res.json(buildings);
+    } catch(error){
+        return res.status(500).json({message: error});
+    }
+})
 
+app.get("/labs", async (req: any, res: any) => {
+    try{
+        const {building} = req.query
 
+        let labs;
+
+        if (building){
+            labs = await Lab.find({building});
+        } else{
+            labs = await Lab.find();
+        }
+
+        return res.json(labs);
+    } catch(error){
+        return res.status(500).json({message: error});
+    }
+});
+
+app.post("/reservations/quick", async (req: any, res: any) => {
+    const user = await requireAuth(req);
+
+    const{lab, date, isAnonymous, startTime, endTime} = req.body;
+
+    const labData = await Lab.findById(lab);
+
+    const reservations = await Reservation.find({
+        lab,
+        date,
+        status: { $ne: "cancelled" },
+        startTime: { $lt: endTime },
+        endTime: { $gt: startTime },
+    })
+
+    const reservedSeats = reservations.flatMap(r => r.seatNumbers);
+
+    let freeSeat = null;
+
+    if(labData){
+        if(labData.totalSeats){
+            for (let i = 1; i <= labData.totalSeats; i++) {
+                if (!reservedSeats.includes(i)) {
+                    freeSeat = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!freeSeat) {
+        return res.status(400).json({
+            message: "No seats available"
+        });
+    }
+
+    const reservation = await Reservation.create({
+        user: user._id,
+        lab,
+        seatNumbers: [freeSeat],
+        date,
+        startTime,
+        endTime,
+        dateRequested: new Date(),
+        isAnonymous
+    });
+    await reservation.populate("lab", "room");
+    await createReservationActivities(reservation, "reserved");
+    res.json(reservation);
+});
 
 app.get("/auth/me", async (request: any, response: any) => {
     try {
