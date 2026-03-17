@@ -1,3 +1,4 @@
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
 "use strict";
 // @ts-nocheck
 // I hardcoded this for now to be the same as the logged in user
@@ -127,26 +128,20 @@ async function showUpcomingReservations() {
     profileDetails.style.display = "none";
     if (listTitle) listTitle.textContent = "Reservations";
     try {
-        const res = await fetch(`http://localhost:3000/reservations/user/${profileID}`);
-        if (!res.ok) {
-            throw new Error("Failed to fetch reservations");
-        }
-        const reservations = await res.json();
-        if (reservations.length === 0) {
-            upcomingTableBody.innerHTML =
-                `<tr><td colspan="4">No reservations found.</td></tr>`;
+        await ClientDBUtil.validateSession();
+        const reservationRes = await fetch(`/reservations/user`, {
+            credentials: "include"
+        });
+
+        if (!reservationRes.ok) {
+            const err = await reservationRes.json();
+            console.error("Fetch error:", err);
             return;
         }
-        reservations.forEach((r: { lab: string; date: string; time: string; status: string }) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${r.lab || "N/A"}</td>
-                <td>${r.date || "N/A"}</td>
-                <td>${r.time || "N/A"}</td>
-                <td>${r.status || "Pending"}</td>
-            `;
-            upcomingTableBody.appendChild(row);
-        });
+
+        const reservations = await reservationRes.json();
+
+        updateReservations(reservations);
     }
     catch (error) {
         console.error("Error fetching reservations:", error);
@@ -217,5 +212,90 @@ async function loadProfile() {
 }
 if (upcomingBtn) upcomingBtn.addEventListener("click", toggleReservations);
 if (reservationsBtn) reservationsBtn.addEventListener("click", toggleReservations);
+
+function updateReservations(reservations: any[]){
+    const upcomingTable = document.querySelector("#upcoming-reservations");
+    const upcomingTableBody = document.querySelector("#upcomingTableBody");
+    const reservationsCnt = document.querySelector('#reservations');
+    const upcoming = document.querySelector('#upcoming');
+    const filler = document.querySelector("#filler");
+
+    if(!upcomingTable || !upcomingTableBody) return;
+    upcomingTableBody.innerHTML = "";
+
+    if(reservations.length === 0){
+        if(filler) filler.innerHTML = "<h3>None</h3>"
+    }
+
+    let count = 0;
+    let activeReservations = 0;
+
+    const today = new Date();
+
+    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+
+    let showedReservations = sortedByDateReservations;
+    showedReservations.forEach(r => {
+        if(r.status !== 'cancelled' && r.status !== 'past'){
+            const reservationDate = new Date(r.date);
+            activeReservations += 1;
+            if(reservationDate.toDateString() === today.toDateString()) 
+                count += 1;
+            
+            const tr = document.createElement("tr");
+            let status = capitalizeFirstLetter(r.status);
+            console.log(status);
+            tr.innerHTML = `
+                <td>${r.lab.room}</td>
+                <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
+                <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
+                <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
+                <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
+            `;
+            upcomingTableBody.appendChild(tr);
+        }
+    });
+
+    if(reservationsCnt) reservationsCnt.textContent = String(activeReservations);
+    if(upcoming) upcoming.textContent = String(count);
+}
+
+function capitalizeFirstLetter(string: string) {
+  if (!string || string.length === 0) { 
+    return "";
+  }
+
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function formatDate(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function formatTime(dateInput: string | Date): string {
+    const date = new Date(dateInput);
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${hh}:${min}`;
+}
+
+
+document.addEventListener("DOMContentLoaded", async() => {
+    await ClientDBUtil.validateSession();
+
+    try{
+        const reservationRes = await fetch(`http://localhost:3000/reservations/user`);
+        const reservations = await reservationRes.json();
+
+        updateReservations(reservations);
+    } catch (e){
+        console.error("Error: ", e);
+    }
+});
+
 loadProfile();
 //# sourceMappingURL=profile.js.map

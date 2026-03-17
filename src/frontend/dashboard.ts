@@ -106,6 +106,7 @@ function updateReservations(reservations: any[]){
     }
 
     let count = 0;
+    let activeReservations = 0;
 
     const today = new Date();
 
@@ -115,7 +116,7 @@ function updateReservations(reservations: any[]){
     showedReservations.forEach(r => {
         if(r.status !== 'cancelled' && r.status !== 'past'){
             const reservationDate = new Date(r.date);
-
+            activeReservations += 1;
             if(reservationDate.toDateString() === today.toDateString()) 
                 count += 1;
             
@@ -144,7 +145,7 @@ function updateReservations(reservations: any[]){
     }
 
     if(noUpcoming) noUpcoming.textContent = String(count);
-    if(noReservations) noReservations.textContent = String(reservations.length);
+    if(noReservations) noReservations.textContent = String(activeReservations);
 }
 
 function capitalizeFirstLetter(string: string) {
