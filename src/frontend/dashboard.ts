@@ -101,10 +101,6 @@ function updateReservations(reservations: any[]){
     if(!upcomingTable || !upcomingTableBody) return;
     upcomingTableBody.innerHTML = "";
 
-    if(reservations.length === 0){
-        if(filler) filler.innerHTML = "<h3>None</h3>"
-    }
-
     let count = 0;
     let activeReservations = 0;
 
@@ -142,6 +138,10 @@ function updateReservations(reservations: any[]){
             </td>
         `;
         upcomingTableBody.appendChild(tr);
+    }
+
+    if(count === 0){
+        if(filler) filler.innerHTML = "<h3>None</h3>"
     }
 
     if(noUpcoming) noUpcoming.textContent = String(count);

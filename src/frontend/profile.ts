@@ -129,7 +129,7 @@ async function showUpcomingReservations() {
     if (listTitle) listTitle.textContent = "Reservations";
     try {
         await ClientDBUtil.validateSession();
-        const reservationRes = await fetch(`/reservations/user`, {
+        const reservationRes = await fetch(`/reservations/user/${profileID}`, {
             credentials: "include"
         });
 
@@ -223,10 +223,6 @@ function updateReservations(reservations: any[]){
     if(!upcomingTable || !upcomingTableBody) return;
     upcomingTableBody.innerHTML = "";
 
-    if(reservations.length === 0){
-        if(filler) filler.innerHTML = "<h3>None</h3>"
-    }
-
     let count = 0;
     let activeReservations = 0;
 
@@ -236,7 +232,7 @@ function updateReservations(reservations: any[]){
 
     let showedReservations = sortedByDateReservations;
     showedReservations.forEach(r => {
-        if(r.status !== 'cancelled' && r.status !== 'past'){
+        if(r.status !== 'cancelled' && r.status !== 'past' && r.isAnonymous != true){
             const reservationDate = new Date(r.date);
             activeReservations += 1;
             if(reservationDate.toDateString() === today.toDateString()) 
@@ -255,6 +251,10 @@ function updateReservations(reservations: any[]){
             upcomingTableBody.appendChild(tr);
         }
     });
+
+    if(count === 0){
+        if(filler) filler.innerHTML = "<h3>None</h3>"
+    }
 
     if(reservationsCnt) reservationsCnt.textContent = String(activeReservations);
     if(upcoming) upcoming.textContent = String(count);
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", async() => {
     await ClientDBUtil.validateSession();
 
     try{
-        const reservationRes = await fetch(`http://localhost:3000/reservations/user`);
+        const reservationRes = await fetch(`http://localhost:3000/reservations/user/${profileID}`);
         const reservations = await reservationRes.json();
 
         updateReservations(reservations);

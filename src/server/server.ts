@@ -1657,6 +1657,20 @@ app.post("/reservations/quick", async (req: any, res: any) => {
     res.json(reservation);
 });
 
+app.get("/reservations/user/:id", async (request, response) => {
+    try {
+        const requestedUser = request.params.id;
+
+        const reservations = await Reservation.find({ user: requestedUser})
+            .populate("lab", "room")
+            .sort({ date: 1, startTime: 1 });
+
+        return response.json(reservations.map(serializeReservation));
+    } catch (error) {
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
+    }
+});
+
 app.get("/auth/me", async (request: any, response: any) => {
     try {
         const currentUser = await getCurrentUserFromSession(request);
