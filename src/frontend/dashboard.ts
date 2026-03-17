@@ -109,7 +109,8 @@ function updateReservations(reservations: any[]){
     const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
     let showedReservations = sortedByDateReservations;
-    showedReservations.forEach(r => {
+
+    for (const r of showedReservations) {
         if(r.status !== 'cancelled' && r.status !== 'past'){
             const reservationDate = new Date(r.date);
             activeReservations += 1;
@@ -119,18 +120,20 @@ function updateReservations(reservations: any[]){
             const tr = document.createElement("tr");
             let status = capitalizeFirstLetter(r.status);
             console.log(status);
-            tr.innerHTML = `
-                <td>${r.lab.room}</td>
-                <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
-                <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
-                <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
-                <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
-            `;
+            if(activeReservations <= visibleReservationCount){
+                tr.innerHTML = `
+                    <td>${r.lab.room}</td>
+                    <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
+                    <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
+                    <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
+                    <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
+                `;
+            }
             upcomingTableBody.appendChild(tr);
         }
-    });
+    };
 
-    if (reservations.length > visibleReservationCount) {
+    if (activeReservations > visibleReservationCount) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td colspan="5" style="text-align:right; padding-right: 1rem;">
