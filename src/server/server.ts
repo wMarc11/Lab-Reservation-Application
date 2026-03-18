@@ -1590,17 +1590,19 @@ app.get("/buildings", async (_req: any, res: any) => {
 
 app.get("/labs", async (req: any, res: any) => {
     try{
-        const {building} = req.query
-
-        let labs;
-
-        if (building){
-            labs = await Lab.find({building});
-        } else{
-            labs = await Lab.find();
+        const {building, floor} = req.query
+        if (!building) {
+            return res.status(400).json({ message: "Building is required" });
         }
 
-        return res.json(labs);
+        let filter: any = { building: building };
+
+        if (floor) {
+            filter.floor = floor;  
+        }
+
+        const labs = await Lab.find(filter);
+        res.json(labs);
     } catch(error){
         return res.status(500).json({message: error});
     }

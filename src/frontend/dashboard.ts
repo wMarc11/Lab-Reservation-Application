@@ -330,29 +330,45 @@ async function loadBuildings() {
 }
 
 const buildingSelect = document.querySelector("#building") as HTMLSelectElement;
+const floorSelect = document.querySelector("#floor") as HTMLSelectElement;
 const labSelect = document.querySelector("#lab") as HTMLSelectElement;
 
+let currentLabs: any[] = []; 
+
 buildingSelect.addEventListener("change", async () => {
+  const buildingId = buildingSelect.value;
+  if (!buildingId) return;
 
-    const buildingId = buildingSelect.value;
+  const res = await fetch(`http://localhost:3000/labs?building=${buildingId}`);
+  currentLabs = await res.json();
 
-    if (!buildingId) return;
+  const floors = [...new Set(currentLabs.map(lab => lab.floor))].sort();
+  floorSelect.innerHTML = '<option value="">Select Floor</option>';
+  floors.forEach(f => {
+    const option = document.createElement("option");
+    option.value = f;
+    option.textContent = f;
+    floorSelect.appendChild(option);
+  });
+  floorSelect.disabled = false;
 
-    const res = await fetch(`http://localhost:3000/labs?building=${buildingId}`);
-    const labs = await res.json();
+  labSelect.innerHTML = '<option value="">Select Lab</option>';
+  labSelect.disabled = true;
+});
 
-    labSelect.innerHTML = '<option value="">Select Lab</option>';
+floorSelect.addEventListener("change", () => {
+  const selectedFloor = floorSelect.value;
 
-    labs.forEach((lab: any) => {
+  const filteredLabs = currentLabs.filter(lab => lab.floor.toString() === selectedFloor);
 
-        const option = document.createElement("option");
-        option.value = lab._id;
-        option.textContent = lab.room;
-
-        labSelect.appendChild(option);
-    });
-
-    labSelect.disabled = false;
+  labSelect.innerHTML = '<option value="">Select Lab</option>';
+  filteredLabs.forEach(lab => {
+    const option = document.createElement("option");
+    option.value = lab._id;
+    option.textContent = lab.room;
+    labSelect.appendChild(option);
+  });
+  labSelect.disabled = false;
 });
 
 const reserveBtn = document.querySelector("#quick-reserve-btn");
