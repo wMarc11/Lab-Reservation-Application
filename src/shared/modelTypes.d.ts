@@ -36,7 +36,7 @@ export type Reservation<TID = string, TDate = string> = {
     endTime: TDate;
     status?: "upcoming" | "today" | "past" | "cancelled";
 }
-export type ReservationDTO = Omit<Reservation, "lab"> & { _id: string, lab: { _id: string, room: LabName } };
+export type ReservationDTO = Omit<Reservation, "lab"> & { _id: string, lab: { _id: string, room: LabName }, user: { _id: string; firstName: string; lastName: string }};
 
 export type User<TID = string, TDate = string> = {
     firstName: string;

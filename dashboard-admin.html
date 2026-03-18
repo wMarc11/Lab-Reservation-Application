@@ -22,7 +22,7 @@
                         <span class="material-symbols-outlined">dashboard_2</span>
                         <h3>Dashboard</h3>
                     </a>
-                    <a href="block.html">
+                    <a href="reservation.html">
                         <span class="material-symbols-outlined">add</span>
                         <h3>Block a Seat</h3>
                     </a>
@@ -163,24 +163,34 @@
                     </div>
 
                     <div>
-                        <div>
+                        <div class="quick-actions-card">
                             <h2>Quick Actions</h2>
                             <div class="quick-actions">
-                                <button class="primary-btn">
+                                <select id="building">
+                                    <option value=""> Select Building</option>
+                                </select>
+
+                                <select id="floor" disabled>
+                                    <option value=""> Select Floor</option>
+                                </select>
+
+                                <select id="lab" disabled>
+                                    <option value="">Select Lab</option>
+                                </select>
+                                
+                                <input type="date" id="reserve-date" />
+
+                                <select id="timeslot">
+                                    <option value="">Select Time Slot</option>
+                                </select>
+
+                                <button class="primary-btn" id="quick-reserve-btn">
                                     <span class="material-symbols-outlined">add</span>
-                                    Block a Seat
-                                </button>
-                                <button class="primary-btn">
-                                    <span class="material-symbols-outlined">search</span>
-                                    Search Reservations
-                                </button>
-                                <button class="primary-btn">
-                                    <span class="material-symbols-outlined">computer</span>
-                                    View All Lab Availability
+                                    Reserve a Seat
                                 </button>
                             </div>
                         </div>
-
+<!--
                          <div class="lab-container">
                             <h2>Lab Availability</h2>
                             <div class="lab-availability">
@@ -237,6 +247,7 @@
                                 </div>
                             </div>  
                         </div>
+                    -->
                     </div>
                 </div>
             </main>

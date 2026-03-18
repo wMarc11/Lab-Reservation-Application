@@ -11,6 +11,8 @@ const userID = sessionStorage.getItem("user");
 
 const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
 
+let isAdmin = false;
+
 async function loadUserImg(){
     try{
         const res = await fetch(`http://localhost:3000/users/${userID}`);
@@ -263,6 +265,10 @@ async function loadUserImg(){
     } else {
       reservations = await ClientDBUtil.getCurrentReservations();
     }
+
+    let currentUserRole = user.role;
+    isAdmin = currentUserRole === "Admin";
+
     
     render();
   }
@@ -309,6 +315,7 @@ async function loadUserImg(){
     const selectedLab = els.filterLab.value;
     const selectedStatus = els.filterStatus.value;
     const query = (els.filterSearch.value || "").trim().toLowerCase();
+
 
     return reservations
       .map((reservation) => ({ ...reservation, _status: statusFor(reservation) }))
@@ -359,6 +366,13 @@ async function loadUserImg(){
       return;
     }
 
+    const userDisplay = document.querySelector('#displayUser') as HTMLElement;
+
+
+    if(isAdmin){
+      if(userDisplay) userDisplay.style.display = "block";
+    }
+
     setHidden(els.emptyState, true);
 
     els.tbody.innerHTML = list
@@ -368,6 +382,9 @@ async function loadUserImg(){
         return `
           <tr>
             <td><b>${reservation._id}</b></td>
+           ${isAdmin && typeof reservation.user !== "string"
+            ? `<td>${(reservation.user as { firstName: string; lastName: string }).firstName} ${(reservation.user as { firstName: string; lastName: string }).lastName}</td>`: ""}
+          <td>${reservation.lab.room}</td>
             <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
