@@ -42,8 +42,8 @@ const MIGUEL_FLOORS = `
 
 const VELASCO_FLOORS = `
     <option value="1" selected> 1st Floor </option>
-    <option value="2> 2nd Floor </option>
-    <option value="3> 3rd Floor </option>
+    <option value="2"> 2nd Floor </option>
+    <option value="3"> 3rd Floor </option>
     <option value="4"> 4th Floor </option>
     <option value="5"> 5th Floor </option>
 `
@@ -59,18 +59,14 @@ const floors = {
     'VH': VELASCO_FLOORS
 }
 
-const handleBuildingChange = (obj) => {
-    populateFloor(obj);
+function handleBuildingChange(building) {
+    floor_select.innerHTML = floors[building.value] || floors['GH'];
 }
 
-function populateFloor(event) {
-    try {
-        floor_select.innerHTML = floors[event.value];
-    }
-    catch(err) {
-        floor_select.innerHTML = floors['GH'];
-    }
-}
+document.getElementById('buildings').addEventListener('change', (e) => {
+    handleBuildingChange(e.target);
+});
+
 
 reservation_form.addEventListener('submit', async (event) => {
     event.preventDefault();

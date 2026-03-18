@@ -59,10 +59,16 @@ const floors = {
     'VH': VELASCO_FLOORS
 }
 
-const handleBuildingChange = (obj) => {
-    populateFloor(obj);
+function handleBuildingChange(building) {
+    floor_select.innerHTML = floors[building.value] || floors['GH'];
 }
 
+document.getElementById('buildings').addEventListener('change', (e) => {
+    handleBuildingChange(e.target);
+});
+
+
+/*
 function populateFloor(event) {
 
     try {
@@ -72,13 +78,13 @@ function populateFloor(event) {
         // Defaults to Goks
         floor_select.innerHTML = floors['GH'];
     }
-}
+}*/
 
 reservation_form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const building = encodeURIComponent(document.getElementById('buildings').value);
-    const floor = encodeURIComponent(document.getElementById('floors').value);
+    const building = document.getElementById('buildings').value;
+    const floor = document.getElementById('floors').value;
 
     window.location.href = `block-slot-availability.html?building=${building}&floor=${floor}`;
 });
