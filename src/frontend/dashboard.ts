@@ -286,8 +286,16 @@ const yyyy1 = today.getFullYear();
 const mm1 = String(today.getMonth() + 1).padStart(2, '0');
 const dd1 = String(today.getDate()).padStart(2, '0');
 
+const maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 6);
+
+const maxYYYY = maxDate.getFullYear();
+const maxMM = String(maxDate.getMonth() + 1).padStart(2, '0');
+const maxDD = String(maxDate.getDate()).padStart(2, '0');
+
 reserveDateInput.value = `${yyyy1}-${mm1}-${dd1}`;
 reserveDateInput.min = `${yyyy1}-${mm1}-${dd1}`;
+reserveDateInput.max = `${maxYYYY}-${maxMM}-${maxDD}`;
 reserveDateInput.disabled = false;
 
 reserveDateInput.addEventListener("change", () => {
