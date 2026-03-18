@@ -81,20 +81,19 @@ reservation_form.addEventListener('submit', async (event) => {
 
     const building = document.getElementById('buildings').value;
     const floor = document.getElementById('floors').value;
-    const capacity = document.getElementById('capacities').value;
 
-    const result = await viewReservations(building, floor, capacity);
+    const result = await viewReservations(building, floor);
 });
 
-async function viewReservations(building, floor, capacity) {
+async function viewReservations(building, floor) {
     try {
-        const query = new URLSearchParams({ building, floor }).toString();
+        const query = new URLSearchParams({ building, floor}).toString();
         const response = await fetch(`/reservation`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ building, floor, capacity })
+            body: JSON.stringify({ building, floor})
         });
 
         const data = await response.json();
@@ -110,7 +109,6 @@ async function viewReservations(building, floor, capacity) {
             
             sessionStorage.setItem('building', building);
             sessionStorage.setItem('floor', floor);
-            sessionStorage.setItem('capacity', capacity);
             
         } else {
             console.log("Server error: ", data.message);

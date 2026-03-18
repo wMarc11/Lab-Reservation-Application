@@ -20,6 +20,7 @@ const profileImage = document.getElementById("profileImage") as HTMLImageElement
 const inputs = document.querySelectorAll(".profile-form input");
 let formsActive = false;
 const accountJSON = sessionStorage.getItem("account");
+
 if (accountJSON) {
     const account = JSON.parse(accountJSON);
     const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]') as HTMLAnchorElement;

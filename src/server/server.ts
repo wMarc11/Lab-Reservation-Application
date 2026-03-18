@@ -1464,16 +1464,13 @@ app.get('/reservation', async (_req, res) =>{
 
 app.post('/reservation', async (req, res) => {
     try {
-        const { building, floor, capacity } = req.body;
+        const { building, floor} = req.body;
         
         if (!building) {
             res.status(400).json({message: "Missing building"});
         }
         else if (!floor) {
             res.status(400).json({message: "Missing floor"});
-        }
-        else if (!capacity) {
-            res.status(400).json({message: "Missing capacity"});
         }
         else {
             res.status(200).json({message: 'Successful reservation redirect'})
