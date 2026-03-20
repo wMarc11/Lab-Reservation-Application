@@ -1237,6 +1237,19 @@ const display_seat = document.querySelector('.display-seat');
 const header_container = document.querySelector('.seat-reservation-information');
 const heading = header_container.querySelector('h1');
 
+function disableReservedSeatHover() {
+    document.querySelectorAll(".seat").forEach(seat => {
+        const dropdown = seat.querySelector(".seat-dropdown");
+        const isReservedSeat = dropdown?.textContent?.includes("Not Available");
+
+        if (!isReservedSeat || !dropdown) 
+            return;
+
+        seat.classList.add("seat-reserved");
+        dropdown.remove();
+    });
+}
+
 function displayAvailableSeats(roomCode) {
     const room = seats[roomCode];
 
@@ -1245,6 +1258,7 @@ function displayAvailableSeats(roomCode) {
 
     heading.textContent = room[`${roomCode}_HEADER`];
     display_seat.innerHTML += room[`${roomCode}_TEXT`];
+    disableReservedSeatHover();
 }
 
 function initialize(roomCode) {
