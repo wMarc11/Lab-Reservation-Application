@@ -1,4 +1,3 @@
-
 const logout = document.getElementById('logout-anchor');
 
 logout?.addEventListener('click', (e) => {

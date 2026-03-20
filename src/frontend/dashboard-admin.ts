@@ -1,3 +1,4 @@
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
 const dateInput = queryElement("#current-date") as HTMLInputElement;
 const today = new Date();
@@ -5,11 +6,11 @@ const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
-const userID = sessionStorage.getItem("user");
 const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
+
 async function loadUserImg() {
     try {
-        const res = await fetch(`http://localhost:3000/users/${userID}`);
+        const res = await fetch(`http://localhost:3000/users`);
         if (!res.ok) {
             throw new Error("Failed to load profile");
         }
@@ -45,12 +46,11 @@ if (loggedInUser && loggedInUser.accountType === "Admin") {
     }
 }*/
 document.addEventListener("DOMContentLoaded", async () => {
-    if (!userID) {
-        window.location.href = "index.html";
-        return;
-    }
+    //This checks if the user is logged in
+    await ClientDBUtil.validateSession();
+
     try {
-        const userRes = await fetch(`http://localhost:3000/users/${userID}`);
+        const userRes = await fetch(`http://localhost:3000/users`);
         const user = await userRes.json();
         if (user.role === "Student") {
             window.location.href = "./dashboard.html";
