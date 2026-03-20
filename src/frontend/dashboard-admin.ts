@@ -64,11 +64,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             userTypeEl.textContent = `${user.role}`;
         const reservationRes = await fetch(`http://localhost:3000/reservations`);
         const reservations = await reservationRes.json();
+
         const activityRes = await fetch(`http://localhost:3000/activities`);
         const activities = await activityRes.json();
+
+        const labsRes = await fetch(`http://localhost:3000/alllabs`);
+        const labs = await labsRes.json();
+
         updateReservations(reservations);
         visibleCount = 3;
         updateRecentActivity(activities);
+
+        const occupancy = computeLabOccupancy(labs, reservations);
+
+        const labOccpancy = document.querySelector('#lab-occupancy');
+        if(labOccpancy) labOccpancy.textContent = `${occupancy.occupancyRate}`;
     }
     catch (e) {
         console.error("Error: ", e);
@@ -407,6 +417,41 @@ reserveBtn?.addEventListener("click", async () => {
     window.location.reload();
 });
 
+function computeLabOccupancy(labs: any, reservations: any) {
+    const now = new Date();
+
+    let totalCapacity = 0;
+    let occupiedSeats = 0;
+
+    labs.forEach((lab: any) => {
+        totalCapacity += lab.totalSeats;
+    });
+
+    reservations.forEach((r: any) => {
+        if (r.status === 'cancelled') return;
+
+        const start = new Date(r.startTime);
+        const end = new Date(r.endTime);
+
+        if (now >= start && now <= end) {
+            if (Array.isArray(r.seatNumbers)) {
+                occupiedSeats += r.seatNumbers.length;
+            } else {
+                occupiedSeats += 1;
+            }
+        }
+    });
+
+    const occupancyRate = totalCapacity === 0 
+        ? 0 
+        : Math.round((occupiedSeats / totalCapacity) * 100);
+
+    return {
+        occupiedSeats,
+        totalCapacity,
+        occupancyRate: `${occupancyRate}%`
+    };
+}
 loadBuildings();
 
 generateTimeSlots();

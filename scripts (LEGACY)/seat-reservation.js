@@ -1,4 +1,4 @@
-
+/*
 const M101_TEXT = `
     <div class="display-seat-row"> 
         <svg style="width: 4.5rem; height: 4.5rem" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -1466,7 +1466,7 @@ const seats = {
     'M104D': { M104D_HEADER, M104D_TEXT},
     'M101': { M101_HEADER, M101_TEXT},
     'GK306A': { GK306A_HEADER, GK306A_TEXT}
-}
+}*/
 
 const display_seat = document.querySelector('.display-seat');
 const header_container = document.querySelector('.seat-reservation-information');

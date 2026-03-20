@@ -24,6 +24,29 @@ let currentDate = normalizeInitialDate(pageParams.get("date"));
 let autoRefreshHandle = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
+    let authOkay = false;
+
+    try {
+        const response = await fetch("/auth/me");
+        if (response.ok) {
+            currentUser = await response.json();
+            authOkay = true;
+        }
+    } catch (e) {
+        authOkay = false;
+    }
+
+    if (!authOkay) {
+        const authLinks = document.getElementById("auth-links");
+        authLinks?.remove();
+
+        const backLink = document.getElementById("back-link");
+        if (backLink) {
+            backLink.style.fontWeight = "bold";
+            backLink.style.display = "block";
+        }
+    }
+
     if (!buildingCode || !floor) {
         renderErrorState("Missing building or floor. Please start from the reservation form.");
         return;

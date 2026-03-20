@@ -28,10 +28,15 @@ let refreshTimer = null;
 let isAnonymousReservation = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const authOkay = await ensureAuthenticated();
-
-    if (!authOkay) {
-        return;
+    const authOkay = false;
+    try {
+        const response = await fetch("/auth/me");
+        if (response.ok) {
+            currentUser = await response.json();
+            authOkay = true;
+        }
+    } catch (e) {
+        authOkay = false;
     }
 
     if (!room || !date || !startTime || !endTime || !buildingCode || !floor) {
@@ -44,6 +49,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     attachControlEvents();
     await refreshSeatMap();
     startAutoRefresh();
+
+    if (!currentUser) {
+        const reserveButton = document.getElementById("reserve-all-button");
+        const anonymousToggleButton = document.getElementById("anonymous-toggle-button");
+        const reservationCounter = document.querySelector(".reservation-counter");
+
+        if (reserveButton) reserveButton.style.display = "none";
+        if (anonymousToggleButton) anonymousToggleButton.style.display = "none";
+        if(reservationCounter) reservationCounter.style.display = "none";
+
+        const authLinks = document.getElementById("auth-links");
+        authLinks?.remove(); 
+
+        const backLink = document.getElementById("back-link");
+        if (backLink) {
+            backLink.style.fontWeight = "bold";
+            backLink.style.display = "block";
+        }
+    }
 });
 
 window.addEventListener("beforeunload", () => {
@@ -51,19 +75,20 @@ window.addEventListener("beforeunload", () => {
         window.clearInterval(refreshTimer);
     }
 });
+let currentUser = null;
 
 async function ensureAuthenticated() {
     try {
         const response = await fetch("/auth/me");
 
         if (response.ok) {
+            currentUser = await response.json();
             return true;
         }
-
-        window.location.href = "index.html";
+        //window.location.href = "index.html";
         return false;
     } catch (error) {
-        renderFatalState("Unable to verify your session. Please log in again.");
+        //renderFatalState("Unable to verify your session. Please log in again.");
         return false;
     }
 }
@@ -218,6 +243,9 @@ function attachSeatEvents() {
         seatElement.addEventListener("click", (event) => {
             event.stopPropagation();
 
+            if(!currentUser)
+                return;
+
             const seatNumber = Number(seatElement.getAttribute("data-seat-number"));
             const status = seatElement.getAttribute("data-status");
 
@@ -249,6 +277,9 @@ function buildSeatSvg(seatNumber, isOccupied, isSelected) {
 }
 
 function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
+    if(!currentUser)
+        return "";
+
     if (occupiedSeat) {
         const reserverName = occupiedSeat.isAnonymous || !occupiedSeat.user
             ? "Anonymous"

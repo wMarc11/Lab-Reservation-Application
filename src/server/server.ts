@@ -889,10 +889,10 @@ async function resolveReservationUserForCreate(payload: any, currentUser: any) {
         if (!targetUser) {
             throw createHttpError(404, "Reservation user not found");
         }
-
+        /*
         if (!hasStudentRole(targetUser)) {
             throw createHttpError(400, "Reservations can only be created for student accounts");
-        }
+        }*/
 
         return targetUser;
     }
@@ -1698,5 +1698,19 @@ app.get("/auth/me", async (request: any, response: any) => {
         });
     } catch (error) {
         return response.status(500).json({ message: (error as Error).message });
+    }
+});
+
+app.get("/reservations/all", async (request: any, response) => {
+    try {
+        await requireAuth(request);
+        const reservations = await Reservation.find()
+            .populate("lab", "room")
+            .populate("user", "firstName lastName")
+            .sort({ date: 1, startTime: 1 });
+
+        return response.json(reservations.map(serializeReservation));
+    } catch (error) {
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });
     }
 });

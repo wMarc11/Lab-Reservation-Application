@@ -11,29 +11,38 @@
 
     <body>
         <div class="container">
-            <aside>
-                <div class="top">
-                    <div class="logo">
-                        <a href="dashboard.html"><img src="images/logo2.png"></a>
+            <div class="sidebar">
+                <aside>
+                    <div class="top">
+                        <div class="logo">
+                            <a href="dashboard.html"><img src="images/logo2.png"></a>
+                        </div>
+                        <div class="close" id="close-btn">
+                            <span class="material-symbols-outlined">close</span>
+                        </div>
                     </div>
-                    <div class="close" id="close-btn">
-                        <span class="material-symbols-outlined">close</span>
+                    <div class="sidebar">
+                        <div id="auth-links">
+                            <a href="dashboard.html">
+                                <span class="material-symbols-outlined">dashboard_2</span>
+                                <h3>Dashboard</h3>
+                            </a>
+                            <a href="reservation.html" class="active">
+                                <span class="material-symbols-outlined">add</span>
+                                <h3>Reserve</h3>
+                            </a>
+                            <a href="my-reservations.html">
+                                <span class="material-symbols-outlined">tatami_seat</span>
+                                <h3>My Reservations</h3>
+                            </a>
+                        </div>
+
+                        <a href="index.html" id="back-link" style="display: none;">
+                            <h3>Go Back to Home</h3>
+                        </a>  
                     </div>
-                </div>
-                <div class="sidebar">
-                    <a href="dashboard.html">
-                        <span class="material-symbols-outlined">dashboard_2</span>
-                        <h3>Dashboard</h3>
-                    </a>
-                    <a href="reservation.html" class="active">
-                        <span class="material-symbols-outlined">add</span>
-                        <h3>Reserve</h3>
-                    </a>
-                    <a href="my-reservations.html">
-                        <span class="material-symbols-outlined">tatami_seat</span>
-                        <h3>My Reservations</h3>
-                    </a>                    
-                </div>
+                </aside>
+            </div>
             </aside>
             <main>
                 <div class="seat-reservation-information"> 

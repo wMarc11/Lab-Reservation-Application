@@ -523,3 +523,18 @@ button {
     border-color: rgba(191, 219, 254, 0.55);
     box-shadow: 0 0.55rem 1.2rem rgba(67, 56, 202, 0.35);
 }
+
+.display-seat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center; 
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.display-seat-row {
+    display: flex;
+    justify-content: center; 
+    gap: 0.5rem;
+}

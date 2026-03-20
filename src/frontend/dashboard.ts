@@ -83,10 +83,16 @@ document.addEventListener("DOMContentLoaded", async() => {
         const labsRes = await fetch(`http://localhost:3000/alllabs`);
         const labs = await labsRes.json();
 
+        const allReservationsRes = await fetch('http://localhost:3000/reservations/all', {
+            credentials: 'include'
+        });
+        const allReservations = await allReservationsRes.json();
+
         updateReservations(reservations);
         updateLabs(labs);
         visibleCount = 3;
         updateRecentActivity(activities);
+        updateAvailableSeats(labs, allReservations);
     } catch (e){
         console.error("Error: ", e);
     }
@@ -422,6 +428,65 @@ reserveBtn?.addEventListener("click", async () => {
     }
     window.location.reload();
 });
+
+function getNext7Days() {
+    const days = [];
+    const today = new Date();
+
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        days.push(d);
+    }
+
+    return days;
+}
+
+function computeAvailableSeats(labs: any, reservations: any) {
+    const days = getNext7Days();
+    const result: any = {};
+
+    days.forEach(day => {
+        const dayKey = day.toDateString();
+
+        let totalCapacity = 0;
+        let reservedSeats = 0;
+
+        labs.forEach((lab: any) => {
+            totalCapacity += lab.totalSeats;
+        });
+
+        reservations.forEach((r: any) => {
+            const rDate = new Date(r.date).toDateString();
+
+            if (rDate === dayKey && r.status !== 'cancelled') {
+                if (Array.isArray(r.seatNumbers)) {
+                    reservedSeats += r.seatNumbers.length;
+                } else {
+                    reservedSeats += 1;
+                }
+            }
+        });
+
+        result[dayKey] = totalCapacity - reservedSeats;
+    });
+
+    return result;
+}
+
+function updateAvailableSeats(labs: any, reservations: any) {
+    const data = computeAvailableSeats(labs, reservations);
+
+    const todayKey = new Date().toDateString();
+    const todaySeats = data[todayKey] || 0;
+
+    const el = document.querySelector("#available-seats");
+    if (el) {
+        el.textContent = String(todaySeats);
+    }
+
+    console.log("Next 7 days:", data);
+}
 
 loadBuildings();
 

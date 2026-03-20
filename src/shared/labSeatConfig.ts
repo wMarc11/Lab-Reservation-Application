@@ -78,9 +78,10 @@ function inferLabLocation(labName: LabName): { buildingCode: BuildingCode; floor
     return { buildingCode: "GH", floor: 1 };
 }
 
+/*
 function tables(count: number, orientation: "row" | "column" = "row") {
     return Array.from({ length: count }, () => ({ type: "table", orientation } as const));
-}
+} */
 
 function countSeats(layout: LabLayoutRow[]) {
     return layout.reduce((totalSeats, row) => {
@@ -123,6 +124,7 @@ function createGenericLayout(capacity: number): LabLayoutRow[] {
     return rows;
 }
 
+/*
 function createGk301Layout(): LabLayoutRow[] {
     return [
         {
@@ -221,11 +223,12 @@ function createGk302Or306Layout(): LabLayoutRow[] {
         }
     ];
 }
+    */
 
-const CUSTOM_LAYOUTS: Partial<Record<LabName, LabLayoutRow[]>> = {
+const CUSTOM_LAYOUTS: Partial<Record<LabName, LabLayoutRow[]>> = {/*
     GK301: createGk301Layout(),
     GK302A: createGk302Or306Layout(),
-    GK306A: createGk302Or306Layout()
+    GK306A: createGk302Or306Layout()*/
 };
 
 export const LAB_SEAT_CONFIG: Record<LabName, LabSeatConfig> = LAB_NAMES.reduce(
