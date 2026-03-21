@@ -18,8 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
         const response = await fetch("/auth/me");
+        console.log(response)
         if (response.ok) {
-            currentUser = await response.json();
             authOkay = true;
         }
     } catch (e) {

@@ -258,7 +258,7 @@ function generateTimeSlots() {
     for (let h = startHour; h < endHour; h++) {
 
         for (let m of [0, 30]) {
-            if(h === endHour - 1 && m > 0)
+            if(h === endHour && m > 0)
                 continue;
 
             const start = new Date(selectedDate);

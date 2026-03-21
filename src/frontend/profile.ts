@@ -253,7 +253,7 @@ function updateReservations(reservations: any[]){
         }
     });
 
-    if(count === 0){
+    if(activeReservations === 0){
         if(filler) filler.innerHTML = "<h3>None</h3>"
     }
 

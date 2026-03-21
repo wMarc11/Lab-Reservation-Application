@@ -190,7 +190,10 @@ function updateRecentActivity(activities: any[]){
 
     const showedActivities = sortedActivities.slice(0, visibleCount);
 
+    let count = 0;
+
     showedActivities.forEach(a => {
+        count += 1;
         const li = document.createElement('li');
 
         const timePassed = formatTimePassed(new Date(a.timestamp));
@@ -206,7 +209,7 @@ function updateRecentActivity(activities: any[]){
         activityList.appendChild(li);
     });
 
-    if(visibleCount <= 10){
+    if(visibleCount <= 10 && count > 3){
         const viewMore = document.createElement('li');
         viewMore.classList.add("view-more-activity");
 
@@ -270,7 +273,7 @@ function generateTimeSlots() {
     for (let h = startHour; h < endHour; h++) {
 
         for (let m of [0, 30]) {
-            if(h === endHour - 1 && m > 0)
+            if(h === endHour && m > 0)
                 continue;
 
             const start = new Date(selectedDate);

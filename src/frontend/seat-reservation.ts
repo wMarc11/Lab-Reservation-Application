@@ -27,12 +27,12 @@ let selectedSeats = new Set();
 let refreshTimer = null;
 let isAnonymousReservation = false;
 
+let authOkay = false;
 document.addEventListener("DOMContentLoaded", async () => {
-    const authOkay = false;
+    
     try {
         const response = await fetch("/auth/me");
         if (response.ok) {
-            currentUser = await response.json();
             authOkay = true;
         }
     } catch (e) {
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await refreshSeatMap();
     startAutoRefresh();
 
-    if (!currentUser) {
+    if (!authOkay) {
         const reserveButton = document.getElementById("reserve-all-button");
         const anonymousToggleButton = document.getElementById("anonymous-toggle-button");
         const reservationCounter = document.querySelector(".reservation-counter");
@@ -75,23 +75,6 @@ window.addEventListener("beforeunload", () => {
         window.clearInterval(refreshTimer);
     }
 });
-let currentUser = null;
-
-async function ensureAuthenticated() {
-    try {
-        const response = await fetch("/auth/me");
-
-        if (response.ok) {
-            currentUser = await response.json();
-            return true;
-        }
-        //window.location.href = "index.html";
-        return false;
-    } catch (error) {
-        //renderFatalState("Unable to verify your session. Please log in again.");
-        return false;
-    }
-}
 
 function renderHeader() {
     if (heading) {
@@ -243,7 +226,7 @@ function attachSeatEvents() {
         seatElement.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            if(!currentUser)
+            if(!authOkay)
                 return;
 
             const seatNumber = Number(seatElement.getAttribute("data-seat-number"));
@@ -277,7 +260,7 @@ function buildSeatSvg(seatNumber, isOccupied, isSelected) {
 }
 
 function buildSeatDropdown(_seatNumber, occupiedSeat, _isSelected) {
-    if(!currentUser)
+    if(!authOkay)
         return "";
 
     if (occupiedSeat) {
