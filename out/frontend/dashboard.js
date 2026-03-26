@@ -1,0 +1,398 @@
+import { ClientDBUtil } from "./util/ClientDbUtil.js";
+import { queryElement } from "./util/frontendUtil.js";
+const dateInput = queryElement("#current-date");
+const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const dd = String(today.getDate()).padStart(2, '0');
+dateInput.value = `${yyyy}-${mm}-${dd}`;
+const profileImage = document.querySelector('#user-pic');
+async function loadUserImg() {
+    try {
+        const res = await fetch(`http://localhost:3000/users`);
+        if (!res.ok) {
+            throw new Error("Failed to load profile");
+        }
+        const user = await res.json();
+        if (profileImage) {
+            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        }
+    }
+    catch (error) {
+        console.error("Error loading profile: ", error);
+    }
+}
+/*
+const loggedInUserJSON = sessionStorage.getItem("loggedInUser");
+let loggedInUser = null;
+
+if (loggedInUserJSON) {
+    loggedInUser = JSON.parse(loggedInUserJSON);
+}
+
+if (loggedInUser) {
+    const infoEl = document.querySelector(".profile .info p b");
+    const userTypeEl = document.getElementById("user-type");
+
+    if (infoEl) infoEl.textContent = loggedInUser.firstName;
+    if (userTypeEl) userTypeEl.textContent = loggedInUser.accountType;
+}
+
+if (loggedInUser && loggedInUser.accountType === "Admin") {
+    const dashboardLink = document.querySelector('.sidebar a[href="dashboard.html"]');
+    if (dashboardLink) {
+        dashboardLink.href = "dashboard-admin.html";
+    }
+}*/
+document.addEventListener("DOMContentLoaded", async () => {
+    //This checks if the user is logged in
+    await ClientDBUtil.validateSession();
+    try {
+        const userRes = await fetch(`http://localhost:3000/users`);
+        const user = await userRes.json();
+        if (user.role === "Admin") {
+            window.location.href = "./dashboard-admin.html";
+            return;
+        }
+        const userNameEl = document.querySelector('#user-name');
+        const userTypeEl = document.querySelector('#user-type');
+        if (userNameEl)
+            userNameEl.textContent = `${user.firstName}`;
+        if (userTypeEl)
+            userTypeEl.textContent = `${user.role}`;
+        const reservationRes = await fetch(`http://localhost:3000/reservations/user`);
+        const reservations = await reservationRes.json();
+        const activityRes = await fetch(`http://localhost:3000/activities/user`);
+        const activities = await activityRes.json();
+        const labsRes = await fetch(`http://localhost:3000/alllabs`);
+        const labs = await labsRes.json();
+        const allReservationsRes = await fetch('http://localhost:3000/reservations/all', {
+            credentials: 'include'
+        });
+        const allReservations = await allReservationsRes.json();
+        updateReservations(reservations);
+        updateLabs(labs);
+        visibleCount = 3;
+        updateRecentActivity(activities);
+        updateAvailableSeats(labs, allReservations);
+    }
+    catch (e) {
+        console.error("Error: ", e);
+    }
+});
+function updateLabs(labs) {
+    const numLabs = document.querySelector('#num-labs');
+    if (numLabs) {
+        numLabs.textContent = String(labs.length);
+    }
+}
+let visibleReservationCount = 5;
+function updateReservations(reservations) {
+    const upcomingTable = document.querySelector("#upcoming-reservations");
+    const upcomingTableBody = upcomingTable?.querySelector("tbody");
+    const noUpcoming = document.querySelector('#no-upcoming');
+    const noReservations = document.querySelector('#no-reservations');
+    const filler = document.querySelector("#filler");
+    if (!upcomingTable || !upcomingTableBody)
+        return;
+    upcomingTableBody.innerHTML = "";
+    let count = 0;
+    let activeReservations = 0;
+    const today = new Date();
+    const sortedByDateReservations = [...reservations].sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+    let showedReservations = sortedByDateReservations;
+    for (const r of showedReservations) {
+        if (r.status !== 'cancelled' && r.status !== 'past') {
+            const reservationDate = new Date(r.date);
+            activeReservations += 1;
+            if (reservationDate.toDateString() === today.toDateString())
+                count += 1;
+            const tr = document.createElement("tr");
+            let status = capitalizeFirstLetter(r.status);
+            console.log(status);
+            if (activeReservations <= visibleReservationCount) {
+                tr.innerHTML = `
+                    <td>${r.lab.room}</td>
+                    <td>${formatDate(r.dateRequested)} | Time: ${formatTime(r.dateRequested)}</td>
+                    <td>${formatDate(r.date)} | Time: ${formatTime(r.startTime)}-${formatTime(r.endTime)}</td>
+                    <td>Seats ${Array.isArray(r.seatNumbers) ? r.seatNumbers.join(", ") : r.seatNumber}</td>
+                    <td class="${r.status === 'today' ? 'warning' : r.status === 'cancelled' ? 'danger' : 'success'}">${capitalizeFirstLetter(r.status)}</td>
+                `;
+            }
+            upcomingTableBody.appendChild(tr);
+        }
+    }
+    ;
+    if (activeReservations > visibleReservationCount) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="5" style="text-align:right; padding-right: 1rem;">
+                <a href="my-reservations.html" class="view-more">View More</a>
+            </td>
+        `;
+        upcomingTableBody.appendChild(tr);
+    }
+    if (activeReservations === 0) {
+        if (filler)
+            filler.innerHTML = "<h3>None</h3>";
+    }
+    if (noUpcoming)
+        noUpcoming.textContent = String(count);
+    if (noReservations)
+        noReservations.textContent = String(activeReservations);
+}
+function capitalizeFirstLetter(string) {
+    if (!string || string.length === 0) {
+        return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+let visibleCount = 3;
+function updateRecentActivity(activities) {
+    const activityList = document.querySelector('#recent-activity-list');
+    if (!activityList) {
+        return;
+    }
+    activityList.innerHTML = '';
+    console.log(activities);
+    const sortedActivities = [...activities].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    const showedActivities = sortedActivities.slice(0, visibleCount);
+    let count = 0;
+    showedActivities.forEach(a => {
+        count += 1;
+        const li = document.createElement('li');
+        const timePassed = formatTimePassed(new Date(a.timestamp));
+        let text = "";
+        if (a.action === "cancelled") {
+            text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
+        }
+        else {
+            text = `Reserved Seat ${a.seatNumber} in ${a.labName}`;
+        }
+        li.innerHTML = `${text} <small>${timePassed}</small>`;
+        activityList.appendChild(li);
+    });
+    if (visibleCount <= 10 && count > 3) {
+        const viewMore = document.createElement('li');
+        viewMore.classList.add("view-more-activity");
+        const a = document.createElement('a');
+        a.textContent = "View More";
+        a.addEventListener("click", (e) => {
+            e.preventDefault();
+            visibleCount += 2;
+            updateRecentActivity(activities);
+        });
+        viewMore.appendChild(a);
+        activityList.appendChild(viewMore);
+    }
+}
+function formatTimePassed(date) {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    if (seconds < 60) {
+        return "Just now";
+    }
+    else if (minutes < 60) {
+        return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+    }
+    else if (hours < 24) {
+        return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+    }
+    else {
+        return `${days} day${days !== 1 ? "s" : ""} ago`;
+    }
+}
+function formatDate(dateInput) {
+    const date = new Date(dateInput);
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+}
+function formatTime(dateInput) {
+    const date = new Date(dateInput);
+    const hh = String(date.getHours()).padStart(2, '0');
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${hh}:${min}`;
+}
+function generateTimeSlots() {
+    const select = document.querySelector("#timeslot");
+    const startHour = 7;
+    const endHour = 18;
+    const selectedDate = new Date(reserveDateInput.value);
+    const now = new Date();
+    for (let h = startHour; h < endHour; h++) {
+        for (let m of [0, 30]) {
+            if (h === endHour && m > 0)
+                continue;
+            const start = new Date(selectedDate);
+            if (h === startHour)
+                start.setHours(7, 30, 0, 0);
+            else
+                start.setHours(h, m, 0, 0);
+            if (start < now)
+                continue;
+            const end = new Date(start);
+            end.setMinutes(start.getMinutes() + 30);
+            const option = document.createElement("option");
+            option.value = start.toISOString();
+            option.textContent =
+                `${formatTime(start)} - ${formatTime(end)}`;
+            select.appendChild(option);
+        }
+    }
+}
+const reserveDateInput = document.querySelector("#reserve-date");
+const yyyy1 = today.getFullYear();
+const mm1 = String(today.getMonth() + 1).padStart(2, '0');
+const dd1 = String(today.getDate()).padStart(2, '0');
+const maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 6);
+const maxYYYY = maxDate.getFullYear();
+const maxMM = String(maxDate.getMonth() + 1).padStart(2, '0');
+const maxDD = String(maxDate.getDate()).padStart(2, '0');
+reserveDateInput.value = `${yyyy1}-${mm1}-${dd1}`;
+reserveDateInput.min = `${yyyy1}-${mm1}-${dd1}`;
+reserveDateInput.max = `${maxYYYY}-${maxMM}-${maxDD}`;
+reserveDateInput.disabled = false;
+reserveDateInput.addEventListener("change", () => {
+    generateTimeSlots();
+});
+async function loadBuildings() {
+    const res = await fetch("http://localhost:3000/buildings");
+    const buildings = await res.json();
+    const select = document.querySelector("#building");
+    buildings.forEach((b) => {
+        const option = document.createElement("option");
+        option.value = b._id;
+        option.textContent = b.name;
+        select.appendChild(option);
+    });
+}
+const buildingSelect = document.querySelector("#building");
+const floorSelect = document.querySelector("#floor");
+const labSelect = document.querySelector("#lab");
+let currentLabs = [];
+buildingSelect.addEventListener("change", async () => {
+    const buildingId = buildingSelect.value;
+    if (!buildingId)
+        return;
+    const res = await fetch(`http://localhost:3000/labs?building=${buildingId}`);
+    currentLabs = await res.json();
+    const floors = [...new Set(currentLabs.map(lab => lab.floor))].sort();
+    floorSelect.innerHTML = '<option value="">Select Floor</option>';
+    floors.forEach(f => {
+        const option = document.createElement("option");
+        option.value = f;
+        option.textContent = f;
+        floorSelect.appendChild(option);
+    });
+    floorSelect.disabled = false;
+    labSelect.innerHTML = '<option value="">Select Lab</option>';
+    labSelect.disabled = true;
+});
+floorSelect.addEventListener("change", () => {
+    const selectedFloor = floorSelect.value;
+    const filteredLabs = currentLabs.filter(lab => lab.floor.toString() === selectedFloor);
+    labSelect.innerHTML = '<option value="">Select Lab</option>';
+    filteredLabs.forEach(lab => {
+        const option = document.createElement("option");
+        option.value = lab._id;
+        option.textContent = lab.room;
+        labSelect.appendChild(option);
+    });
+    labSelect.disabled = false;
+});
+const reserveBtn = document.querySelector("#quick-reserve-btn");
+reserveBtn?.addEventListener("click", async () => {
+    const labId = document.querySelector("#lab").value;
+    const time = document.querySelector("#timeslot").value;
+    if (!labId || !time) {
+        alert("Please select lab and time slot");
+        return;
+    }
+    const startTime = new Date(time);
+    const endTime = new Date(startTime);
+    endTime.setMinutes(startTime.getMinutes() + 30);
+    const reservation = {
+        lab: labId,
+        date: startTime,
+        isAnonymous: false,
+        startTime: startTime,
+        endTime: endTime
+    };
+    try {
+        const res = await fetch("http://localhost:3000/reservations/quick", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reservation)
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            alert(data.message || "Reservation failed");
+            return;
+        }
+        alert(`Seat ${data.seatNumbers.join(", ")} reserved successfully`);
+        window.location.reload();
+    }
+    catch (error) {
+        console.error("Quick reserve error:", error);
+        alert("Something went wrong");
+    }
+    window.location.reload();
+});
+function getNext7Days() {
+    const days = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        days.push(d);
+    }
+    return days;
+}
+function computeAvailableSeats(labs, reservations) {
+    const days = getNext7Days();
+    const result = {};
+    days.forEach(day => {
+        const dayKey = day.toDateString();
+        let totalCapacity = 0;
+        let reservedSeats = 0;
+        labs.forEach((lab) => {
+            totalCapacity += lab.totalSeats;
+        });
+        reservations.forEach((r) => {
+            const rDate = new Date(r.date).toDateString();
+            if (rDate === dayKey && r.status !== 'cancelled') {
+                if (Array.isArray(r.seatNumbers)) {
+                    reservedSeats += r.seatNumbers.length;
+                }
+                else {
+                    reservedSeats += 1;
+                }
+            }
+        });
+        result[dayKey] = totalCapacity - reservedSeats;
+    });
+    return result;
+}
+function updateAvailableSeats(labs, reservations) {
+    const data = computeAvailableSeats(labs, reservations);
+    const todayKey = new Date().toDateString();
+    const todaySeats = data[todayKey] || 0;
+    const el = document.querySelector("#available-seats");
+    if (el) {
+        el.textContent = String(todaySeats);
+    }
+    console.log("Next 7 days:", data);
+}
+loadBuildings();
+generateTimeSlots();
+loadUserImg();
+//# sourceMappingURL=dashboard.js.map
