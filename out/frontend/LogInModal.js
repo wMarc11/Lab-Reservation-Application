@@ -1,5 +1,5 @@
 import { queryElement } from "./util/frontendUtil.js";
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com/";
 const DIV = `
         <div class="overlay">
             <div class="form">
