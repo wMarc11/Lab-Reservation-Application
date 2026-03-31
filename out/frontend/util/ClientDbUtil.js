@@ -1,3 +1,4 @@
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
 export var ClientDBUtil;
 (function (ClientDBUtil) {
     /**
@@ -76,7 +77,7 @@ export var ClientDBUtil;
     }
     ClientDBUtil.getCurrentReservations = getCurrentReservations;
     async function getAllReservations() {
-        const res = await fetch("http://localhost:3000/reservations");
+        const res = await fetch(`${BASE_URL}/reservations`);
         if (!res.ok) {
             throw new Error("Failed to fetch all reservations");
         }

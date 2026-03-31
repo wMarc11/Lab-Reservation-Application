@@ -2,6 +2,7 @@ import { ClientDBUtil } from "./util/ClientDbUtil.js";
 "use strict";
 // @ts-nocheck
 // I hardcoded this for now to be the same as the logged in user
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
 const loggedInUserID = sessionStorage.getItem("user");
 if (!loggedInUserID) {
     window.location.href = "index.html";
@@ -86,7 +87,7 @@ saveBtn?.addEventListener("click", async (e) => {
         formData.append('profileImage', file);
     }
     try {
-        const res = await fetch(`http://localhost:3000/users/${profileID}`, {
+        const res = await fetch(`${BASE_URL}/users/${profileID}`, {
             method: 'PUT',
             body: formData
         });
@@ -112,7 +113,7 @@ saveBtn?.addEventListener("click", async (e) => {
         if (emailEl)
             emailEl.textContent = updatedUser.email;
         if (profileImage)
-            profileImage.src = `http://localhost:3000/images/${updatedUser.profileImage}`;
+            profileImage.src = `${BASE_URL}/images/${updatedUser.profileImage}`;
         if (cancelBtn)
             cancelBtn.click();
         loadProfile();
@@ -183,7 +184,7 @@ function toggleReservations() {
 ;
 async function loadProfile() {
     try {
-        const res = await fetch(`http://localhost:3000/users/${profileID}`);
+        const res = await fetch(`${BASE_URL}/users/${profileID}`);
         if (!res.ok) {
             throw new Error("Failed to load profile");
         }
@@ -206,7 +207,7 @@ async function loadProfile() {
         const contactNumberEl = document.querySelector('#contactNumber');
         if (contactNumberEl)
             contactNumberEl.textContent = user.contactNumber;
-        profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+        profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
         inputs.forEach(input => {
             const htmlInput = input;
             switch (htmlInput.name) {
@@ -303,7 +304,7 @@ function formatTime(dateInput) {
 document.addEventListener("DOMContentLoaded", async () => {
     await ClientDBUtil.validateSession();
     try {
-        const reservationRes = await fetch(`http://localhost:3000/reservations/user/${profileID}`);
+        const reservationRes = await fetch(`${BASE_URL}/reservations/user/${profileID}`);
         const reservations = await reservationRes.json();
         updateReservations(reservations);
     }

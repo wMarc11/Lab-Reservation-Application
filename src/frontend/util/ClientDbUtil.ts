@@ -5,6 +5,8 @@ import { ReservationDTO } from "../../shared/modelTypes";
 export type UserID = string & {_brand: "UserID"}
 export type ReservationID = string & {_brand: "ReservationID"}
 
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+
 export namespace ClientDBUtil {
 
     /**
@@ -81,7 +83,7 @@ export namespace ClientDBUtil {
     }
 
     export async function getAllReservations() {
-        const res = await fetch("http://localhost:3000/reservations");
+        const res = await fetch(`${BASE_URL}/reservations`);
 
         if (!res.ok) {
             throw new Error("Failed to fetch all reservations");

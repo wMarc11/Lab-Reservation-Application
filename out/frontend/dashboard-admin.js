@@ -7,15 +7,16 @@ const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 const profileImage = document.querySelector('#user-pic');
+const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
 async function loadUserImg() {
     try {
-        const res = await fetch(`http://localhost:3000/users`);
+        const res = await fetch(`${BASE_URL}/users`);
         if (!res.ok) {
             throw new Error("Failed to load profile");
         }
         const user = await res.json();
         if (profileImage) {
-            profileImage.src = `http://localhost:3000/images/${user.profileImage}`;
+            profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
         }
     }
     catch (error) {
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //This checks if the user is logged in
     await ClientDBUtil.validateSession();
     try {
-        const userRes = await fetch(`http://localhost:3000/users`);
+        const userRes = await fetch(`${BASE_URL}/users`);
         const user = await userRes.json();
         if (user.role === "Student") {
             window.location.href = "./dashboard.html";
@@ -60,11 +61,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             userNameEl.textContent = `${user.firstName}`;
         if (userTypeEl)
             userTypeEl.textContent = `${user.role}`;
-        const reservationRes = await fetch(`http://localhost:3000/reservations`);
+        const reservationRes = await fetch(`${BASE_URL}/reservations`);
         const reservations = await reservationRes.json();
-        const activityRes = await fetch(`http://localhost:3000/activities`);
+        const activityRes = await fetch(`${BASE_URL}/activities`);
         const activities = await activityRes.json();
-        const labsRes = await fetch(`http://localhost:3000/alllabs`);
+        const labsRes = await fetch(`${BASE_URL}/alllabs`);
         const labs = await labsRes.json();
         updateReservations(reservations);
         visibleCount = 3;
@@ -272,7 +273,7 @@ reserveDateInput.addEventListener("change", () => {
     generateTimeSlots();
 });
 async function loadBuildings() {
-    const res = await fetch("http://localhost:3000/buildings");
+    const res = await fetch(`${BASE_URL}/buildings`);
     const buildings = await res.json();
     const select = document.querySelector("#building");
     buildings.forEach((b) => {
@@ -290,7 +291,7 @@ buildingSelect.addEventListener("change", async () => {
     const buildingId = buildingSelect.value;
     if (!buildingId)
         return;
-    const res = await fetch(`http://localhost:3000/labs?building=${buildingId}`);
+    const res = await fetch(`${BASE_URL}/labs?building=${buildingId}`);
     currentLabs = await res.json();
     const floors = [...new Set(currentLabs.map(lab => lab.floor))].sort();
     floorSelect.innerHTML = '<option value="">Select Floor</option>';
@@ -335,7 +336,7 @@ reserveBtn?.addEventListener("click", async () => {
         endTime: endTime
     };
     try {
-        const res = await fetch("http://localhost:3000/reservations/quick", {
+        const res = await fetch(`${BASE_URL}/reservations/quick`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
