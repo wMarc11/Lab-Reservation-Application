@@ -386,7 +386,6 @@ async function loadUserImg(){
             <td><b>${reservation._id}</b></td>
            ${isAdmin && typeof reservation.user !== "string"
             ? `<td>${(reservation.user as { firstName: string; lastName: string }).firstName} ${(reservation.user as { firstName: string; lastName: string }).lastName}</td>`: ""}
-          <td>${reservation.lab.room}</td>
             <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
