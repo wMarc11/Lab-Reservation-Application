@@ -6,7 +6,8 @@ const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+//const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "http://localhost:3000";
 const profileImage = document.querySelector('#user-pic');
 async function loadUserImg() {
     try {
@@ -226,6 +227,7 @@ function generateTimeSlots() {
     const endHour = 18;
     const selectedDate = new Date(reserveDateInput.value);
     const now = new Date();
+    select.innerHTML = '<option value="">Select Time Slot</option>';
     for (let h = startHour; h < endHour; h++) {
         for (let m of [0, 30]) {
             if (h === endHour && m > 0)

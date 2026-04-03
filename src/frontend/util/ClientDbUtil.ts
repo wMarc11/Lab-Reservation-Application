@@ -5,7 +5,8 @@ import { ReservationDTO } from "../../shared/modelTypes";
 export type UserID = string & {_brand: "UserID"}
 export type ReservationID = string & {_brand: "ReservationID"}
 
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+// const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 export namespace ClientDBUtil {
 

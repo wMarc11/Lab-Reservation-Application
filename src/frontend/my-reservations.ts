@@ -13,7 +13,8 @@ const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
 
 let isAdmin = false;
 
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+ const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+//const BASE_URL = "http://localhost:3000";
 
 async function loadUserImg(){
     try{

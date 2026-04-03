@@ -4,7 +4,8 @@ import { queryElement } from "./util/frontendUtil.js";
 const userID = sessionStorage.getItem("user");
 const profileImage = document.querySelector('#user-pic');
 let isAdmin = false;
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+// const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "http://localhost:3000";
 async function loadUserImg() {
     try {
         const res = await fetch(`${BASE_URL}/users/${userID}`);
