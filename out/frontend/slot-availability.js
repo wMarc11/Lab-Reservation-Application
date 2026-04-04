@@ -160,8 +160,8 @@ function renderAvailabilityTable(rooms) {
                 floor: String(floor),
                 room: roomEntry.room,
                 date: formatDateInputValue(currentDate),
-                startTime: toUTCString(slot.startTime),
-                endTime: toUTCString(slot.endTime)
+                startTime: slot.startTime,
+                endTime: slot.endTime
             });
             return `
                 <td class="room-data" style="background-color:${cellInfo.background};">
