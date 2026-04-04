@@ -1031,7 +1031,7 @@ function combineDateAndTime(dateValue: string | Date, timeValue: string | Date) 
         baseDate.getFullYear(),
         baseDate.getMonth(),
         baseDate.getDate(),
-        hours - 8,
+        hours,
         minutes,
         0,
         0
@@ -1064,7 +1064,9 @@ function buildDailyTimeSlots(dateValue: string | Date) {
             const endTime = `${String(endHour).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
 
             const startDateTime = combineDateAndTime(dateValue, startTime);
+            startDateTime.setUTCHours(startDateTime.getUTCHours() - 8);
             const endDateTime = combineDateAndTime(dateValue, endTime);
+            endDateTime.setUTCHours(endDateTime.getUTCHours() - 8);
 
             slotDefinitions.push({
                 startTime,
