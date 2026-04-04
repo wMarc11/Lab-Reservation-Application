@@ -152,8 +152,8 @@ function renderAvailabilityTable(rooms) {
     `;
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === slotTimeToUTC(currentDate, slot.startTime) && entry.endTime === slotTimeToUTC(currentDate, slot.endTime)) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
-            console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
+            const roomSlot = roomEntry.slots.find((entry) => entry.startTime === formatHMM(slotTimeToUTC(currentDate, slot.startTime)) && entry.endTime === formatHMM(slotTimeToUTC(currentDate, slot.endTime))) ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
+            console.log(`Rendering slot: ${formatHMM(slotTimeToUTC(currentDate, slot.startTime))} and ${formatHMM(slotTimeToUTC(currentDate, slot.endTime))}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
             const query = new URLSearchParams({
                 building: buildingCode,
