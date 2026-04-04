@@ -318,7 +318,7 @@ reserveBtn?.addEventListener("click", async () => {
         alert("Please select lab and time slot");
         return;
     }
-    const startTime = new Date(time);
+    const startTime = new Date(Number(time));
     const endTime = new Date(startTime);
     endTime.setMinutes(startTime.getMinutes() + 30);
     console.log("Reserving lab:", { startTime, endTime });

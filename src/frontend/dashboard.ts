@@ -397,7 +397,7 @@ reserveBtn?.addEventListener("click", async () => {
         return;
     }
 
-    const startTime = new Date(time);
+    const startTime = new Date(Number(time));
     const endTime = new Date(startTime);
     endTime.setMinutes(startTime.getMinutes() + 30);
 
