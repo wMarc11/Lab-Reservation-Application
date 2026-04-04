@@ -275,7 +275,7 @@ function slotTimeToUTC(date, slotTime) {
     return dt.toISOString();
 }
 function formatHMM(date) {
-    const dt = new Date(isoString);
+    const dt = new Date(date);
     const h = dt.getHours();
     const m = dt.getMinutes();
     return `${h}:${m.toString().padStart(2, "0")}`;
