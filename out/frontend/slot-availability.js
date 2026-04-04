@@ -223,7 +223,7 @@ function getCellPresentation(slot, capacity) {
 }
 function buildSlotDefinitions(dateValue) {
     const slots = [];
-    for (let hour = 8; hour < 18; hour += 1) {
+    for (let hour = 0; hour < 10; hour += 1) {
         for (const minute of [0, 30]) {
             const startTime = `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
             const displayDate = new Date(`${dateValue}T${startTime}:00`);
