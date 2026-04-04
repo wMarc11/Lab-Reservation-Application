@@ -152,7 +152,7 @@ function renderAvailabilityTable(rooms) {
     `;
     const bodyRows = rooms.map((roomEntry) => {
         const slotCells = slotDefinitions.map((slot) => {
-            const roomSlot = roomEntry.slots.find((entry) => toUTCString(entry.startTime) === toUTCString(slot.startTime) && toUTCString(entry.endTime) === toUTCString(slot.endTime))
+            const roomSlot = roomEntry.slots.find((entry) => utcToLocal(entry.startTime) === slot.startTime && utcToLocal(entry.endTime) === slot.endTime)
                 ?? { occupiedCount: 0, remainingSeats: roomEntry.capacity, status: "available" };
             console.log(`Rendering slot: ${slot.startTime} and ${slot.endTime}, Occupied: ${roomSlot.occupiedCount}, Remaining: ${roomSlot.remainingSeats}`);
             const cellInfo = getCellPresentation(roomSlot, roomEntry.capacity);
@@ -269,11 +269,11 @@ function formatHeadingDate(dateValue) {
         day: "numeric"
     });
 }
-function toUTCString(time) {
+function utcToLocal(time) {
     if (!time)
         return null;
     let [hours, minutes] = time.split(":").map(Number);
-    hours = (hours - 8 + 24) % 24;
+    hours = (hours + 8) % 24;
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 //# sourceMappingURL=slot-availability.js.map
