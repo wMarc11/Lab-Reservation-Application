@@ -72,8 +72,9 @@ const REMEMBER_ME_LENGTH = 1000 * 60 * 60 * 24 * 30; //30 days
 const SALT_ROUNDS = 12;
 app.post("/signup", async (request, response) => {
     const { email, password, rememberMe } = request.body;
-    if (!email.includes("_") || !email.includes("@") || !email.endsWith("@dlsu.edu.ph")) {
-        response.status(400).json({ message: "Invalid email format!" });
+    const regex = /^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)+@dlsu\.edu\.ph$/;
+    if (!regex.test(email)) {
+        response.status(400).json({ message: "Invalid email format! Use your dlsu email!" });
         return;
     }
     if (password.length < MINIMUM_PASSWORD_LENGTH) {
@@ -83,15 +84,16 @@ app.post("/signup", async (request, response) => {
     try {
         const role = normalizeUserRole(request.body.role);
         const defaultUsername = email.split("@")[0];
-        const defaultFirstName = capitalizeFirstLetter(defaultUsername.split("_")[0]);
-        const defaultLastName = capitalizeFirstLetter(defaultUsername.split("_")[1]);
+        const splitDefaultUserName = defaultUsername.split("_");
+        const defaultFirstName = capitalizeFirstLetter(splitDefaultUserName[0]);
+        const defaultLastName = capitalizeFirstLetter(splitDefaultUserName[splitDefaultUserName.length - 1]);
         const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
         const newUser = new user_model_1.default({
             firstName: defaultFirstName,
             lastName: defaultLastName,
             email,
             role,
-            hashedPassword,
+            password: hashedPassword,
         });
         await newUser.save();
         request.session.userID = newUser.id;
@@ -173,15 +175,17 @@ app.put(`/change-password`, async (request, response) => {
     const user = await requireAuth(request);
     if (newPassword !== confirmNewPassword)
         return response.status(400).json({ message: `Confirm new password does not match new password` });
-    if (currentPassword !== user.password)
+    const correctCurrentPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!correctCurrentPassword)
         return response.status(400).json({ message: `Invalid current password` });
-    if (newPassword === currentPassword)
+    const newPassIsSameAsOld = await bcrypt.compare(newPassword, user.password);
+    if (newPassIsSameAsOld)
         return response.status(400).json({ message: `New password cannot be the same as old password` });
     if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
         response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} characters long!` });
         return;
     }
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
     await user.save();
     return response.status(200).json({ message: `Password changed successfully! Redirecting to home page...` });
 });
@@ -820,7 +824,8 @@ function parseDateOnly(value) {
         return new Date(year, month, day);
     }
     const parsedDate = parseFlexibleDate(value, "date");
-    return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
+    // return new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
+    return new Date(Date.UTC(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate()));
 }
 function combineDateAndTime(dateValue, timeValue) {
     if (timeValue instanceof Date) {
@@ -848,7 +853,16 @@ function combineDateAndTime(dateValue, timeValue) {
     else {
         throw createHttpError(400, "Invalid time format");
     }
-    return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hours, minutes, 0, 0);
+    // return new Date(
+    //     baseDate.getFullYear(),
+    //     baseDate.getMonth(),
+    //     baseDate.getDate(),
+    //     hours,
+    //     minutes,
+    //     0,
+    //     0
+    // );
+    return new Date(Date.UTC(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hours, minutes, 0, 0));
 }
 function getDayRange(value) {
     const start = parseDateOnly(value);
@@ -865,7 +879,9 @@ function buildDailyTimeSlots(dateValue) {
             const endMinute = minute === 30 ? 0 : 30;
             const endTime = `${String(endHour).padStart(2, "0")}:${String(endMinute).padStart(2, "0")}`;
             const startDateTime = combineDateAndTime(dateValue, startTime);
+            startDateTime.setUTCHours(startDateTime.getUTCHours() - 8);
             const endDateTime = combineDateAndTime(dateValue, endTime);
+            endDateTime.setUTCHours(endDateTime.getUTCHours() - 8);
             slotDefinitions.push({
                 startTime,
                 endTime,
@@ -1399,5 +1415,10 @@ app.get("/reservations/all", async (request, response) => {
     catch (error) {
         return response.status(getErrorStatus(error)).json({ message: error.message });
     }
+});
+app.patch("/reservations/cancel", async (req, res) => {
+    const { reservationIds } = req.body;
+    await reservation_model_1.default.updateMany({ _id: { $in: reservationIds } }, { $set: { status: "cancelled" } });
+    res.json({ message: "Cancelled" });
 });
 //# sourceMappingURL=server.js.map

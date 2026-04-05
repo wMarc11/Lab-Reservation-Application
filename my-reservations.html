@@ -235,26 +235,29 @@
             <div class="form-grid">
               <div class="form-field">
                 <label>Reservation ID</label>
-                <input id="edit-id" type="text" disabled>
+                <input id="edit-id" class="locked-field" type="text" disabled>
               </div>
 
               <div class="form-field">
                 <label>Laboratory</label>
-                <select id="edit-lab" disabled>
-                  <option value="">Loading labs...</option>
-                </select>
+                <input id="edit-lab" class="locked-field" type="text" disabled>
                 <small class="text-muted">Lab cannot be changed (delete + rebook for another lab).</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-date">Date</label>
-                <input id="edit-date" type="date" required>
+                <label>Date</label>
+                <input id="edit-date" class="locked-field" type="text" disabled>
+                <small class="text-muted">Date cannot be changed (cancel + rebook for another date).</small>
               </div>
 
               <div class="form-field">
-                <label for="edit-seat">Seat</label>
-                <input id="edit-seat" type="number" min="1" step="1" required>
-                <small class="text-muted" id="seat-hint">Seat must be within lab capacity.</small>
+                <label for="edit-seat-input">Seats</label>
+                <div class="seat-editor">
+                  <input id="edit-seat-input" type="number" min="1" step="1" placeholder="Enter a seat number">
+                  <button class="action-btn seat-add-btn" id="add-seat-btn" type="button">Add Seat</button>
+                </div>
+                <div class="seat-pill-list" id="edit-seat-list"></div>
+                <small class="text-muted" id="seat-hint">Add or remove seats, but at least one seat must remain.</small>
               </div>
 
               <div class="form-field">
@@ -268,8 +271,11 @@
               </div>
 
               <div class="form-field form-field-inline">
-                <input id="edit-anon" type="checkbox">
-                <label for="edit-anon">Anonymous reservation</label>
+                <label class="toggle-control" for="edit-anon">
+                  <input id="edit-anon" type="checkbox">
+                  <span class="toggle-slider" aria-hidden="true"></span>
+                  <span>Anonymous reservation</span>
+                </label>
               </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { LAB_NAMES, LabName } from "../shared/labNames.js";
+import { LAB_NAMES } from "../shared/labNames.js";
 import { ClientDBUtil } from "./util/ClientDbUtil.js";
 import { queryElement } from "./util/frontendUtil.js";
 import type { ReservationDTO } from "../shared/modelTypes.d.ts";
@@ -6,33 +6,28 @@ import type { ReservationDTO } from "../shared/modelTypes.d.ts";
 type Status = "UPCOMING" | "TODAY" | "PAST" | "CANCELLED";
 type ReservationWithStatus = ReservationDTO & { _status: Status };
 
-
 const userID = sessionStorage.getItem("user");
 
-const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
+const profileImage = document.querySelector("#user-pic") as HTMLImageElement;
 
 let isAdmin = false;
 
- const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
-//const BASE_URL = "http://localhost:3000";
+async function loadUserImg() {
+  try {
+    const res = await fetch(`/users/${userID}`);
 
-async function loadUserImg(){
-    try{
-        const res = await fetch(`${BASE_URL}/users/${userID}`);
-
-        if(!res.ok){
-            throw new Error("Failed to load profile");
-        }
-
-        const user = await res.json();
-
-        if(profileImage) {
-            profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
-        }
-
-    } catch(error){
-        console.error("Error loading profile: ", error);
+    if (!res.ok) {
+      throw new Error("Failed to load profile");
     }
+
+    const user = await res.json();
+
+    if (profileImage && user.profileImage) {
+      profileImage.src = `/images/${user.profileImage}`;
+    }
+  } catch (error) {
+    console.error("Error loading profile: ", error);
+  }
 }
 
 (function () {
@@ -66,9 +61,11 @@ async function loadUserImg(){
     btnCancel: queryElement<HTMLButtonElement>("#btn-cancel"),
 
     editId: queryElement<HTMLInputElement>("#edit-id"),
-    editLab: queryElement<HTMLSelectElement>("#edit-lab"),
+    editLab: queryElement<HTMLInputElement>("#edit-lab"),
     editDate: queryElement<HTMLInputElement>("#edit-date"),
-    editSeat: queryElement<HTMLInputElement>("#edit-seat"),
+    editSeatInput: queryElement<HTMLInputElement>("#edit-seat-input"),
+    addSeatBtn: queryElement<HTMLButtonElement>("#add-seat-btn"),
+    editSeatList: queryElement<HTMLElement>("#edit-seat-list"),
     editStart: queryElement<HTMLSelectElement>("#edit-start"),
     editEnd: queryElement<HTMLSelectElement>("#edit-end"),
     editAnon: queryElement<HTMLInputElement>("#edit-anon"),
@@ -77,6 +74,7 @@ async function loadUserImg(){
 
   let reservations: ReservationDTO[] = [];
   let activeReservationId: string | null = null;
+  let draftSeatNumbers: number[] = [];
 
   function pad2(n: number) {
     return String(n).padStart(2, "0");
@@ -96,6 +94,12 @@ async function loadUserImg(){
     if (isoDate === today) return "Today";
     if (isoDate === tomorrow) return "Tomorrow";
     return isoDate;
+  }
+
+  function formatLockedDate(dateInput: string | Date) {
+    const isoDate = toISODate(dateInput);
+    const [year, month, day] = isoDate.split("-");
+    return `${month}/${day}/${year}`;
   }
 
   function minutesFromTimeValue(value: string) {
@@ -177,6 +181,77 @@ async function loadUserImg(){
     return Array.isArray(reservation.seatNumbers) ? reservation.seatNumbers : [];
   }
 
+  function renderSeatPills() {
+    if (draftSeatNumbers.length === 0) {
+      els.editSeatList.innerHTML = "";
+      els.seatHint.textContent = "A reservation must keep at least one seat.";
+      return;
+    }
+
+    els.editSeatList.innerHTML = draftSeatNumbers
+      .map(
+        (seat) => `
+          <span class="seat-pill">
+            Seat ${seat}
+            <button
+              class="seat-pill-remove"
+              type="button"
+              data-seat="${seat}"
+              ${draftSeatNumbers.length === 1 ? "disabled title=\"At least one seat must remain\"" : ""}
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </span>
+        `
+      )
+      .join("");
+
+    els.seatHint.textContent = `${draftSeatNumbers.length} seat${
+      draftSeatNumbers.length === 1 ? "" : "s"
+    } selected. Add or remove seats, but at least one seat must remain.`;
+  }
+
+  function setDraftSeatNumbers(seatNumbers: number[]) {
+    draftSeatNumbers = [...new Set(seatNumbers)]
+      .filter((seat) => Number.isInteger(seat) && seat > 0)
+      .sort((a, b) => a - b);
+
+    renderSeatPills();
+  }
+
+  function addSeatFromInput() {
+    const rawValue = els.editSeatInput.value.trim();
+
+    if (!rawValue) {
+      return showError("Enter a seat number before adding.");
+    }
+
+    const seat = Number(rawValue);
+
+    if (!Number.isInteger(seat) || seat <= 0) {
+      return showError("Seat numbers must be positive whole numbers.");
+    }
+
+    if (draftSeatNumbers.includes(seat)) {
+      return showError(`Seat ${seat} is already included in this reservation.`);
+    }
+
+    draftSeatNumbers = [...draftSeatNumbers, seat].sort((a, b) => a - b);
+    els.editSeatInput.value = "";
+    setHidden(els.formError, true);
+    renderSeatPills();
+  }
+
+  function removeSeat(seatToRemove: number) {
+    if (draftSeatNumbers.length <= 1) {
+      return showError("A reservation must keep at least one seat.");
+    }
+
+    draftSeatNumbers = draftSeatNumbers.filter((seat) => seat !== seatToRemove);
+    setHidden(els.formError, true);
+    renderSeatPills();
+  }
+
   function openModal(reservationID: string, mode: "edit" | "view") {
     activeReservationId = reservationID;
     const reservation = reservations.find((item) => item._id === reservationID);
@@ -209,14 +284,15 @@ async function loadUserImg(){
 
     els.editId.value = reservation._id;
     els.editLab.value = reservation.lab.room;
-    els.editDate.value = toISODate(reservation.date);
-    els.editSeat.value = String(seatNumbers[0] ?? "");
+    els.editDate.value = formatLockedDate(reservation.date);
+    els.editSeatInput.value = "";
+    setDraftSeatNumbers(seatNumbers);
     els.editStart.value = toTimeInputValue(reservation.startTime);
     els.editEnd.value = toTimeInputValue(reservation.endTime);
     els.editAnon.checked = Boolean(reservation.isAnonymous);
-    els.seatHint.textContent = `You can edit one seat number for this reservation.`;
 
     syncEndTimes();
+    setHidden(els.formError, true);
 
     setHidden(els.overlay, false);
     els.overlay.classList.add("is-open");
@@ -269,10 +345,9 @@ async function loadUserImg(){
       reservations = await ClientDBUtil.getCurrentReservations();
     }
 
-    let currentUserRole = user.role;
+    const currentUserRole = user.role;
     isAdmin = currentUserRole === "Admin";
 
-    
     render();
   }
 
@@ -285,13 +360,15 @@ async function loadUserImg(){
 
     if (!existing) return;
 
-    const date = els.editDate.value;
-    const seat = Number(els.editSeat.value);
     const startTime = els.editStart.value;
     const endTime = els.editEnd.value;
 
-    if (!date || !startTime || !endTime || !Number.isFinite(seat)) {
+    if (!startTime || !endTime) {
       return showError("Please complete all required fields.");
+    }
+
+    if (draftSeatNumbers.length === 0) {
+      return showError("A reservation must keep at least one seat.");
     }
 
     if (minutesFromTimeValue(endTime) <= minutesFromTimeValue(startTime)) {
@@ -300,10 +377,9 @@ async function loadUserImg(){
 
     try {
       await ClientDBUtil.updateReservation(id, {
-        date,
         startTime,
         endTime,
-        seatNumbers: [seat],
+        seatNumbers: draftSeatNumbers,
         isAnonymous: els.editAnon.checked,
       });
 
@@ -318,7 +394,6 @@ async function loadUserImg(){
     const selectedLab = els.filterLab.value;
     const selectedStatus = els.filterStatus.value;
     const query = (els.filterSearch.value || "").trim().toLowerCase();
-
 
     return reservations
       .map((reservation) => ({ ...reservation, _status: statusFor(reservation) }))
@@ -369,11 +444,10 @@ async function loadUserImg(){
       return;
     }
 
-    const userDisplay = document.querySelector('#displayUser') as HTMLElement;
+    const userDisplay = document.querySelector("#displayUser") as HTMLElement;
 
-
-    if(isAdmin){
-      if(userDisplay) userDisplay.style.display = "block";
+    if (isAdmin) {
+      if (userDisplay) userDisplay.style.display = "block";
     }
 
     setHidden(els.emptyState, true);
@@ -385,8 +459,15 @@ async function loadUserImg(){
         return `
           <tr>
             <td><b>${reservation._id}</b></td>
-           ${isAdmin && typeof reservation.user !== "string"
-            ? `<td>${(reservation.user as { firstName: string; lastName: string }).firstName} ${(reservation.user as { firstName: string; lastName: string }).lastName}</td>`: ""}
+           ${
+             isAdmin && typeof reservation.user !== "string"
+               ? `<td>${(reservation.user as { firstName: string; lastName: string }).firstName} ${(reservation.user as {
+                   firstName: string;
+                   lastName: string;
+                 }).lastName}</td>`
+               : ""
+           }
+          <td>${reservation.lab.room}</td>
             <td>${reservation.lab.room}</td>
             <td>${reservation.dateRequested ? new Date(reservation.dateRequested).toLocaleString() : "N/A"}</td>
             <td>${formatDateLabel(toISODate(reservation.date))}</td>
@@ -395,7 +476,9 @@ async function loadUserImg(){
             <td>${visibilityLabel(reservation)}</td>
             <td>
               <span class="badge ${badgeClass(reservation._status)}">
-                <span class="material-symbols-outlined" style="font-size:18px;">${reservation._status === "CANCELLED" ? "cancel" : "schedule"}</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">${
+                  reservation._status === "CANCELLED" ? "cancel" : "schedule"
+                }</span>
                 ${prettyStatus(reservation._status)}
               </span>
             </td>
@@ -408,9 +491,6 @@ async function loadUserImg(){
                 <button class="action-btn primary" type="button" data-action="edit" data-id="${reservation._id}">
                   <span class="material-symbols-outlined">edit</span>
                   Edit
-                </button>
-                <button class="action-btn danger" type="button" data-action="cancel" data-id="${reservation._id}">
-                  Cancel
                 </button>
               </div>
             </td>
@@ -425,14 +505,6 @@ async function loadUserImg(){
         const action = button.getAttribute("data-action");
 
         if (!id) return;
-
-        if(action === "cancel"){
-          if (confirm("Are you sure you want to cancel this reservation?")) {
-            cancelReservations([id]);
-          }
-          return;
-        }
-
         openModal(id, action === "edit" ? "edit" : "view");
       });
     });
@@ -441,7 +513,6 @@ async function loadUserImg(){
   function populateLabSelections() {
     const labOptions = LAB_NAMES.map((labName) => `<option value="${labName}">${labName}</option>`).join("");
     els.filterLab.innerHTML = `<option value="ALL">All Labs</option>${labOptions}`;
-    els.editLab.innerHTML = labOptions;
   }
 
   function render() {
@@ -494,9 +565,25 @@ async function loadUserImg(){
     els.editForm.addEventListener("submit", validateAndSaveEdit);
     els.editStart.addEventListener("change", syncEndTimes);
 
-    els.editLab.addEventListener("change", () => {
-      const lab = els.editLab.value as LabName;
-      els.seatHint.textContent = `Editing reservation in ${lab}.`;
+    els.addSeatBtn.addEventListener("click", addSeatFromInput);
+
+    els.editSeatInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        addSeatFromInput();
+      }
+    });
+
+    els.editSeatList.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement | null;
+      const removeButton = target?.closest<HTMLButtonElement>(".seat-pill-remove");
+
+      if (!removeButton) return;
+
+      const seat = Number(removeButton.getAttribute("data-seat"));
+      if (!Number.isFinite(seat)) return;
+
+      removeSeat(seat);
     });
   }
 
@@ -509,7 +596,7 @@ async function loadUserImg(){
       if (nameElement) nameElement.textContent = user.firstName;
       if (roleElement) roleElement.textContent = user.role ?? "Student";
     } catch {
-      // no-op: this should not block reservations rendering
+      // no-op
     }
   }
 
@@ -525,26 +612,6 @@ async function loadUserImg(){
   init().catch((error) => {
     console.error("Failed to initialize My Reservations page", error);
   });
-
-  async function cancelReservations(ids: string[]) {
-    try {
-      const res = await fetch(`${BASE_URL}/reservations/cancel`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ reservationIds: ids }),
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to cancel reservations");
-      }
-
-      await refreshReservations();
-    } catch (error) {
-      console.error("Cancel error:", error);
-    }
-  }
 })();
 
 loadUserImg();
