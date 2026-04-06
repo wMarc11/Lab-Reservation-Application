@@ -99,7 +99,7 @@ async function loadUserImg() {
         }
         const parsed = new Date(trimmed);
         if (!Number.isNaN(parsed.getTime())) {
-            return parsed.getHours() * 60 + parsed.getMinutes();
+            return parsed.getUTCHours() * 60 + parsed.getUTCMinutes();
         }
         throw new Error("Invalid time format");
     }
