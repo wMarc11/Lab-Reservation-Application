@@ -118,10 +118,14 @@ async function loadUserImg() {
   }
 
   function statusFor(res: ReservationDTO): Status {
-    const status = (res.status ?? "upcoming").toString().toLowerCase();
-    if (status === "cancelled") return "CANCELLED";
-    if (status === "today") return "TODAY";
-    if (status === "past") return "PAST";
+    const serverStatus = (res.status ?? "").toString().toLowerCase();
+    if (serverStatus === "cancelled") return "CANCELLED";
+
+    const today = toISODate(new Date());
+    const reservationDate = toISODate(new Date(res.date));
+
+    if (reservationDate === today) return "TODAY";
+    if (reservationDate < today) return "PAST";
     return "UPCOMING";
   }
 

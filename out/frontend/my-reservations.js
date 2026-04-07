@@ -95,12 +95,14 @@ async function loadUserImg() {
         return `${startValue} - ${endValue}`;
     }
     function statusFor(res) {
-        const status = (res.status ?? "upcoming").toString().toLowerCase();
-        if (status === "cancelled")
+        const serverStatus = (res.status ?? "").toString().toLowerCase();
+        if (serverStatus === "cancelled")
             return "CANCELLED";
-        if (status === "today")
+        const today = toISODate(new Date());
+        const reservationDate = toISODate(new Date(res.date));
+        if (reservationDate === today)
             return "TODAY";
-        if (status === "past")
+        if (reservationDate < today)
             return "PAST";
         return "UPCOMING";
     }
