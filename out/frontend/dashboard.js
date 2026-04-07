@@ -6,7 +6,7 @@ const yyyy = today.getFullYear();
 const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "https://labynx.onrender.com";
 //const BASE_URL = "http://localhost:3000";
 const profileImage = document.querySelector('#user-pic');
 async function loadUserImg() {

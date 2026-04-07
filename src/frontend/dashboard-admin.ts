@@ -8,7 +8,7 @@ const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 const profileImage = document.querySelector('#user-pic') as HTMLImageElement;
 
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "https://labynx.onrender.com";
 
 async function loadUserImg() {
     try {

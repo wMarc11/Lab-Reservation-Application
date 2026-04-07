@@ -1,4 +1,4 @@
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "https://labynx.onrender.com";
 //const BASE_URL = "http://localhost:3000";
 export var ClientDBUtil;
 (function (ClientDBUtil) {

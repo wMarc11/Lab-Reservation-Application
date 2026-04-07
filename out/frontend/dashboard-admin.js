@@ -7,7 +7,7 @@ const mm = String(today.getMonth() + 1).padStart(2, '0');
 const dd = String(today.getDate()).padStart(2, '0');
 dateInput.value = `${yyyy}-${mm}-${dd}`;
 const profileImage = document.querySelector('#user-pic');
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "https://labynx.onrender.com";
 async function loadUserImg() {
     try {
         const res = await fetch(`${BASE_URL}/users`);

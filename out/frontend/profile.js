@@ -2,7 +2,7 @@ import { ClientDBUtil } from "./util/ClientDbUtil.js";
 "use strict";
 // @ts-nocheck
 // I hardcoded this for now to be the same as the logged in user
-const BASE_URL = "https://lab-reservation-application-wip.onrender.com";
+const BASE_URL = "https://labynx.onrender.com";
 const loggedInUserID = sessionStorage.getItem("user");
 if (!loggedInUserID) {
     window.location.href = "index.html";
