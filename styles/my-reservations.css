@@ -253,7 +253,7 @@ body.modal-open {
     max-height: calc(100vh - 3rem);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .modal-header {
@@ -291,7 +291,7 @@ body.modal-open {
 
 .modal-content {
     padding: 0 1.2rem 1.2rem;
-    overflow: auto;
+    overflow: visible;
     min-height: 220px;
 }
 
