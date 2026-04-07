@@ -47,8 +47,8 @@ updatePassword.addEventListener("click", async () => {
                 confirmNewPassword: confirmNewPassword.value
             }),
         });
-        const test = await response.text();
-        console.log("status:", response.status, "body:", test);
+        // const test = await response.text();
+        // console.log("status:", response.status, "body:", test);
         const data = await response.json();
         let messageClass = "success";
         if (!response.ok)
