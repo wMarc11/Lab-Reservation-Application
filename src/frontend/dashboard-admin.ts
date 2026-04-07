@@ -135,7 +135,7 @@ function updateReservations(reservations: any[]) {
     if (activeReservations > visibleReservationCount) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td colspan="5" style="text-align:right; padding-right: 1rem;">
+            <td colspan="6" style="text-align:right; padding-right: 1rem;">
                 <a href="all-reservations.html" class="view-more">View More</a>
             </td>
         `;
