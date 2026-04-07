@@ -329,6 +329,7 @@ async function loadUserImg() {
 
     const id = els.editId.value;
     const startInput = els.editStart.value;
+    const date = els.editDate.value;
 
     if (!startInput) {
       return showError("Start time is required.");
@@ -340,7 +341,7 @@ async function loadUserImg() {
 
     const [hours, minutes] = startInput.split(":").map(Number);
 
-    const localDate = new Date(existing.date);
+    const localDate = new Date(date);
 
     if(hours) localDate.setHours(hours);
     if(minutes)localDate.setMinutes(minutes);
@@ -360,6 +361,7 @@ async function loadUserImg() {
 
     try {
       await ClientDBUtil.updateReservation(id, {
+        date: date,
         startTime: startUTC,
         endTime: endUTC,
         seatNumbers: draftSeatNumbers,
