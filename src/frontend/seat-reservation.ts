@@ -262,7 +262,7 @@ function attachSeatEvents() {
             if (!confirmCancel) return;
 
             try {
-                const response = await fetch("/reservations/cancel", {
+                const response = await fetch("/reservations/cancel-seat", {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json"

@@ -1786,3 +1786,61 @@ app.patch("/reservations/cancel", async (req, res) => {
         res.status(500).json({ message: (error as Error).message });
     }
 });
+
+app.patch("/reservations/cancel-seat", async (req, res) => {
+    try {
+        const { reservationId, seatNumber } = req.body;
+        const user = await requireAuth(req);
+
+        if (!reservationId || typeof seatNumber !== "number") {
+            return res.status(400).json({
+                message: "reservationId and seatNumber are required"
+            });
+        }
+
+        const reservation = await Reservation.findById(reservationId);
+
+        if (!reservation) {
+            return res.status(404).json({ message: "Reservation not found" });
+        }
+
+        if (
+            user.role !== "Admin" &&
+            reservation.user.toString() !== user._id.toString()
+        ) {
+            return res.status(403).json({ message: "Not allowed" });
+        }
+
+        if (!reservation.seatNumbers.includes(seatNumber)) {
+            return res.status(400).json({
+                message: "Seat not part of this reservation"
+            });
+        }
+
+        reservation.seatNumbers = reservation.seatNumbers.filter(
+            (seat: number) => seat !== seatNumber
+        );
+
+        let activityType: "cancelled" | "admin-cancelled" = "cancelled";
+
+        if (reservation.seatNumbers.length === 0) {
+            reservation.status = "cancelled";
+        }
+
+        if (user.role === "Admin") {
+            activityType =
+                reservation.user.toString() === user._id.toString()
+                    ? "cancelled"
+                    : "admin-cancelled";
+        }
+
+        await reservation.save();
+        await createReservationActivities(reservation, activityType);
+
+        res.json({ message: "Seat cancelled successfully" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: (error as Error).message });
+    }
+});
