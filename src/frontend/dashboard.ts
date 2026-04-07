@@ -137,8 +137,7 @@ function updateReservations(reservations: any[]){
                 count += 1;
             
             const tr = document.createElement("tr");
-            let status = capitalizeFirstLetter(r.status);
-            console.log(status);
+
             if(activeReservations <= visibleReservationCount){
                 tr.innerHTML = `
                     <td>${r.lab.room}</td>
@@ -188,7 +187,6 @@ function updateRecentActivity(activities: any[]){
     }
         
     activityList.innerHTML = '';
-    console.log(activities);
     const sortedActivities = [...activities].sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
     const showedActivities = sortedActivities.slice(0, visibleCount);
@@ -400,8 +398,6 @@ reserveBtn?.addEventListener("click", async () => {
     const endTime = new Date(startTime);
     endTime.setMinutes(startTime.getMinutes() + 30);
 
-    console.log("Reserving lab:", { startTime, endTime });
-
     const reservation = {
         lab: labId,
         date: startTime,
@@ -493,8 +489,6 @@ function updateAvailableSeats(labs: any, reservations: any) {
     if (el) {
         el.textContent = String(todaySeats);
     }
-
-    console.log("Next 7 days:", data);
 }
 
 loadBuildings();

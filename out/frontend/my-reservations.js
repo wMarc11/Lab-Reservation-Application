@@ -230,8 +230,11 @@ async function loadUserImg() {
             .join("");
         els.editId.value = reservation._id;
         els.editLab.value = reservation.lab.room;
-        els.editDate.value = formatLockedDate(reservation.date);
-        generateTimeSlotsForEdit(reservation.date);
+        const { minDate, maxDate } = getMinMaxEditDates();
+        els.editDate.min = toISODateString(minDate);
+        els.editDate.max = toISODateString(maxDate);
+        els.editDate.value = formatLockedDate(new Date(reservation.date));
+        generateTimeSlotsForEdit(new Date(reservation.date));
         const startLocal = new Date(reservation.startTime);
         els.editStart.value = `${pad2(startLocal.getHours())}:${pad2(startLocal.getMinutes())}`;
         els.editSeatInput.value = "";
@@ -243,6 +246,12 @@ async function loadUserImg() {
         document.body.classList.add("modal-open");
         setTab(mode);
     }
+    els.editDate.addEventListener("change", () => {
+        const selectedDate = new Date(els.editDate.value);
+        if (selectedDate) {
+            generateTimeSlotsForEdit(selectedDate);
+        }
+    });
     function showError(message) {
         els.formError.textContent = message;
         setHidden(els.formError, false);
@@ -513,14 +522,13 @@ async function loadUserImg() {
             return;
         const startHour = 8;
         const endHour = 18;
-        const selectedDate = selectedDateInput ? new Date(selectedDateInput) : new Date();
         const now = new Date();
         select.innerHTML = "";
         for (let h = startHour; h < endHour; h++) {
             for (let m of [0, 30]) {
                 if (h === endHour && m > 0)
                     continue;
-                const slotStart = new Date(selectedDate);
+                const slotStart = new Date(selectedDateInput);
                 slotStart.setHours(h, m, 0, 0);
                 if (slotStart < now)
                     continue;
@@ -532,6 +540,19 @@ async function loadUserImg() {
                 select.appendChild(option);
             }
         }
+    }
+    function getMinMaxEditDates() {
+        const today = new Date();
+        const minDate = today;
+        const maxDate = new Date(today);
+        maxDate.setDate(today.getDate() + 6);
+        return { minDate, maxDate };
+    }
+    function toISODateString(date) {
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const dd = String(date.getDate()).padStart(2, "0");
+        return `${yyyy}-${mm}-${dd}`;
     }
 })();
 loadUserImg();
