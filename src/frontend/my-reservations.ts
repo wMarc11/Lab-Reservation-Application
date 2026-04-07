@@ -94,12 +94,12 @@ async function loadUserImg() {
     if (isoDate === tomorrow) return "Tomorrow";
     return isoDate;
   }
-
+/*
   function formatLockedDate(dateInput: string | Date) {
     const isoDate = toISODate(dateInput);
     const [year, month, day] = isoDate.split("-");
     return `${month}/${day}/${year}`;
-  }
+  }*/
 
   function formatReservationTime(dateTimeValue: string | Date) {
     const date = new Date(dateTimeValue);
@@ -278,7 +278,8 @@ async function loadUserImg() {
     const { minDate, maxDate } = getMinMaxEditDates();
     els.editDate.min = toISODateString(minDate);
     els.editDate.max = toISODateString(maxDate);
-    els.editDate.value = formatLockedDate(new Date(reservation.date));
+    els.editDate.value = toISODateString(new Date(reservation.date));
+
     generateTimeSlotsForEdit(new Date(reservation.date));
     const startLocal = new Date(reservation.startTime);
     els.editStart.value = `${pad2(startLocal.getHours())}:${pad2(startLocal.getMinutes())}`;
