@@ -1747,12 +1747,25 @@ app.get("/reservations/all", async (request: any, response) => {
 });
 
 app.patch("/reservations/cancel", async (req, res) => {
-  const { reservationIds } = req.body;
+    try {
+        const { reservationIds } = req.body;
 
-  await Reservation.updateMany(
-    { _id: { $in: reservationIds } },
-    { $set: { status: "cancelled" } }
-  );
+        const reservations = await Reservation.find({
+            _id: { $in: reservationIds }
+            }).populate("lab", "room");
 
-  res.json({ message: "Cancelled" });
+        await Reservation.updateMany(
+            { _id: { $in: reservationIds } },
+            { $set: { status: "cancelled" } }
+        );
+
+        await Promise.all(
+            reservations.map((reservation) => createReservationActivities(reservation, "cancelled"))
+        );
+
+        res.json({ message: "Cancelled" });
+    } catch (error) {   
+        console.error(error);
+        res.status(500).json({ message: (error as Error).message });
+    }
 });
