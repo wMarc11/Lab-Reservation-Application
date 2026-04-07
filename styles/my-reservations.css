@@ -526,8 +526,6 @@ main table tbody tr:hover{
 }
 
 #edit-date {
-    -webkit-appearance: none;
-    appearance: none; 
     padding: 0.75rem 0.9rem;   
     border-radius: var(--border-radius-2);
     background: var(--color-dark);
