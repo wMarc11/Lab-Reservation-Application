@@ -227,7 +227,7 @@ function attachSeatEvents() {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        reservationIds: reservationId,
+                        reservationId: reservationId,
                         seatNumber: seatNumber
                     })
                 });
