@@ -526,15 +526,15 @@ main table tbody tr:hover{
 }
 
 #edit-date {
-    padding: 0.75rem 0.9rem;   
+    padding: 0.75rem 0.9rem;
     border-radius: var(--border-radius-2);
     background: var(--color-dark);
     color: var(--color-white);
     border: 1px solid rgba(255,255,255,0.08);
 }
 
-#edit-date {
-    color-scheme: dark;
+#edit-date::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 @media (max-width: 768px) {

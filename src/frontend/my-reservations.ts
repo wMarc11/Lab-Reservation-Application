@@ -275,9 +275,10 @@ async function loadUserImg() {
 
     els.editId.value = reservation._id;
     els.editLab.value = reservation.lab.room;
-    const { minDate, maxDate } = getMinMaxEditDates();
-    els.editDate.min = toISODateString(minDate);
-    els.editDate.max = toISODateString(maxDate);
+    // Temporarily remove min/max to test date picker
+    // const { minDate, maxDate } = getMinMaxEditDates();
+    // els.editDate.min = toISODateString(minDate);
+    // els.editDate.max = toISODateString(maxDate);
     console.log(els.editDate.min, els.editDate.max);
     els.editDate.value = toISODateString(new Date(reservation.date));
 
@@ -659,14 +660,14 @@ async function loadUserImg() {
       }
     }
   }
-
+/*
   function getMinMaxEditDates() {
     const today = new Date();
     const minDate = today;
     const maxDate = new Date(today);
     maxDate.setDate(today.getDate() + 6); 
     return { minDate, maxDate };
-  }
+  }*/
 
   function toISODateString(date: Date) {
     const yyyy = date.getFullYear();

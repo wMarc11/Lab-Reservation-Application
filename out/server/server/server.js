@@ -1417,8 +1417,31 @@ app.get("/reservations/all", async (request, response) => {
     }
 });
 app.patch("/reservations/cancel", async (req, res) => {
-    const { reservationIds } = req.body;
-    await reservation_model_1.default.updateMany({ _id: { $in: reservationIds } }, { $set: { status: "cancelled" } });
-    res.json({ message: "Cancelled" });
+    try {
+        const { reservationIds } = req.body;
+        const user = await requireAuth(req);
+        const reservations = await reservation_model_1.default.find({
+            _id: { $in: reservationIds }
+        }).populate("lab", "room");
+        await reservation_model_1.default.updateMany({ _id: { $in: reservationIds } }, { $set: { status: "cancelled" } });
+        if (user.role === "Student") {
+            await Promise.all(reservations.map((reservation) => createReservationActivities(reservation, "cancelled")));
+        }
+        else {
+            await Promise.all(reservations.map((reservation) => {
+                if (reservation.user.toString() === user._id.toString()) {
+                    return createReservationActivities(reservation, "cancelled");
+                }
+                else {
+                    return createReservationActivities(reservation, "admin-cancelled");
+                }
+            }));
+        }
+        res.json({ message: "Cancelled" });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
 });
 //# sourceMappingURL=server.js.map
