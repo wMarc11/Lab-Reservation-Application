@@ -202,7 +202,7 @@ function renderAvailabilityTable(rooms) {
             });
 
             return `
-                <td class="room-data" style="background-color:${cellInfo.background};">
+                <td class="room-data room-button" style="background-color:${cellInfo.background};">
                     <a href="seat-reservation.html?${query.toString()}" style="display:block; color:#111827; font-weight:600;">
                         ${cellInfo.label}
                     </a>
@@ -329,4 +329,4 @@ function formatHeadingDate(dateValue) {
     });
 }
 
-f
+
