@@ -270,6 +270,7 @@ async function loadUserImg() {
     els.editId.value = reservation._id;
     els.editLab.value = reservation.lab.room;
     els.editDate.value = formatLockedDate(reservation.date);
+    generateTimeSlotsForEdit(reservation.date);
     const startLocal = new Date(reservation.startTime);
     els.editStart.value = `${pad2(startLocal.getHours())}:${pad2(startLocal.getMinutes())}`;
     els.editSeatInput.value = "";
@@ -606,6 +607,42 @@ async function loadUserImg() {
         console.error("Cancel error:", error);
       }
     }
+
+  function generateTimeSlotsForEdit(selectedDateInput?: string) {
+    const select = queryElement<HTMLSelectElement>("#edit-start");
+    if (!select) return;
+
+    const startHour = 8;
+    const endHour = 18;
+
+    const selectedDate = selectedDateInput ? new Date(selectedDateInput) : new Date();
+
+    const now = new Date();
+
+    select.innerHTML = "";
+
+    for (let h = startHour; h < endHour; h++) {
+      for (let m of [0, 30]) {
+        if (h === endHour && m > 0) continue;
+
+        const slotStart = new Date(selectedDate);
+        slotStart.setHours(h, m, 0, 0);
+
+        if (slotStart < now) continue;
+
+        const slotEnd = new Date(slotStart);
+        slotEnd.setMinutes(slotStart.getMinutes() + 30);
+
+        const option = document.createElement("option");
+        option.value = `${pad2(slotStart.getHours())}:${pad2(slotStart.getMinutes())}`;
+        option.textContent = `${pad2(slotStart.getHours())}:${pad2(slotStart.getMinutes())} - ${pad2(
+          slotEnd.getHours()
+        )}:${pad2(slotEnd.getMinutes())}`;
+
+        select.appendChild(option);
+      }
+    }
+  }
 })();
 
 loadUserImg();
