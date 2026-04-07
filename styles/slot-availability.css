@@ -331,5 +331,22 @@ th {
 .room-data {
     text-align: center;
     padding: 5px 10px; 
-    height: 35px;
+    height: 40px;
+}
+
+.room-button {
+    transition: filter 0.15s ease, transform 0.15s ease;
+    border-radius: 8px;
+    background-clip: content-box;
+    padding: 2.5px;
+    border: none;
+}
+
+.room-button:hover {
+    filter: brightness(1.1);
+    transform: scale(1.075);
+}
+
+.room-button:active {
+    filter: brightness(0.7);
 }
