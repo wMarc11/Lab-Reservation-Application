@@ -153,27 +153,31 @@ app.delete('/delete-account', async (req: any, res) => {
 })
 
 app.put(`/change-password`, async (request, response) => {
-    const {currentPassword, newPassword, confirmNewPassword} = request.body;
-    const user = await requireAuth(request);
-    if (newPassword !== confirmNewPassword)
-        return response.status(400).json({message: `Confirm new password does not match new password`});
+    try {
+        const {currentPassword, newPassword, confirmNewPassword} = request.body;
+        const user = await requireAuth(request);
+        if (newPassword !== confirmNewPassword)
+            return response.status(400).json({message: `Confirm new password does not match new password`});
 
-    const correctCurrentPassword = await bcrypt.compare(currentPassword, user.password);
-    if (!correctCurrentPassword)
-        return response.status(400).json({message: `Invalid current password`});
+        const correctCurrentPassword = await bcrypt.compare(currentPassword, user.password);
+        if (!correctCurrentPassword)
+            return response.status(400).json({message: `Invalid current password`});
 
-    const newPassIsSameAsOld = await bcrypt.compare(newPassword, user.password);
-    if (newPassIsSameAsOld)
-        return response.status(400).json({message: `New password cannot be the same as old password`});
+        const newPassIsSameAsOld = await bcrypt.compare(newPassword, user.password);
+        if (newPassIsSameAsOld)
+            return response.status(400).json({message: `New password cannot be the same as old password`});
 
-    if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
-        response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} characters long!` });
-        return;
+        if (newPassword.length < MINIMUM_PASSWORD_LENGTH) {
+            response.status(400).json({ message: `Password must be atleast ${MINIMUM_PASSWORD_LENGTH} characters long!` });
+            return;
+        }
+
+        user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
+        await user.save();
+        return response.status(200).json({message: `Password changed successfully! Redirecting to home page...`});
+    } catch (error) {
+        return response.status(getErrorStatus(error)).json({ message: (error as Error).message });   
     }
-
-    user.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
-    await user.save();
-    return response.status(200).json({message: `Password changed successfully! Redirecting to home page...`});
 })
 
 app.get(`/auth/check`, (request, response) => {
