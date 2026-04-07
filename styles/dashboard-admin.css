@@ -395,11 +395,11 @@ main .recent-activity:hover{
     gap: 1rem;
 }
 
-main .view-more a{
+main .view-more{
     transition: all 0.3s ease;
 }
 
-main .view-more a:hover{
+main .view-more:hover{
     text-decoration: underline;
 }
 
