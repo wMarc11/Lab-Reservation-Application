@@ -278,6 +278,7 @@ async function loadUserImg() {
     const { minDate, maxDate } = getMinMaxEditDates();
     els.editDate.min = toISODateString(minDate);
     els.editDate.max = toISODateString(maxDate);
+    console.log(els.editDate.min, els.editDate.max);
     els.editDate.value = toISODateString(new Date(reservation.date));
 
     generateTimeSlotsForEdit(new Date(reservation.date));

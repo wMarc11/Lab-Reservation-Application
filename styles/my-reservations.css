@@ -533,8 +533,8 @@ main table tbody tr:hover{
     border: 1px solid rgba(255,255,255,0.08);
 }
 
-#edit-date::-webkit-calendar-picker-indicator {
-    filter: invert(1);
+#edit-date {
+    color-scheme: dark;
 }
 
 @media (max-width: 768px) {
