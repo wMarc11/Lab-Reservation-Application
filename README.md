@@ -8,6 +8,7 @@ This repository is a full-stack TypeScript web application for reserving compute
 - **Backend:** Express + TypeScript.
 - **Database:** MongoDB via Mongoose.
 - **Session/Auth:** `express-session` with server-side session checks.
+- **Bcrypt** `bcrypt` was used for password hashing and validation.
 
 ## Project Structure
 
@@ -25,7 +26,7 @@ This repository is a full-stack TypeScript web application for reserving compute
 
 ## Data Model (High-Level)
 
-- **User**: identity, role (`Student` / `Lab Technician`), profile fields, plaintext password (currently not hashed).
+- **User**: identity, role (`Student` / `Lab Technician`), profile fields, hashed password.
 - **Reservation**: user, lab, selected `seatNumbers`, date/start/end, computed status (`upcoming`, `today`, `past`, `cancelled`).
 - **Lab**: canonical room code + building/floor + total seat count.
 - **Building**: building name and floor count.
@@ -41,6 +42,7 @@ This repository is a full-stack TypeScript web application for reserving compute
 ## Key API Areas
 
 - **Auth / session:** `/signup`, `/login`, `/logout`, `/auth/me`, `/delete-account`
+- **Bcrypt:** `/signup`, `/login`, `/change-password`
 - **Users/profile:** `/users/:id` (`GET`, `PUT` with image upload)
 - **Reservations (core):** `/reservations` (`GET` for technicians, `POST` create), `/reservations/:id` (`PUT`, `DELETE`), `/reservations/user/:id`, `/reservations/occupied`, `/availability`
 - **Labs:** `/lab/name/:name`, `/lab/id/:id`
@@ -62,7 +64,7 @@ The server has a fairly robust normalization pipeline in helper functions:
 
 - The app serves static assets from repository root (`express.static(path.join(process.cwd()))`).
 - MongoDB connection string is hardcoded in `server.ts`.
-- Passwords are compared as plaintext in login route.
+- Passwords are compared via bcrypt.compare() in login route.
 - There are both modernized API routes and older compatibility routes in parallel.
 - `src/frontend` has a mix of strongly-typed code and legacy `@ts-nocheck` sections.
 
