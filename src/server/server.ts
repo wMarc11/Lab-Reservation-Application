@@ -13,6 +13,7 @@ import Activity from './models/activity.model';
 import Building from './models/building.model';
 import { BUILDING_LABELS, LAB_SEAT_CONFIG, getLabsForBuildingFloor, normalizeBuildingCode, parseFloorNumber } from '../shared/labSeatConfig';
 import { promisify } from 'util';
+import { ClientDBUtil } from "../frontend/util/ClientDbUtil";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -1416,7 +1417,7 @@ async function createReservationFromPayload(payload: any, currentUser: any) {
 }
 
 
-async function createReservationActivities(reservation: any, action: "reserved" | "cancelled") {
+async function createReservationActivities(reservation: any, action: "reserved" | "cancelled" | "admin-cancelled") {
     const reservationObject = typeof reservation.toObject === "function"
         ? reservation.toObject()
         : reservation;
@@ -1749,6 +1750,7 @@ app.get("/reservations/all", async (request: any, response) => {
 app.patch("/reservations/cancel", async (req, res) => {
     try {
         const { reservationIds } = req.body;
+        const user = await ClientDBUtil.getCurrentUser();
 
         const reservations = await Reservation.find({
             _id: { $in: reservationIds }
@@ -1759,9 +1761,21 @@ app.patch("/reservations/cancel", async (req, res) => {
             { $set: { status: "cancelled" } }
         );
 
-        await Promise.all(
-            reservations.map((reservation) => createReservationActivities(reservation, "cancelled"))
-        );
+        if(user.role === "Student"){
+            await Promise.all(
+                reservations.map((reservation) => createReservationActivities(reservation, "cancelled"))
+            );
+        } else{
+            await Promise.all(
+                reservations.map((reservation) => {
+                    if(reservation.user.toString() === user._id.toString()){
+                        return createReservationActivities(reservation, "cancelled");
+                    } else{                                                      
+                        return createReservationActivities(reservation, "admin-cancelled");
+                    }
+                })
+            );
+        }
 
         res.json({ message: "Cancelled" });
     } catch (error) {   

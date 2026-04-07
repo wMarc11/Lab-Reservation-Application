@@ -16,7 +16,7 @@ const activitySchema = new mongoose.Schema<ActivityDB>({
     },
     action: {
         type: String,
-        enum: ["reserved", "cancelled"],
+        enum: ["reserved", "cancelled", "admin-cancelled"],
         required: true
     },
     seatNumber: {

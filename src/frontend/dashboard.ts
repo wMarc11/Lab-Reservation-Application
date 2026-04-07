@@ -204,7 +204,9 @@ function updateRecentActivity(activities: any[]){
         let text = "";
         if(a.action === "cancelled"){
             text = `Cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
-        } else{
+        } else if (a.action === "admin-cancelled"){
+            text = `A moderator cancelled reservation for Seat ${a.seatNumber} in ${a.labName}`;
+        } else {
             text = `Reserved Seat ${a.seatNumber} in ${a.labName}`;
         }
 
