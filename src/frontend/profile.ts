@@ -185,7 +185,7 @@ async function loadProfile() {
         if (courseEl) courseEl.textContent = user.course;
         const contactNumberEl = document.querySelector('#contactNumber');
         if (contactNumberEl) contactNumberEl.textContent = user.contactNumber;
-        const userType = document.querySelector("#user-typ") as HTMLHeadingElement;
+        const userType = document.querySelector("#user-type") as HTMLHeadingElement;
         if (userType) userType.innerHTML = user.role;
         profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
         inputs.forEach(input => {

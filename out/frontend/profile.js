@@ -207,7 +207,7 @@ async function loadProfile() {
         const contactNumberEl = document.querySelector('#contactNumber');
         if (contactNumberEl)
             contactNumberEl.textContent = user.contactNumber;
-        const userType = document.querySelector("#user-typ");
+        const userType = document.querySelector("#user-type");
         if (userType)
             userType.innerHTML = user.role;
         profileImage.src = `${BASE_URL}/images/${user.profileImage}`;
