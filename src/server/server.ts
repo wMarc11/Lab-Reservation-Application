@@ -1817,17 +1817,20 @@ app.patch("/reservations/cancel-seat", async (req, res) => {
             });
         }
 
-        const updatedSeats = reservation.seatNumbers = reservation.seatNumbers.filter(
-            (seat: number) => seat !== seatNumber
-        );
+        let updatedSeats: number[] | undefined = undefined;
+        if(reservation.seatNumbers.length > 1){
+            updatedSeats = reservation.seatNumbers = reservation.seatNumbers.filter(
+                (seat: number) => seat !== seatNumber
+            );
+        }
 
         let activityType: "cancelled" | "admin-cancelled" = "cancelled";
 
-        if (updatedSeats.length === 0) {
+        if (reservation.seatNumbers.length === 1) {
             reservation.status = "cancelled";
             await reservation.save();
         } else {
-            reservation.seatNumbers = updatedSeats;
+            if(updatedSeats) reservation.seatNumbers = updatedSeats;
             await reservation.save();
         }
 
