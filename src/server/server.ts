@@ -1817,6 +1817,12 @@ app.patch("/reservations/cancel-seat", async (req, res) => {
             });
         }
 
+        if (reservation.seatNumbers.length === 1) {
+            reservation.status = "cancelled";
+            await reservation.save();
+            return res.json({ message: "Seat cancelled successfully" });
+        }
+            
         let updatedSeats: number[] | undefined = undefined;
         if(reservation.seatNumbers.length > 1){
             updatedSeats = reservation.seatNumbers = reservation.seatNumbers.filter(
@@ -1824,15 +1830,12 @@ app.patch("/reservations/cancel-seat", async (req, res) => {
             );
         }
 
-        let activityType: "cancelled" | "admin-cancelled" = "cancelled";
+        if(updatedSeats) 
+            reservation.seatNumbers = updatedSeats;
+        
+        await reservation.save();
 
-        if (reservation.seatNumbers.length === 1) {
-            reservation.status = "cancelled";
-            await reservation.save();
-        } else {
-            if(updatedSeats) reservation.seatNumbers = updatedSeats;
-            await reservation.save();
-        }
+        let activityType: "cancelled" | "admin-cancelled" = "cancelled";
 
         if (user.role === "Admin") {
             activityType =

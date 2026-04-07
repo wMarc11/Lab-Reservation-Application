@@ -55,6 +55,7 @@ editBtn?.addEventListener("click", () => {
     if (reservationList) reservationList.style.display = "none";
     formsActive = true;
 });
+
 cancelBtn?.addEventListener("click", () => {
     inputs.forEach(input => input.setAttribute("disabled", "true"));
     if (block) block.style.gridTemplateColumns = "auto";
