@@ -63,7 +63,7 @@ async function loadUserImg() {
     editId: queryElement<HTMLInputElement>("#edit-id"),
     editLab: queryElement<HTMLInputElement>("#edit-lab"),
     editDate: queryElement<HTMLInputElement>("#edit-date"),
-    editTime: queryElement<HTMLInputElement>("#edit-time"),
+    editStart: queryElement<HTMLInputElement>("#edit-start"),
     editSeatInput: queryElement<HTMLInputElement>("#edit-seat-input"),
     addSeatBtn: queryElement<HTMLButtonElement>("#add-seat-btn"),
     editSeatList: queryElement<HTMLElement>("#edit-seat-list"),
@@ -270,7 +270,8 @@ async function loadUserImg() {
     els.editId.value = reservation._id;
     els.editLab.value = reservation.lab.room;
     els.editDate.value = formatLockedDate(reservation.date);
-    els.editTime.value = timeRange;
+    const startLocal = new Date(reservation.startTime);
+    els.editStart.value = `${pad2(startLocal.getHours())}:${pad2(startLocal.getMinutes())}`;
     els.editSeatInput.value = "";
     setDraftSeatNumbers(seatNumbers);
     els.editAnon.checked = Boolean(reservation.isAnonymous);
@@ -308,9 +309,31 @@ async function loadUserImg() {
     setHidden(els.formError, true);
 
     const id = els.editId.value;
+    const startInput = els.editStart.value;
+
+    if (!startInput) {
+      return showError("Start time is required.");
+    }
+
     const existing = reservations.find((reservation) => reservation._id === id);
 
     if (!existing) return;
+
+    const [hours, minutes] = startInput.split(":").map(Number);
+
+    const localDate = new Date(existing.date);
+
+    if(hours) localDate.setHours(hours);
+    if(minutes)localDate.setMinutes(minutes);
+    localDate.setSeconds(0);
+    localDate.setMilliseconds(0);
+
+    const startUTC = localDate.toISOString();
+
+    const endDate = new Date(localDate);
+    endDate.setMinutes(endDate.getMinutes() + 30);
+
+    const endUTC = endDate.toISOString();
 
     if (draftSeatNumbers.length === 0) {
       return showError("A reservation must keep at least one seat.");
@@ -318,6 +341,8 @@ async function loadUserImg() {
 
     try {
       await ClientDBUtil.updateReservation(id, {
+        startTime: startUTC,
+        endTime: endUTC,
         seatNumbers: draftSeatNumbers,
         isAnonymous: els.editAnon.checked,
       });
