@@ -47,6 +47,8 @@ updatePassword.addEventListener("click", async () => {
                 confirmNewPassword: confirmNewPassword.value
             }),
         });
+        const test = await response.text();
+        console.log("status:", response.status, "body:", test);
         const data = await response.json();
         let messageClass = "success";
         if (!response.ok)
@@ -54,8 +56,6 @@ updatePassword.addEventListener("click", async () => {
         passwordMessage.innerHTML = data.message;
         passwordMessage.classList.add(messageClass);
         passwordMessage.classList.remove("hidden");
-        const test = await response.text();
-        console.log("status:", response.status, "body:", test);
         if (response.ok) {
             await requestLogOut(false);
             await sleep(2500);
