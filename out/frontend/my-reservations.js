@@ -366,6 +366,7 @@ async function loadUserImg() {
         els.tbody.innerHTML = list
             .map((reservation) => {
             const seats = getSeatNumbers(reservation);
+            const isCancelledStudentReservation = !isManager && reservation._status === "CANCELLED";
             return `
           <tr>
             <td><b>${reservation._id}</b></td>
@@ -395,8 +396,15 @@ async function loadUserImg() {
                 <button class="action-btn primary" type="button" data-action="edit" data-id="${reservation._id}">
                   <span class="material-symbols-outlined">edit</span>
                   Edit
-                </button>
-                <button class="action-btn danger" type="button" data-action="cancel" data-id="${reservation._id}">
+                <button
+                  class="action-btn danger"
+                  type="button"
+                  data-action="cancel"
+                  data-id="${reservation._id}"
+                  ${isCancelledStudentReservation
+                ? 'disabled aria-disabled="true" title="This reservation is already cancelled."'
+                : ""}
+                >
                   Cancel
                 </button>
               </div>
