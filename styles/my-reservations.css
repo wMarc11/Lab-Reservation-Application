@@ -535,6 +535,7 @@ main table tbody tr:hover{
 
 #edit-date::-webkit-calendar-picker-indicator {
     filter: invert(1);
+    display: block;
 }
 
 @media (max-width: 768px) {
